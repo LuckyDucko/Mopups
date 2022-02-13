@@ -9,7 +9,7 @@ In SampleMaui, you will see the general idea of how to get this up and running, 
 
 --
 
-Currently only supporty Android, i plan on iOS in the coming months aswell as other platforms
+Currently only supporting Android, i plan on iOS in the coming months aswell as other platforms
 
 --
 
