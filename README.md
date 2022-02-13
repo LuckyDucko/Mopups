@@ -1,4 +1,7 @@
 # Mopups
+
+[![NuGet Downloads](https://img.shields.io/nuget/dt/Mopups.svg)](https://www.nuget.org/packages/Mopups/)
+[![nuget](https://img.shields.io/nuget/v/Mopups.svg)](https://www.nuget.org/packages/Mopups/)
 Popups For MAUI 
 ---
 This is a rewrite of the older "Rg.Plugins.Popups" made by Rotorgames. There are many things i want to change with this plugin, such as adding returnable tasks, integrating with MAUI tightly and a general simplification which is why i have decided to create a new plugin. 
