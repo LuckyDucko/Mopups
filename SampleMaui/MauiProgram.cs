@@ -1,12 +1,4 @@
-﻿
-using Microsoft.Maui.LifecycleEvents;
-
-using Mopups.Interfaces;
-using Mopups.Services;
-
-using Mopups;
-using Mopups.Pages;
-using Mopups.Droid.Implementation;
+﻿using Mopups.Hosting;
 
 namespace SampleMaui
 {
@@ -21,19 +13,7 @@ namespace SampleMaui
                 {
                     fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
                 })
-                .ConfigureLifecycleEvents(lifecycle =>
-                {
-                    
-#if ANDROID
-                    lifecycle.AddAndroid(d => d.OnBackPressed(activity => AndroidMopups.SendBackPressed(activity.OnBackPressed)));
-                
-#endif
-                })
-                .ConfigureMauiHandlers(handlers =>
-                {
-
-                    handlers.AddHandler(typeof(PopupPage), typeof(PopupPageHandler));
-                });
+                .ConfigureMopups();
 
             //Work out how to register this as a singleton
             return builder.Build();
