@@ -1,16 +1,15 @@
 ﻿using Android.Views;
 
-namespace Mopups.Droid.Gestures
+namespace Mopups.Droid.Gestures;
+
+internal class MopupGestureDetectorListener : GestureDetector.SimpleOnGestureListener
 {
-    internal class MopupGestureDetectorListener : GestureDetector.SimpleOnGestureListener
+    public event EventHandler<MotionEvent>? Clicked;
+
+    public override bool OnSingleTapUp(MotionEvent? e)
     {
-        public event EventHandler<MotionEvent>? Clicked;
+        if (e != null) Clicked?.Invoke(this, e);
 
-        public override bool OnSingleTapUp(MotionEvent? e)
-        {
-            if (e != null) Clicked?.Invoke(this, e);
-
-            return false;
-        }
+        return false;
     }
 }

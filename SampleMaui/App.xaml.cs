@@ -1,18 +1,13 @@
-﻿
-//using Demo.Pages;
-
+﻿//using Demo.Pages;
 using SampleMaui.CSharpMarkup;
 
-using Application = Microsoft.Maui.Controls.Application;
-
 [assembly: XamlCompilation(XamlCompilationOptions.Skip)]
-namespace SampleMaui
+namespace SampleMaui;
+
+public partial class App : Application
 {
-    public partial class App : Application
+    public App()
     {
-        public App()
-        {
-            MainPage = new MainPage();
-        }
+        MainPage = new MainPage();
     }
 }

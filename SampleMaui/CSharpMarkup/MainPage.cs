@@ -1,65 +1,60 @@
-﻿
-using AsyncAwaitBestPractices.MVVM;
+﻿using AsyncAwaitBestPractices.MVVM;
 using Mopups.Pages;
 using Mopups.Services;
 using Button = Microsoft.Maui.Controls.Button;
 using ScrollView = Microsoft.Maui.Controls.ScrollView;
 
-namespace SampleMaui.CSharpMarkup
+namespace SampleMaui.CSharpMarkup;
+
+public partial class MainPage : ContentPage
 {
-    public partial class MainPage : ContentPage
+    protected void BuildContent()
     {
-        protected void BuildContent()
+        BackgroundColor = Color.FromRgb(255, 255, 255);
+        Title = "Popup Demo";
+        Content = new ScrollView
         {
-            BackgroundColor = Color.FromRgb(255, 255, 255);
-            Title = "Popup Demo";
-            Content = new ScrollView
-            {
-                VerticalOptions = LayoutOptions.FillAndExpand,
-                Content = GenerateMainPageStackLayout()
-            };
-        }
+            VerticalOptions = LayoutOptions.FillAndExpand,
+            Content = GenerateMainPageStackLayout()
+        };
+    }
 
-        private StackLayout GenerateMainPageStackLayout()
+    private StackLayout GenerateMainPageStackLayout()
+    {
+        var mainStackLayout = new StackLayout
         {
-            var mainStackLayout = new StackLayout
-            {
-                Spacing = 20,
-                Margin = new Microsoft.Maui.Thickness(10, 15)
-            };
-            mainStackLayout.Add(GeneratePopupButton("Open Popup", GenerateSimpleCommandForPopup<LoginPage>()));
-            return mainStackLayout;
-        }
+            Spacing = 20,
+            Margin = new Microsoft.Maui.Thickness(10, 15)
+        };
+        mainStackLayout.Add(GeneratePopupButton("Open Popup", GenerateSimpleCommandForPopup<LoginPage>()));
+        return mainStackLayout;
+    }
 
-        private static Button GeneratePopupButton(string buttonText, AsyncCommand buttonCommand)
+    private static Button GeneratePopupButton(string buttonText, AsyncCommand buttonCommand)
+    {
+        return new Button
         {
-            return new Button
-            {
-                Text = buttonText,
-                BackgroundColor = Color.FromHex("#FF7DBBE6"),
-                TextColor = Color.FromRgb(255, 255, 255),
-                Command = buttonCommand,
-            };
-        }
+            Text = buttonText,
+            BackgroundColor = Color.FromHex("#FF7DBBE6"),
+            TextColor = Color.FromRgb(255, 255, 255),
+            Command = buttonCommand,
+        };
+    }
 
-        private static AsyncCommand GenerateSimpleCommandForPopup<TPopupPage>() where TPopupPage : PopupPage, new()
+    private static AsyncCommand GenerateSimpleCommandForPopup<TPopupPage>() where TPopupPage : PopupPage, new()
+    {
+        return new AsyncCommand(async () =>
         {
-            return new AsyncCommand(async () =>
+            try
             {
-                try
-                {
-                    var page = new TPopupPage();
-                    await MopupService.Instance.PushAsync(page);
-                }
-                catch (Exception)
-                {
-                    throw;
-                }
+                var page = new TPopupPage();
+                await MopupService.Instance.PushAsync(page);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
 
-            });
-        }
-
-
-
+        });
     }
 }

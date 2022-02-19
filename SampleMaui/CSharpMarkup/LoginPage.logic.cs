@@ -1,19 +1,16 @@
-﻿
-using Mopups.Pages;
+﻿using Mopups.Pages;
 
-namespace SampleMaui.CSharpMarkup
+namespace SampleMaui.CSharpMarkup;
+
+public partial class LoginPage : PopupPage
 {
-    public partial class LoginPage : PopupPage
+    public LoginPage()
     {
-        public LoginPage()
-        {
-            BuildContent();
+        BuildContent();
+    }
 
-        }
-
-        protected override bool OnBackgroundClicked()
-        {
-            return base.OnBackgroundClicked();
-        }
+    protected override bool OnBackgroundClicked()
+    {
+        return base.OnBackgroundClicked();
     }
 }

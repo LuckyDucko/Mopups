@@ -5,3 +5,7 @@
 indent_style = space
 indent_size = 2
 
+[*.cs]
+
+# Namespace preferences
+csharp_style_namespace_declarations = file_scoped:warning

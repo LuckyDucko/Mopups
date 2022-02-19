@@ -1,11 +1,10 @@
 ﻿using Mopups.Pages;
 
-namespace Mopups.Interfaces
-{
-    public interface IPopupPlatform
-    {
-        Task AddAsync(PopupPage page);
+namespace Mopups.Interfaces;
 
-        Task RemoveAsync(PopupPage page);
-    }
+public interface IPopupPlatform
+{
+    Task AddAsync(PopupPage page);
+
+    Task RemoveAsync(PopupPage page);
 }

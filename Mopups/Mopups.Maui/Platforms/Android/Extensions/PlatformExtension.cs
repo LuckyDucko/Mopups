@@ -1,21 +1,18 @@
-﻿
+﻿using Mopups.Pages;
 
-using Mopups.Pages;
+namespace Mopups.Droid.Extension;
 
-namespace Mopups.Droid.Extension
+internal static class PlatformExtension
 {
-    internal static class PlatformExtension
+    public static IViewHandler GetOrCreateHandler(this VisualElement bindable)
     {
-        public static IViewHandler GetOrCreateHandler(this VisualElement bindable)
+        try
         {
-            try
-            {
-                return bindable.Handler ??= new PopupPageHandler();
-            }
-            catch (System.Exception ex)
-            {
-                throw;
-            }
+            return bindable.Handler ??= new PopupPageHandler();
+        }
+        catch (Exception)
+        {
+            throw;
         }
     }
 }
