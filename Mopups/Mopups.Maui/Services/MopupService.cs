@@ -1,8 +1,5 @@
 ﻿using Mopups.Interfaces;
 
-using System;
-using System.ComponentModel;
-
 namespace Mopups.Services
 {
     public static class MopupService

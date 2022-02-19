@@ -1,0 +1,7 @@
+﻿# Full rule list: https://docs.microsoft.com/en-us/dotnet/fundamentals/code-analysis/code-style-rule-options
+
+[*.{csproj,props,config,yml,xml}]
+
+indent_style = space
+indent_size = 2
+

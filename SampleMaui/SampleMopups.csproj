@@ -24,7 +24,6 @@
     <TargetFramework>net6.0-android</TargetFramework>
     <AnalysisLevel>preview</AnalysisLevel>
     <AutoGenerateBindingRedirects>True</AutoGenerateBindingRedirects>
-    <ImplicitUsings>enable</ImplicitUsings>
     <GeneratePackageOnBuild>False</GeneratePackageOnBuild>
   </PropertyGroup>
 
@@ -78,8 +77,8 @@
     <OutputType>WinExe</OutputType>
     <RuntimeIdentifier>win-x64</RuntimeIdentifier>
   </PropertyGroup>
-  
-    <Target Name="Remove1B1B3F705C33DF84" AfterTargets="_CheckDuplicateJavaLibraries">
+
+  <Target Name="Remove1B1B3F705C33DF84" AfterTargets="_CheckDuplicateJavaLibraries">
     <ItemGroup>
       <ExtractedJarImportsToRemove Include="@(ExtractedJarImports)" Condition="'%(Filename)' == '1B1B3F705C33DF84'" />
       <ExtractedJarImports Remove="@(ExtractedJarImportsToRemove)" />

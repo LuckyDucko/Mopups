@@ -1,13 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using Mopups.Services;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-using Microsoft.Maui.Controls;
-
-using Mopups.Services;
 
 namespace SampleMaui.CSharpMarkup
 {
@@ -24,8 +16,8 @@ namespace SampleMaui.CSharpMarkup
         }
 
         protected override void OnAppearing()
-        { 
-        
+        {
+
         }
     }
 }

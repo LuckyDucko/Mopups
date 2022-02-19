@@ -2,11 +2,11 @@
 
   <PropertyGroup>
     <!-- iOS, Android, MacCatalyst -->
-    <TargetFrameworks>net6.0;net6.0-android<!--net6.0-ios;net6.0-maccatalyst--></TargetFrameworks>
+    <TargetFrameworks>net6.0;net6.0-android<!--net6.0-ios;net6.0-maccatalyst-->
+    </TargetFrameworks>
     <UseMaui>true</UseMaui>
     <UseMauiEssentials>true</UseMauiEssentials>
     <SingleProject>true</SingleProject>
-    <ImplicitUsings>enable</ImplicitUsings>
 
     <AssemblyName>Mopups</AssemblyName>
     <RootNamespace>Mopups</RootNamespace>

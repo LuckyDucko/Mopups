@@ -1,10 +1,6 @@
-﻿
+﻿using AsyncAwaitBestPractices;
 using Mopups.Services;
 
-using System;
-using System.Threading.Tasks;
-
-using AsyncAwaitBestPractices;
 namespace Mopups.Pages
 {
     public partial class PopupPage : ContentPage

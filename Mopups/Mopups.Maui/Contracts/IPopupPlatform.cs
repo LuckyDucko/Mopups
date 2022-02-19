@@ -1,6 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
-using Mopups.Pages;
+﻿using Mopups.Pages;
 
 namespace Mopups.Interfaces
 {

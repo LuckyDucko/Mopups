@@ -1,5 +1,4 @@
-﻿using Android.Provider;
-using Android.Widget;
+﻿using Android.Widget;
 
 using AsyncAwaitBestPractices;
 
@@ -8,9 +7,6 @@ using Mopups.Interfaces;
 
 using Mopups.Pages;
 using Mopups.Services;
-
-using System;
-using System.Threading.Tasks;
 
 namespace Mopups.Droid.Implementation
 {

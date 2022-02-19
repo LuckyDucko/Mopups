@@ -1,13 +1,9 @@
 ﻿using Android.Content;
 using Android.OS;
 using Android.Views;
-using System;
-using Microsoft.Maui;
-using Microsoft.Maui.Graphics;
 using Microsoft.Maui.Handlers;
-using System.Threading.Tasks;
-using Mopups.Droid.Gestures;
 using Microsoft.Maui.Platform;
+using Mopups.Droid.Gestures;
 
 namespace Mopups.Pages
 {

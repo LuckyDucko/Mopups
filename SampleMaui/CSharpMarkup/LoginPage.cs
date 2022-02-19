@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
+﻿
 using Mopups.Pages;
 using Mopups.Services;
 using ScrollView = Microsoft.Maui.Controls.ScrollView;
@@ -13,28 +8,28 @@ namespace SampleMaui.CSharpMarkup
 {
     public partial class LoginPage : PopupPage
     {
-        public Frame FrameContainer {  get; set; }
+        public Frame FrameContainer { get; set; }
         public Image DotNetBotImage { get; set; }
 
         public Entry UsernameEntry { get; set; }
-        public Entry PasswordEntry {  get; set; }
+        public Entry PasswordEntry { get; set; }
 
-        public Microsoft.Maui.Controls.Button LoginButton {  get; set; }
+        public Microsoft.Maui.Controls.Button LoginButton { get; set; }
         protected void BuildContent()
         {
             try
             {
-                
 
-                
-                
+
+
+
                 this.Content = new ScrollView
                 {
                     HorizontalOptions = LayoutOptions.Center,
                     VerticalOptions = LayoutOptions.Center,
-                    BackgroundColor = Color.FromRgb(200.00,0.00,0.00),
+                    BackgroundColor = Color.FromRgb(200.00, 0.00, 0.00),
                     Content = GenerateLoginView()
-                    
+
                 };
             }
             catch (Exception)
@@ -51,7 +46,7 @@ namespace SampleMaui.CSharpMarkup
                 Padding = new Microsoft.Maui.Thickness(0),
                 BackgroundColor = Microsoft.Maui.Graphics.Colors.Gray,
                 HorizontalOptions = LayoutOptions.Center,
-                VerticalOptions= LayoutOptions.Center,
+                VerticalOptions = LayoutOptions.Center,
                 Content = GenerateFrameContainerContent()
             };
             return FrameContainer;
@@ -99,7 +94,7 @@ namespace SampleMaui.CSharpMarkup
             {
                 Command = new Command(() => MopupService.Instance.PopAllAsync())
             }
-            ;  
+            ;
 
 
 

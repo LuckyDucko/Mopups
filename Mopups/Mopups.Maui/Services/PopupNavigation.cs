@@ -60,7 +60,7 @@ namespace Mopups.Services
                 : MainThread.InvokeOnMainThreadAsync(PushPage);
 
             async Task PushPage()
-            { 
+            {
                 await PopupPlatform.AddAsync(page);
                 Pushed?.Invoke(this, page);
             };
@@ -108,9 +108,9 @@ namespace Mopups.Services
                 Popping?.Invoke(this, page);
                 await PopupPlatform.RemoveAsync(page);
 
-                    _popupStack.Remove(page);
+                _popupStack.Remove(page);
                 Popped?.Invoke(this, page);
-            }               
+            }
         }
     }
 }

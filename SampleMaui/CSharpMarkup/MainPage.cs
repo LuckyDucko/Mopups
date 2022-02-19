@@ -1,17 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-using Microsoft.Maui.Controls;
-using Microsoft.Maui.Graphics;
-
-using Mopups.Pages;
-using Microsoft.Maui.Essentials;
-using AsyncAwaitBestPractices;
-using Mopups.Services;
+﻿
 using AsyncAwaitBestPractices.MVVM;
+using Mopups.Pages;
+using Mopups.Services;
 using Button = Microsoft.Maui.Controls.Button;
 using ScrollView = Microsoft.Maui.Controls.ScrollView;
 
@@ -68,8 +58,8 @@ namespace SampleMaui.CSharpMarkup
 
             });
         }
-        
 
-        
+
+
     }
 }
