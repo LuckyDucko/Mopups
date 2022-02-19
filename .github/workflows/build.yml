@@ -1,0 +1,23 @@
+name: Build
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
+
+jobs: 
+  build:
+    name: Build
+    runs-on: windows-2022
+    steps:
+    - uses: actions/checkout@v2
+    - name: Install workload
+      run: dotnet workload install maui
+    - name: Setup Java SDK
+      uses: actions/setup-java@v1
+      with:
+        java-version: 17
+    - name: Build
+      run: dotnet build -c Release

@@ -11,14 +11,16 @@
 #
 name: "CodeQL"
 
+# Workflow disabled as it currently fails to build the solution
 on:
-  push:
-    branches: [ master ]
-  pull_request:
-    # The branches below must be a subset of the branches above
-    branches: [ master ]
-  schedule:
-    - cron: '39 2 * * 1'
+  workflow_dispatch:
+  #push:
+  #  branches: [ master ]
+  #pull_request:
+  #  # The branches below must be a subset of the branches above
+  #  branches: [ master ]
+  #schedule:
+  #  - cron: '39 2 * * 1'
 
 jobs:
   analyze:
