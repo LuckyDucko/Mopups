@@ -11,13 +11,13 @@ public class PopupNavigation : IPopupNavigation
     public IReadOnlyList<PopupPage> PopupStack => _popupStack;
     private readonly List<PopupPage> _popupStack = new();
 
-    public event EventHandler<PopupPage> Pushing;
+    public event EventHandler<PopupPage>? Pushing;
 
-    public event EventHandler<PopupPage> Pushed;
+    public event EventHandler<PopupPage>? Pushed;
 
-    public event EventHandler<PopupPage> Popping;
+    public event EventHandler<PopupPage>? Popping;
 
-    public event EventHandler<PopupPage> Popped;
+    public event EventHandler<PopupPage>? Popped;
 
 
     private static readonly Lazy<IPopupPlatform> lazyImplementation = new(() => GeneratePopupPlatform(), System.Threading.LazyThreadSafetyMode.PublicationOnly);
@@ -80,7 +80,6 @@ public class PopupNavigation : IPopupNavigation
 
     public Task RemovePageAsync(PopupPage page)
     {
-
         if (page == null)
             throw new InvalidOperationException("Page can not be null");
 

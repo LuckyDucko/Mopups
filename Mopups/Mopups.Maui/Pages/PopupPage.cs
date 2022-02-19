@@ -5,7 +5,6 @@ namespace Mopups.Pages;
 
 public partial class PopupPage : ContentPage
 {
-
     public event EventHandler? BackgroundClicked;
 
     public static readonly BindableProperty CloseWhenBackgroundIsClickedProperty = BindableProperty.Create(nameof(CloseWhenBackgroundIsClicked), typeof(bool), typeof(PopupPage), true);
@@ -40,8 +39,6 @@ public partial class PopupPage : ContentPage
         private set { SetValue(KeyboardOffsetProperty, value); }
     }
 
-
-
     public PopupPage()
     {
         BackgroundColor = Color.FromArgb("#80000000");
@@ -52,19 +49,16 @@ public partial class PopupPage : ContentPage
         return false;
     }
 
-
     protected override void LayoutChildren(double x, double y, double width, double height)
     {
         height -= KeyboardOffset;
         base.LayoutChildren(x, y, width, height);
     }
 
-
     protected virtual bool OnBackgroundClicked()
     {
         return CloseWhenBackgroundIsClicked;
     }
-
 
     internal void SendBackgroundClick()
     {

@@ -1,5 +1,6 @@
 ﻿using Mopups.Pages;
 using Mopups.Services;
+using System.Diagnostics.CodeAnalysis;
 using ScrollView = Microsoft.Maui.Controls.ScrollView;
 
 namespace SampleMaui.CSharpMarkup;
@@ -7,12 +8,17 @@ namespace SampleMaui.CSharpMarkup;
 public partial class LoginPage : PopupPage
 {
     public Frame FrameContainer { get; set; }
-    public Image DotNetBotImage { get; set; }
+    public Image? DotNetBotImage { get; set; }
 
     public Entry UsernameEntry { get; set; }
     public Entry PasswordEntry { get; set; }
 
     public Button LoginButton { get; set; }
+
+    [MemberNotNull(nameof(UsernameEntry))]
+    [MemberNotNull(nameof(PasswordEntry))]
+    [MemberNotNull(nameof(LoginButton))]
+    [MemberNotNull(nameof(FrameContainer))]
     protected void BuildContent()
     {
         try
@@ -23,7 +29,6 @@ public partial class LoginPage : PopupPage
                 VerticalOptions = LayoutOptions.Center,
                 BackgroundColor = Color.FromRgb(200.00, 0.00, 0.00),
                 Content = GenerateLoginView()
-
             };
         }
         catch (Exception)
@@ -32,13 +37,17 @@ public partial class LoginPage : PopupPage
         }
     }
 
+    [MemberNotNull(nameof(UsernameEntry))]
+    [MemberNotNull(nameof(PasswordEntry))]
+    [MemberNotNull(nameof(LoginButton))]
+    [MemberNotNull(nameof(FrameContainer))]
     private Frame GenerateLoginView()
     {
         FrameContainer = new Frame
         {
-            Margin = new Microsoft.Maui.Thickness(1),
-            Padding = new Microsoft.Maui.Thickness(0),
-            BackgroundColor = Microsoft.Maui.Graphics.Colors.Gray,
+            Margin = new Thickness(1),
+            Padding = new Thickness(0),
+            BackgroundColor = Colors.Gray,
             HorizontalOptions = LayoutOptions.Center,
             VerticalOptions = LayoutOptions.Center,
             Content = GenerateFrameContainerContent()
@@ -46,15 +55,17 @@ public partial class LoginPage : PopupPage
         return FrameContainer;
     }
 
+    [MemberNotNull(nameof(UsernameEntry))]
+    [MemberNotNull(nameof(PasswordEntry))]
+    [MemberNotNull(nameof(LoginButton))]
     private StackLayout GenerateFrameContainerContent()
     {
         var frameContainerContent = new StackLayout
         {
-            Margin = new Microsoft.Maui.Thickness(1),
-            Padding = new Microsoft.Maui.Thickness(1, 1),
+            Margin = new Thickness(1),
+            Padding = new Thickness(1, 1),
             HorizontalOptions = LayoutOptions.Center,
             VerticalOptions = LayoutOptions.Center
-
         };
         /*
         DotNetBotImage = new Image

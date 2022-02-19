@@ -12,7 +12,7 @@ public class PopupPageHandler : ContentViewHandler
     private readonly MopupGestureDetectorListener _gestureDetectorListener;
     private readonly GestureDetector _gestureDetector;
     private DateTime _downTime;
-    private Microsoft.Maui.Graphics.Point _downPosition;
+    private Point _downPosition;
     private bool _disposed;
 
     public PopupPageHandler()
@@ -57,7 +57,7 @@ public class PopupPageHandler : ContentViewHandler
     }
 
 
-    private bool OnTouchEvent(object? sender, MotionEvent e)
+    private bool OnTouchEvent(object? sender, MotionEvent? e)
     {
         if (_disposed)
         {
@@ -78,7 +78,6 @@ public class PopupPageHandler : ContentViewHandler
 
     private void OnBackgroundClick(object? sender, MotionEvent e)
     {
-
         var isInRegion = IsInRegion(e.RawX, e.RawY, (sender as Android.Views.View)!);
 
         if (!isInRegion)
@@ -101,7 +100,6 @@ public class PopupPageHandler : ContentViewHandler
     {
         try
         {
-
             DispatchTouchEvent(e.Event);
 
             void DispatchTouchEvent(MotionEvent e)
@@ -142,7 +140,6 @@ public class PopupPageHandler : ContentViewHandler
         }
         catch (Exception)
         {
-
             throw;
         }
     }
@@ -151,9 +148,9 @@ public class PopupPageHandler : ContentViewHandler
     {
         try
         {
-            var activity = Microsoft.Maui.Essentials.Platform.CurrentActivity;
+            var activity = Platform.CurrentActivity;
 
-            Microsoft.Maui.Thickness systemPadding;
+            Thickness systemPadding;
             var keyboardOffset = 0d;
 
             var decoreView = activity.Window.DecorView;
@@ -189,8 +186,6 @@ public class PopupPageHandler : ContentViewHandler
             }
             else
             {
-
-
                 var keyboardHeight = 0d;
 
                 if (visibleRect.Bottom < screenSize.Y)
@@ -218,7 +213,6 @@ public class PopupPageHandler : ContentViewHandler
         }
         catch (Exception)
         {
-
             throw;
         }
     }
