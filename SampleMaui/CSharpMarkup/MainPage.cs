@@ -24,7 +24,7 @@ public partial class MainPage : ContentPage
         var mainStackLayout = new StackLayout
         {
             Spacing = 20,
-            Margin = new Microsoft.Maui.Thickness(10, 15)
+            Margin = new Thickness(10, 15)
         };
         mainStackLayout.Add(GeneratePopupButton("Open Popup", GenerateSimpleCommandForPopup<LoginPage>()));
         return mainStackLayout;
@@ -35,7 +35,7 @@ public partial class MainPage : ContentPage
         return new Button
         {
             Text = buttonText,
-            BackgroundColor = Color.FromHex("#FF7DBBE6"),
+            BackgroundColor = Color.FromArgb("#FF7DBBE6"),
             TextColor = Color.FromRgb(255, 255, 255),
             Command = buttonCommand,
         };
@@ -54,7 +54,6 @@ public partial class MainPage : ContentPage
             {
                 throw;
             }
-
         });
     }
 }

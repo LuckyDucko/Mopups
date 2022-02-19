@@ -83,8 +83,8 @@ public partial class LoginPage : PopupPage
         {
             HorizontalOptions = LayoutOptions.Center,
             Placeholder = "Username",
-            PlaceholderColor = Color.FromHex("#FF9CDAF1"),
-            TextColor = Color.FromHex("#FF7DBBE6")
+            PlaceholderColor = Color.FromArgb("#FF9CDAF1"),
+            TextColor = Color.FromArgb("#FF7DBBE6")
         };
 
         PasswordEntry = new Entry
@@ -92,8 +92,8 @@ public partial class LoginPage : PopupPage
             HorizontalOptions = LayoutOptions.Center,
             IsPassword = true,
             Placeholder = "Password",
-            PlaceholderColor = Color.FromHex("#FF9CDAF1"),
-            TextColor = Color.FromHex("#FF7DBBE6")
+            PlaceholderColor = Color.FromArgb("#FF9CDAF1"),
+            TextColor = Color.FromArgb("#FF7DBBE6")
         };
 
         LoginButton = new Button

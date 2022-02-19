@@ -12,9 +12,7 @@ namespace Mopups.Droid.Implementation;
 
 public class AndroidMopups : IPopupPlatform
 {
-
     private static FrameLayout? DecoreView => Platform.CurrentActivity.Window.DecorView as FrameLayout;
-
 
     public static bool SendBackPressed(Action? backPressedHandler = null)
     {
@@ -61,7 +59,6 @@ public class AndroidMopups : IPopupPlatform
         var renderer = page.GetOrCreateHandler();
         if (renderer != null)
         {
-
             DecoreView?.RemoveView(renderer.NativeView as Android.Views.View);
             renderer.DisconnectHandler(); //?? no clue if works
             page.Parent = null;
@@ -85,7 +82,4 @@ public class AndroidMopups : IPopupPlatform
 
         return tcs.Task;
     }
-
-
-
 }
