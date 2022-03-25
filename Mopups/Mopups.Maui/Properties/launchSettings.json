@@ -1,6 +1,6 @@
 {
   "profiles": {
-    "SampleMopups": {
+    "Mopups": {
       "commandName": "Project",
       "hotReloadEnabled": false,
       "nativeDebugging": true

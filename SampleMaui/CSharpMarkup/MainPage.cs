@@ -8,6 +8,7 @@ namespace SampleMaui.CSharpMarkup;
 
 public partial class MainPage : ContentPage
 {
+    [Obsolete]
     protected void BuildContent()
     {
         BackgroundColor = Color.FromRgb(255, 255, 255);

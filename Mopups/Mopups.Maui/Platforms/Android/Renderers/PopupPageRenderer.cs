@@ -5,6 +5,8 @@ using Microsoft.Maui.Handlers;
 using Microsoft.Maui.Platform;
 using Mopups.Droid.Gestures;
 
+using System.Drawing;
+
 namespace Mopups.Pages;
 
 public class PopupPageHandler : ContentViewHandler
@@ -12,7 +14,7 @@ public class PopupPageHandler : ContentViewHandler
     private readonly MopupGestureDetectorListener _gestureDetectorListener;
     private readonly GestureDetector _gestureDetector;
     private DateTime _downTime;
-    private Point _downPosition;
+    private Microsoft.Maui.Graphics.Point _downPosition;
     private bool _disposed;
 
     public PopupPageHandler()
@@ -44,9 +46,9 @@ public class PopupPageHandler : ContentViewHandler
                 {
                     await Task.Delay(100);
                 }
-                this.NativeView.LayoutChange += PopupPage_LayoutChange;
-                this.NativeView.Touch += NativeView_Touch;
-                this.NativeView.Touch += NativeView_Touch1;
+                this.PlatformView.LayoutChange += PopupPage_LayoutChange;
+                this.PlatformView.Touch += NativeView_Touch;
+                this.PlatformView.Touch += NativeView_Touch1;
             });
         }
     }
@@ -108,7 +110,7 @@ public class PopupPageHandler : ContentViewHandler
                 if (e.Action == MotionEventActions.Down)
                 {
                     _downTime = DateTime.UtcNow;
-                    _downPosition = new Point(e.RawX, e.RawY);
+                    _downPosition = new Microsoft.Maui.Graphics.Point(e.RawX, e.RawY);
                 }
                 if (e.Action != MotionEventActions.Up)
                 {
@@ -129,7 +131,7 @@ public class PopupPageHandler : ContentViewHandler
                         currentFocus1.GetLocationOnScreen(location);
                         float num1 = e.RawX + currentFocus1.Left - location[0];
                         float num2 = e.RawY + currentFocus1.Top - location[1];
-                        if (!new Rectangle(currentFocus1.Left, currentFocus1.Top, currentFocus1.Width, currentFocus1.Height).Contains(num1, num2))
+                        if (!new Rectangle(currentFocus1.Left, currentFocus1.Top, currentFocus1.Width, currentFocus1.Height).Contains((int)num1, (int)num2))
                         {
                             Context.HideKeyboard(currentFocus1);
                             currentFocus1.ClearFocus();
@@ -159,17 +161,17 @@ public class PopupPageHandler : ContentViewHandler
 
             using var visibleRect = new Android.Graphics.Rect();
 
-            decoreView.GetWindowVisibleDisplayFrame(visibleRect);
+            decoreView?.GetWindowVisibleDisplayFrame(visibleRect);
 
             using var screenSize = new Android.Graphics.Point();
 
             if (Build.VERSION.SdkInt >= BuildVersionCodes.M)
             {
 
-                var windowInsets = activity.WindowManager.DefaultDisplay.Cutout;
+                var windowInsets = activity?.WindowManager?.DefaultDisplay?.Cutout;
 
 
-                var bottomPadding = windowInsets.SafeInsetBottom;
+                var bottomPadding = windowInsets?.SafeInsetBottom;
 
                 if (screenSize.Y - visibleRect.Bottom > bottomPadding)
                 {
@@ -181,7 +183,7 @@ public class PopupPageHandler : ContentViewHandler
                     Left = Context.FromPixels(windowInsets.SafeInsetLeft),
                     Top = Context.FromPixels(windowInsets.SafeInsetTop),
                     Right = Context.FromPixels(windowInsets.SafeInsetRight),
-                    Bottom = Context.FromPixels(bottomPadding)
+                    Bottom = Context.FromPixels(bottomPadding.Value)
                 };
             }
             else
@@ -206,8 +208,8 @@ public class PopupPageHandler : ContentViewHandler
 
             //CurrentElement.SetValue(PopupPage.SystemPaddingProperty, systemPadding);
             //CurrentElement.SetValue(PopupPage.KeyboardOffsetProperty, keyboardOffset);
-            this.NativeView.Layout((int)Context.FromPixels(e.Left), (int)Context.FromPixels(e.Top), (int)Context.FromPixels(e.Right), (int)Context.FromPixels(e.Bottom));
-            this.NativeView.ForceLayout();
+            this.PlatformView.Layout((int)Context.FromPixels(e.Left), (int)Context.FromPixels(e.Top), (int)Context.FromPixels(e.Right), (int)Context.FromPixels(e.Bottom));
+            this.PlatformView.ForceLayout();
 
             //base.OnLayout(changed, l, t, r, b);
         }

@@ -13,6 +13,7 @@ public static class MauiProgram
             {
                 fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
             })
+           
             .ConfigureMopups();
 
         //Work out how to register this as a singleton

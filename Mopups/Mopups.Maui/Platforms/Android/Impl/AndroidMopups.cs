@@ -44,7 +44,7 @@ public class AndroidMopups : IPopupPlatform
             var decoreView = DecoreView;
 
             page.Parent = MauiApplication.Current.Application.Windows[0].Content as Element;
-            var AndroidNativeView = page.GetOrCreateHandler().NativeView as Android.Views.View;
+            var AndroidNativeView = page.GetOrCreateHandler().PlatformView as Android.Views.View;
             decoreView?.AddView(AndroidNativeView);
             return PostAsync(AndroidNativeView);
         }
@@ -59,7 +59,7 @@ public class AndroidMopups : IPopupPlatform
         var renderer = page.GetOrCreateHandler();
         if (renderer != null)
         {
-            DecoreView?.RemoveView(renderer.NativeView as Android.Views.View);
+            DecoreView?.RemoveView(renderer.PlatformView as Android.Views.View);
             renderer.DisconnectHandler(); //?? no clue if works
             page.Parent = null;
 
