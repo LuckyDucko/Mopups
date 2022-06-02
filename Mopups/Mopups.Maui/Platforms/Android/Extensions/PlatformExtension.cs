@@ -10,9 +10,9 @@ internal static class PlatformExtension
         {
             return bindable.Handler ??= new PopupPageHandler();
         }
-        catch (Exception)
+        catch (Exception ex)
         {
-            throw;
+            throw ex;
         }
     }
 }

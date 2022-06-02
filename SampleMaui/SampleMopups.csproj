@@ -49,6 +49,7 @@
     <PackageReference Include="Microsoft.WindowsAppSDK.InteractiveExperiences" Version="1.0.0-experimental1" NoWarn="NU1701" />
   </ItemGroup>
 
+
   <ItemGroup>
     <PackageReference Include="AsyncAwaitBestPractices.MVVM" Version="6.0.4" />
   </ItemGroup>
@@ -87,11 +88,14 @@
 
   <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net6.0-android|AnyCPU'">
     <CheckForOverflowUnderflow>True</CheckForOverflowUnderflow>
-    <Optimize>True</Optimize>
+    <Optimize>False</Optimize>
+    <DebugType>embedded</DebugType>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net6.0-android|AnyCPU'">
     <CheckForOverflowUnderflow>True</CheckForOverflowUnderflow>
+    <Optimize>False</Optimize>
+    <DebugType>embedded</DebugType>
   </PropertyGroup>
 
 </Project>

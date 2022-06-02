@@ -1,7 +1,6 @@
 ﻿using Mopups.Pages;
 using Mopups.Services;
 using System.Diagnostics.CodeAnalysis;
-using ScrollView = Microsoft.Maui.Controls.ScrollView;
 
 namespace SampleMaui.CSharpMarkup;
 
@@ -23,13 +22,7 @@ public partial class LoginPage : PopupPage
     {
         try
         {
-            this.Content = new ScrollView
-            {
-                HorizontalOptions = LayoutOptions.Center,
-                VerticalOptions = LayoutOptions.Center,
-                BackgroundColor = Color.FromRgb(200.00, 0.00, 0.00),
-                Content = GenerateLoginView()
-            };
+            this.Content = GenerateLoginView();
         }
         catch (Exception)
         {
@@ -58,27 +51,15 @@ public partial class LoginPage : PopupPage
     [MemberNotNull(nameof(UsernameEntry))]
     [MemberNotNull(nameof(PasswordEntry))]
     [MemberNotNull(nameof(LoginButton))]
-    private StackLayout GenerateFrameContainerContent()
+    private VerticalStackLayout GenerateFrameContainerContent()
     {
-        var frameContainerContent = new StackLayout
+
+        var frameContainerContent = new VerticalStackLayout
         {
+            
             Margin = new Thickness(1),
             Padding = new Thickness(1, 1),
-            HorizontalOptions = LayoutOptions.Center,
-            VerticalOptions = LayoutOptions.Center
         };
-        /*
-        DotNetBotImage = new Image
-        {
-
-            Margin = new Microsoft.Maui.Thickness(1),
-            BackgroundColor = Microsoft.Maui.Graphics.Colors.White,
-            Scale = 10,
-            HorizontalOptions = LayoutOptions.Center,
-            VerticalOptions = LayoutOptions.Center,
-            Source = ImageSource.FromFile("fluent_balloon.svg")
-        };
-        */
         UsernameEntry = new Entry
         {
             HorizontalOptions = LayoutOptions.Center,
@@ -95,17 +76,25 @@ public partial class LoginPage : PopupPage
             PlaceholderColor = Color.FromArgb("#FF9CDAF1"),
             TextColor = Color.FromArgb("#FF7DBBE6")
         };
-
+        /*
         LoginButton = new Button
         {
             Command = new Command(() => MopupService.Instance.PopAllAsync())
         };
-
+        */
         //frameContainerContent.Add(DotNetBotImage);
         frameContainerContent.Add(UsernameEntry);
         frameContainerContent.Add(PasswordEntry);
-        frameContainerContent.Add(LoginButton);
-
+        //frameContainerContent.Add(LoginButton);
         return frameContainerContent;
+    }
+
+    protected override bool OnBackButtonPressed()
+    {
+        return Task.Run(() =>
+        {
+            MopupService.Instance.PopAllAsync();
+            return base.OnBackButtonPressed();
+        }).Result;
     }
 }
