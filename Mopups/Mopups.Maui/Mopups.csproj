@@ -1,13 +1,13 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net6.0;net6.0-android<!--net6.0-ios;net6.0-maccatalyst--></TargetFrameworks> <!-- iOS, Android, MacCatalyst -->
+    <TargetFrameworks>net6.0;net6.0-android;net6.0-ios;net6.0-maccatalyst\</TargetFrameworks> <!-- iOS, Android, MacCatalyst -->
     <UseMaui>true</UseMaui>
     <UseMauiEssentials>true</UseMauiEssentials>
     <SingleProject>true</SingleProject>
 
     <PackageId>Mopups</PackageId>
-    <Description>Create popups out of any Maui page!</Description>
+    <Description>Popups for MAUI</Description>
     <DisableFastUpToDateCheck>true</DisableFastUpToDateCheck>
 
     <PlatformVersion Condition="'$(TargetFramework)' == 'net6.0-android'">21.0</PlatformVersion>
@@ -27,10 +27,16 @@
     <UseInterpreter Condition="$(TargetFramework.Contains('-android'))">False</UseInterpreter>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <GenerateDocumentationFile>True</GenerateDocumentationFile>
-    <Authors>Tyson Hooker, Kirill Lyubimov, Martijn Van Dijk</Authors>
+    <Authors>Tyson Hooker,Maksym Koshovyi,Aswin P G, Kirill Lyubimov, Martijn Van Dijk</Authors>
     <Company>$(CompanyName)</Company>
     <PackageTags>Popups;Maui</PackageTags>
-    <Version>1.0.0-preview.13.1</Version>
+    <Version>1.0.0</Version>
+    <Title>Mopups </Title>
+    <PackageReleaseNotes>First Release, Huge thankyou to 
+- Maksym Koshovyi, For his interest, QOL checks and communication
+- Aswin P G, for swooping in and providing a fixed version of my broken code 
+- Kirill Lyubimov, for providing the initial codebase this is based on
+- Martijn Van Dijk, for his maintanence of said codebase</PackageReleaseNotes>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net6.0-android|AnyCPU'">
@@ -48,6 +54,11 @@
 
   <ItemGroup>
     <PackageReference Include="AsyncAwaitBestPractices" Version="6.0.4" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Platforms\iOS\Extensions\" />
+    <Folder Include="Platforms\MacCatalyst\" />
   </ItemGroup>
 
 </Project>

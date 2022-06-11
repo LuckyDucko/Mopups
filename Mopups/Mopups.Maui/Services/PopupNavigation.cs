@@ -108,10 +108,13 @@ public class PopupNavigation : IPopupNavigation
             }
 
             Popping?.Invoke(this, new PopupNavigationEventArgs(page, animate));
+            await page.DisappearingAnimation();
             await PopupPlatform.RemoveAsync(page);
+            page.DisposingAnimation();
 
             _popupStack.Remove(page);
             Popped?.Invoke(this, new PopupNavigationEventArgs(page, animate));
         }
     }
 }
+

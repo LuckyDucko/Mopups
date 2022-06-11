@@ -24,8 +24,7 @@ public partial class LoginPage : PopupPage
         try
         {
             this.Content = GenerateLoginView();
-            this.Background = new SolidColorBrush(Colors.White);
-            this.Animation = new FadeAnimation() { DurationIn = 2000, DurationOut = 2000, EasingIn = Easing.BounceIn, EasingOut = Easing.BounceOut };
+            this.Background = Colors.AliceBlue;
             this.IsAnimationEnabled = true;
         }
         catch (Exception)

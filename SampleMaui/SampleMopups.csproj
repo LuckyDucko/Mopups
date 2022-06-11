@@ -60,13 +60,13 @@
 
 
   <ItemGroup>
-    <Compile Update="PopupTest.xaml.cs">
-      <DependentUpon>%(Filename)</DependentUpon>
-    </Compile>
     <Compile Update="Properties\Resources.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Update="XAML\AswinPage.xaml.cs">
+      <DependentUpon>AswinPage.xaml</DependentUpon>
     </Compile>
   </ItemGroup>
 
@@ -78,7 +78,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <MauiXaml Update="PopupTest.xaml">
+    <MauiXaml Update="XAML\AswinPage.xaml">
       <Generator>MSBuild:Compile</Generator>
     </MauiXaml>
   </ItemGroup>

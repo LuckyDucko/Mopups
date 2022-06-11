@@ -20,12 +20,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "workflows", "workflows", "{
 		.github\workflows\codeql-analysis.yml = .github\workflows\codeql-analysis.yml
 	EndProjectSection
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rg.Plugins.Popup", "..\Rg.Plugins.Popup\Rg.Plugins.Popup\Rg.Plugins.Popup.csproj", "{653FFDF0-1C3D-4D02-87CE-972FD506ED81}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RGPopupSample", "..\..\..\Repos\RGNewKids\RGPopupSample\RGPopupSample.csproj", "{1FEEA493-9409-40E2-AC4E-28324E6C68F4}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MauiApp1", "..\..\..\Repos\RGNewKids\MauiApp1\MauiApp1.csproj", "{5CC9F21D-B1CA-4982-9F42-739C3F647779}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -42,22 +36,6 @@ Global
 		{6EBF1CDC-C4DD-4722-8EBC-3CAE51C3545B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6EBF1CDC-C4DD-4722-8EBC-3CAE51C3545B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6EBF1CDC-C4DD-4722-8EBC-3CAE51C3545B}.Release|Any CPU.Build.0 = Release|Any CPU
-		{653FFDF0-1C3D-4D02-87CE-972FD506ED81}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{653FFDF0-1C3D-4D02-87CE-972FD506ED81}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{653FFDF0-1C3D-4D02-87CE-972FD506ED81}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{653FFDF0-1C3D-4D02-87CE-972FD506ED81}.Release|Any CPU.Build.0 = Release|Any CPU
-		{1FEEA493-9409-40E2-AC4E-28324E6C68F4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{1FEEA493-9409-40E2-AC4E-28324E6C68F4}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{1FEEA493-9409-40E2-AC4E-28324E6C68F4}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
-		{1FEEA493-9409-40E2-AC4E-28324E6C68F4}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{1FEEA493-9409-40E2-AC4E-28324E6C68F4}.Release|Any CPU.Build.0 = Release|Any CPU
-		{1FEEA493-9409-40E2-AC4E-28324E6C68F4}.Release|Any CPU.Deploy.0 = Release|Any CPU
-		{5CC9F21D-B1CA-4982-9F42-739C3F647779}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{5CC9F21D-B1CA-4982-9F42-739C3F647779}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{5CC9F21D-B1CA-4982-9F42-739C3F647779}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
-		{5CC9F21D-B1CA-4982-9F42-739C3F647779}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{5CC9F21D-B1CA-4982-9F42-739C3F647779}.Release|Any CPU.Build.0 = Release|Any CPU
-		{5CC9F21D-B1CA-4982-9F42-739C3F647779}.Release|Any CPU.Deploy.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
