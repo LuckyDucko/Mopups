@@ -1,24 +1,25 @@
-﻿using Mopups.Pages;
+﻿using Mopups.Events;
+using Mopups.Pages;
 
 namespace Mopups.Interfaces;
 
 public interface IPopupNavigation
 {
-    event EventHandler<PopupPage> Pushing;
+    event EventHandler<PopupNavigationEventArgs> Pushing;
 
-    event EventHandler<PopupPage> Pushed;
+    event EventHandler<PopupNavigationEventArgs> Pushed;
 
-    event EventHandler<PopupPage> Popping;
+    event EventHandler<PopupNavigationEventArgs> Popping;
 
-    event EventHandler<PopupPage> Popped;
+    event EventHandler<PopupNavigationEventArgs> Popped;
 
     IReadOnlyList<PopupPage> PopupStack { get; }
 
-    Task PushAsync(PopupPage page);
+    Task PushAsync(PopupPage page, bool animate = true);
 
-    Task PopAsync();
+    Task PopAsync(bool animate = true);
 
-    Task PopAllAsync();
+    Task PopAllAsync(bool animate = true);
 
-    Task RemovePageAsync(PopupPage page);
+    Task RemovePageAsync(PopupPage page, bool animate = true);
 }

@@ -134,7 +134,7 @@ public class ScaleAnimation : FadeAnimation
 
     private Task Scale(View content, Easing easing, double start, double end, bool isAppearing)
     {
-        TaskCompletionSource<bool> task = new TaskCompletionSource<bool>();
+        var task = new TaskCompletionSource<bool>();
 
         content.Animate("popIn", d =>
         {

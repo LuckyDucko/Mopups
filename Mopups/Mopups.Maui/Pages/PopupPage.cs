@@ -13,7 +13,12 @@ public partial class PopupPage : ContentPage
 {
     public event EventHandler? BackgroundClicked;
 
-    public static readonly BindableProperty CloseWhenBackgroundIsClickedProperty = BindableProperty.Create(nameof(CloseWhenBackgroundIsClicked), typeof(bool), typeof(PopupPage), true);
+    internal Task? AppearingTransactionTask { get; set; }
+
+    internal Task? DisappearingTransactionTask { get; set; }
+
+
+
 
     public static readonly BindableProperty IsAnimationEnabledProperty = BindableProperty.Create(nameof(IsAnimationEnabled), typeof(bool), typeof(PopupPage), true);
 
@@ -55,7 +60,7 @@ public partial class PopupPage : ContentPage
         set { SetValue(SystemPaddingSidesProperty, value); }
     }
 
-   
+    public static readonly BindableProperty CloseWhenBackgroundIsClickedProperty = BindableProperty.Create(nameof(CloseWhenBackgroundIsClicked), typeof(bool), typeof(PopupPage), true);
 
     public bool CloseWhenBackgroundIsClicked
     {

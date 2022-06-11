@@ -1,4 +1,5 @@
-﻿using Mopups.Pages;
+﻿using Mopups.Animations;
+using Mopups.Pages;
 using Mopups.Services;
 using System.Diagnostics.CodeAnalysis;
 
@@ -23,6 +24,9 @@ public partial class LoginPage : PopupPage
         try
         {
             this.Content = GenerateLoginView();
+            this.Background = new SolidColorBrush(Colors.White);
+            this.Animation = new FadeAnimation() { DurationIn = 2000, DurationOut = 2000, EasingIn = Easing.BounceIn, EasingOut = Easing.BounceOut };
+            this.IsAnimationEnabled = true;
         }
         catch (Exception)
         {
@@ -76,16 +80,16 @@ public partial class LoginPage : PopupPage
             PlaceholderColor = Color.FromArgb("#FF9CDAF1"),
             TextColor = Color.FromArgb("#FF7DBBE6")
         };
-        /*
+        
         LoginButton = new Button
         {
             Command = new Command(() => MopupService.Instance.PopAllAsync())
         };
-        */
-        //frameContainerContent.Add(DotNetBotImage);
+        
+        frameContainerContent.Add(DotNetBotImage);
         frameContainerContent.Add(UsernameEntry);
         frameContainerContent.Add(PasswordEntry);
-        //frameContainerContent.Add(LoginButton);
+        frameContainerContent.Add(LoginButton);
         return frameContainerContent;
     }
 

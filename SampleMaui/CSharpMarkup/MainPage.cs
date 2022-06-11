@@ -1,6 +1,9 @@
 ﻿using AsyncAwaitBestPractices.MVVM;
 using Mopups.Pages;
 using Mopups.Services;
+
+using RGPopupSample;
+
 using Button = Microsoft.Maui.Controls.Button;
 using ScrollView = Microsoft.Maui.Controls.ScrollView;
 
@@ -26,7 +29,7 @@ public partial class MainPage : ContentPage
             Spacing = 20,
             Margin = new Thickness(10, 15)
         };
-        mainStackLayout.Add(GeneratePopupButton("Open Popup", GenerateSimpleCommandForPopup<LoginPage>()));
+        mainStackLayout.Add(GeneratePopupButton("Open Popup", GenerateSimpleCommandForPopup<PopupTest>()));
         return mainStackLayout;
     }
 

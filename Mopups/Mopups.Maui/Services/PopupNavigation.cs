@@ -1,4 +1,6 @@
 ﻿using AsyncAwaitBestPractices;
+
+using Mopups.Events;
 using Mopups.Interfaces;
 using Mopups.Pages;
 
@@ -11,13 +13,13 @@ public class PopupNavigation : IPopupNavigation
     public IReadOnlyList<PopupPage> PopupStack => _popupStack;
     private readonly List<PopupPage> _popupStack = new();
 
-    public event EventHandler<PopupPage>? Pushing;
+    public event EventHandler<PopupNavigationEventArgs>? Pushing;
 
-    public event EventHandler<PopupPage>? Pushed;
+    public event EventHandler<PopupNavigationEventArgs>? Pushed;
 
-    public event EventHandler<PopupPage>? Popping;
+    public event EventHandler<PopupNavigationEventArgs>? Popping;
 
-    public event EventHandler<PopupPage>? Popped;
+    public event EventHandler<PopupNavigationEventArgs>? Popped;
 
 
     private static readonly Lazy<IPopupPlatform> lazyImplementation = new(() => GeneratePopupPlatform(), System.Threading.LazyThreadSafetyMode.PublicationOnly);
@@ -47,9 +49,11 @@ public class PopupNavigation : IPopupNavigation
         }
     }
 
-    public Task PushAsync(PopupPage page)
-    {
-        Pushing?.Invoke(this, page);
+    
+
+    public Task PushAsync(PopupPage page, bool animate = true)
+    {   
+        Pushing?.Invoke(this, new PopupNavigationEventArgs(page,animate));
         _popupStack.Add(page);
 
         return MainThread.IsMainThread
@@ -58,27 +62,29 @@ public class PopupNavigation : IPopupNavigation
 
         async Task PushPage()
         {
+            page.PreparingAnimation();
             await PopupPlatform.AddAsync(page);
-            Pushed?.Invoke(this, page);
+            await page.AppearingAnimation();
+            Pushed?.Invoke(this, new PopupNavigationEventArgs(page, animate));
         };
     }
 
-    public async Task PopAllAsync()
+    public async Task PopAllAsync(bool animate = true)
     {
         while (MopupService.Instance.PopupStack.Count > 0)
         {
-            await PopAsync();
+            await PopAsync(animate);
         }
     }
 
-    public Task PopAsync()
+    public Task PopAsync(bool animate = true)
     {
         return _popupStack.Count <= 0
             ? throw new InvalidOperationException("PopupStack is empty")
-            : RemovePageAsync(PopupStack[PopupStack.Count - 1]);
+            : RemovePageAsync(PopupStack[PopupStack.Count - 1], animate);
     }
 
-    public Task RemovePageAsync(PopupPage page)
+    public Task RemovePageAsync(PopupPage page, bool animate =true)
     {
         if (page == null)
             throw new InvalidOperationException("Page can not be null");
@@ -101,11 +107,11 @@ public class PopupNavigation : IPopupNavigation
                 }
             }
 
-            Popping?.Invoke(this, page);
+            Popping?.Invoke(this, new PopupNavigationEventArgs(page, animate));
             await PopupPlatform.RemoveAsync(page);
 
             _popupStack.Remove(page);
-            Popped?.Invoke(this, page);
+            Popped?.Invoke(this, new PopupNavigationEventArgs(page, animate));
         }
     }
 }
