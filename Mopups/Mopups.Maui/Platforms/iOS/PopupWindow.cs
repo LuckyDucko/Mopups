@@ -1,7 +1,7 @@
 ﻿using CoreGraphics;
 
 using Mopups.Pages;
-using Mopups.Platforms.iOS.Handler;
+
 
 using UIKit;
 

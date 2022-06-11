@@ -4,13 +4,14 @@ using Microsoft.Maui.Controls.Compatibility.Platform.iOS;
 
 using Mopups.Interfaces;
 using Mopups.Pages;
+using Mopups.Platforms.iOS;
 using Mopups.Platforms.iOS.Extentions;
 
 using UIKit;
 
-namespace Mopups.Platforms.iOS;
+namespace Mopups.iOS.Implementation;
 
-internal class PopupPlatformIos : IPopupPlatform
+internal class iOSMopups : IPopupPlatform
 {
     // It's necessary because GC in Xamarin.iOS 13 removes all UIWindow if there are not any references to them. See #459
     private readonly List<UIWindow> _windows = new List<UIWindow>();
@@ -57,12 +58,12 @@ internal class PopupPlatformIos : IPopupPlatform
         window.BackgroundColor = Colors.Transparent.ToUIColor();
         window.RootViewController = new PopupPlatformHandler(handler);
         if (window.RootViewController.View != null)
-            window.RootViewController.View.BackgroundColor = CGColorSpaceName.s.Transparent.ToUIColor();
+            window.RootViewController.View.BackgroundColor = Colors.Transparent.ToUIColor();
         window.WindowLevel = UIWindowLevel.Normal;
         window.MakeKeyAndVisible();
 
         if (!IsiOS9OrNewer)
-            window.Frame = new CGRect(new System.Runtime.InteropServices.NFloat(0),  new System.Runtime.InteropServices.NFloat(0), UIScreen.MainScreen.Bounds.Width, UIScreen.MainScreen.Bounds.Height);
+            window.Frame = new CGRect(new System.Runtime.InteropServices.NFloat(0), new System.Runtime.InteropServices.NFloat(0), UIScreen.MainScreen.Bounds.Width, UIScreen.MainScreen.Bounds.Height);
 
         return window.RootViewController.PresentViewControllerAsync(handler.ViewController, false);
     }

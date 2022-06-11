@@ -37,6 +37,10 @@ public class PopupNavigation : IPopupNavigation
             return new Mopups.Droid.Implementation.AndroidMopups();
 #endif
 
+#if IOS
+            return new Mopups.iOS.Implementation.iOSMopups();
+#endif
+
             throw new PlatformNotSupportedException();
         }
     }
@@ -49,11 +53,11 @@ public class PopupNavigation : IPopupNavigation
         }
     }
 
-    
+
 
     public Task PushAsync(PopupPage page, bool animate = true)
-    {   
-        Pushing?.Invoke(this, new PopupNavigationEventArgs(page,animate));
+    {
+        Pushing?.Invoke(this, new PopupNavigationEventArgs(page, animate));
         _popupStack.Add(page);
 
         return MainThread.IsMainThread
@@ -84,7 +88,7 @@ public class PopupNavigation : IPopupNavigation
             : RemovePageAsync(PopupStack[PopupStack.Count - 1], animate);
     }
 
-    public Task RemovePageAsync(PopupPage page, bool animate =true)
+    public Task RemovePageAsync(PopupPage page, bool animate = true)
     {
         if (page == null)
             throw new InvalidOperationException("Page can not be null");

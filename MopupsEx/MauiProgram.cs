@@ -1,6 +1,5 @@
-﻿using Mopups.Hosting;
-
-namespace SampleMaui;
+﻿namespace MopupsEx;
+using Mopups.Hosting;
 
 public static class MauiProgram
 {
@@ -12,11 +11,10 @@ public static class MauiProgram
             .ConfigureFonts(fonts =>
             {
                 fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
-            })
+                fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
+            }).ConfigureMopups();
 
-            .ConfigureMopups();
-
-        //Work out how to register this as a singleton
         return builder.Build();
     }
 }
+
