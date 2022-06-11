@@ -3,7 +3,7 @@ using Mopups.Animations.Base;
 using Mopups.Enums;
 using Mopups.Pages;
 
-namespace Mopup.Animations;
+namespace Mopups.Animations;
 
 public class MoveAnimation : FadeBackgroundAnimation
 {
