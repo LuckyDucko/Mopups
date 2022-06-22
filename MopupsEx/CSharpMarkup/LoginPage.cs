@@ -25,7 +25,9 @@ public partial class LoginPage : PopupPage
         {
             this.Content = GenerateLoginView();
             this.Background = Colors.AliceBlue;
+            this.BackgroundInputTransparent = true;
             this.IsAnimationEnabled = true;
+            this.CloseWhenBackgroundIsClicked = true;
         }
         catch (Exception)
         {
@@ -91,6 +93,8 @@ public partial class LoginPage : PopupPage
         frameContainerContent.Add(LoginButton);
         return frameContainerContent;
     }
+
+    
 
     protected override bool OnBackButtonPressed()
     {

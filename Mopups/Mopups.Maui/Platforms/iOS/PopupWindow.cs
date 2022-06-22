@@ -26,7 +26,7 @@ namespace Mopups.Platforms.iOS
 
         public override UIView HitTest(CGPoint point, UIEvent? uievent)
         {
-            var platformHandler = (PopupPlatformHandler?)RootViewController;
+            var platformHandler = (PopupPageRenderer?)RootViewController;
             var renderer = platformHandler?.Handler;
             var hitTestResult = base.HitTest(point, uievent);
 

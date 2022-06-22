@@ -2,7 +2,6 @@
 
 using AsyncAwaitBestPractices;
 
-using Mopups.Droid.Extension;
 using Mopups.Interfaces;
 
 using Mopups.Pages;
@@ -44,7 +43,7 @@ public class AndroidMopups : IPopupPlatform
             var decoreView = DecoreView;
 
             page.Parent = MauiApplication.Current.Application.Windows[0].Content as Element;
-            var AndroidNativeView = page.GetOrCreateHandler().PlatformView as Android.Views.View;
+            var AndroidNativeView = IPopupPlatform.GetOrCreateHandler<PopupPageHandler>(page).PlatformView as Android.Views.View;
             decoreView?.AddView(AndroidNativeView);
             return PostAsync(AndroidNativeView);
         }
@@ -56,7 +55,7 @@ public class AndroidMopups : IPopupPlatform
 
     public Task RemoveAsync(PopupPage page)
     {
-        var renderer = page.GetOrCreateHandler();
+        var renderer = IPopupPlatform.GetOrCreateHandler<PopupPageHandler>(page);
         if (renderer != null)
         {
             DecoreView?.RemoveView(renderer.PlatformView as Android.Views.View);
@@ -75,7 +74,6 @@ public class AndroidMopups : IPopupPlatform
         {
             return Task.FromResult(true);
         }
-
         var tcs = new TaskCompletionSource<bool>();
 
         nativeView.Post(() => tcs.SetResult(true));

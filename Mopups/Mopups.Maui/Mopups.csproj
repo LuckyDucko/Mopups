@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
-		<TargetFrameworks>net6.0;net6.0-android;net6.0-ios;net6.0-maccatalyst;</TargetFrameworks>
+		<TargetFrameworks>net6.0;net6.0-android;net6.0-ios;<!--net6.0-maccatalyst;--></TargetFrameworks>
 		<!-- iOS, Android, MacCatalyst -->
 		<UseMaui>true</UseMaui>
 		<UseMauiEssentials>true</UseMauiEssentials>
@@ -11,7 +11,7 @@
 		<DisableFastUpToDateCheck>true</DisableFastUpToDateCheck>
 		<PlatformVersion Condition="'$(TargetFramework)' == 'net6.0-android'">21.0</PlatformVersion>
 		<PlatformVersion Condition="'$(TargetFramework)' == 'net6.0-ios'">14.2</PlatformVersion>
-		<PlatformVersion Condition="'$(TargetFramework)' == 'net6.0-maccatalyst'">14.0</PlatformVersion>
+		<!--<PlatformVersion Condition="'$(TargetFramework)' == 'net6.0-maccatalyst'">14.0</PlatformVersion>-->
 	</PropertyGroup>
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net6.0-android|AnyCPU'">
 		<PlatformTarget>AnyCPU</PlatformTarget>
@@ -28,12 +28,8 @@
 		<Company>$(CompanyName)</Company>
 		<PackageTags>Popups;Maui</PackageTags>
 		<Version>1.0.0</Version>
-		<Title>Mopups </Title>
-		<PackageReleaseNotes>First Release, Huge thankyou to 
-- Maksym Koshovyi, For his interest, QOL checks and communication
-- Aswin P G, for swooping in and providing a fixed version of my broken code 
-- Kirill Lyubimov, for providing the initial codebase this is based on
-- Martijn Van Dijk, for his maintanence of said codebase</PackageReleaseNotes>
+		<Title>Mopups (Maui Popups)</Title>
+		<PackageReleaseNotes>First official release! This runs on iOS and Android. There is still much work to be done, and plenty of bugs to find.</PackageReleaseNotes>
 	</PropertyGroup>
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net6.0-android|AnyCPU'">
 		<PlatformTarget>AnyCPU</PlatformTarget>

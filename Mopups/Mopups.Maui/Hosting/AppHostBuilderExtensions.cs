@@ -28,6 +28,9 @@ public static class AppHostBuilderExtensions
 #if ANDROID
                 handlers.AddHandler(typeof(PopupPage), typeof(PopupPageHandler));
 #endif
+#if IOS
+                handlers.AddHandler(typeof(PopupPage), typeof(Platforms.iOS.PopupPageHandler));
+#endif
             });
         return builder;
     }

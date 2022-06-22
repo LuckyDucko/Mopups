@@ -20,7 +20,7 @@ using Android.OS;
 using Rect = Microsoft.Maui.Graphics.Rect;
 
 namespace Mopups.Platforms.Android.Renderers;
-public class PopupContentViewGroup : ContentViewGroup
+public class PopupPageRenderer : ContentViewGroup
 {
     public PopupPageHandler PopupHandler;
 
@@ -29,7 +29,7 @@ public class PopupContentViewGroup : ContentViewGroup
     private DateTime _downTime;
     private Microsoft.Maui.Graphics.Point _downPosition;
     private bool _disposed;
-    public PopupContentViewGroup(Context context) : base(context)
+    public PopupPageRenderer(Context context) : base(context)
     {
         _gestureDetectorListener = new MopupGestureDetectorListener();
         _gestureDetectorListener.Clicked += OnBackgroundClick;

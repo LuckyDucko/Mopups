@@ -5,7 +5,6 @@ using Microsoft.Maui.Controls.Compatibility.Platform.iOS;
 using Mopups.Interfaces;
 using Mopups.Pages;
 using Mopups.Platforms.iOS;
-using Mopups.Platforms.iOS.Extentions;
 
 using UIKit;
 
@@ -20,14 +19,6 @@ internal class iOSMopups : IPopupPlatform
 
     private static bool IsiOS13OrNewer => UIDevice.CurrentDevice.CheckSystemVersion(13, 0);
 
-    //public event EventHandler OnInitialized
-    //{
-    //    add => Popup.OnInitialized += value;
-    //    remove => Popup.OnInitialized -= value;
-    //}
-
-    //public bool IsInitialized => Popup.IsInitialized;
-
     public bool IsSystemAnimationEnabled => true;
 
     public Task AddAsync(PopupPage page)
@@ -39,7 +30,7 @@ internal class iOSMopups : IPopupPlatform
         if (UIApplication.SharedApplication.KeyWindow.WindowLevel.Equals(UIWindowLevel.Normal))
             UIApplication.SharedApplication.KeyWindow.WindowLevel = new System.Runtime.InteropServices.NFloat(-1);
 
-        var handler = page.GetOrCreateHandler();
+        var handler = (PopupPageHandler)IPopupPlatform.GetOrCreateHandler<PopupPageHandler>(page);
 
         PopupWindow window;
         if (IsiOS13OrNewer)
@@ -56,7 +47,7 @@ internal class iOSMopups : IPopupPlatform
             window = new PopupWindow();
 
         window.BackgroundColor = Colors.Transparent.ToUIColor();
-        window.RootViewController = new PopupPlatformHandler(handler);
+        window.RootViewController = new PopupPageRenderer(handler);
         if (window.RootViewController.View != null)
             window.RootViewController.View.BackgroundColor = Colors.Transparent.ToUIColor();
         window.WindowLevel = UIWindowLevel.Normal;

@@ -16,28 +16,25 @@ public class PopupPageHandler : PageHandler
 
     public PopupPageHandler()
     {
-
+        
         this.SetMauiContext(MauiApplication.Current.Application.Windows[0].Handler.MauiContext);
-
     }
 
     protected override void ConnectHandler(ContentViewGroup platformView)
     {
 
-        (platformView as PopupContentViewGroup).PopupHandler = this;
+        (platformView as PopupPageRenderer).PopupHandler = this;
         base.ConnectHandler(platformView);
     }
 
     protected override ContentViewGroup CreatePlatformView()
     {
-        var item = new PopupContentViewGroup(Context);
-        return item;
+        return new PopupPageRenderer(Context);
     }
 
 
     protected override void DisconnectHandler(ContentViewGroup platformView)
     {
-        //platformView.Dispose();
         base.DisconnectHandler(platformView);
 
     }
