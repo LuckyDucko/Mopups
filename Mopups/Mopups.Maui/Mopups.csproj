@@ -9,9 +9,9 @@
 		<PackageId>Mopups</PackageId>
 		<Description>Popups for MAUI</Description>
 		<DisableFastUpToDateCheck>true</DisableFastUpToDateCheck>
-		<PlatformVersion Condition="'$(TargetFramework)' == 'net6.0-android'">21.0</PlatformVersion>
-		<PlatformVersion Condition="'$(TargetFramework)' == 'net6.0-ios'">14.2</PlatformVersion>
-		<!--<PlatformVersion Condition="'$(TargetFramework)' == 'net6.0-maccatalyst'">14.0</PlatformVersion>-->
+    <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">21.0</SupportedOSPlatformVersion>
+    <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios'">14.2</SupportedOSPlatformVersion>
+    <!--<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'maccatalyst'">14.0</SupportedOSPlatformVersion>-->
 	</PropertyGroup>
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net6.0-android|AnyCPU'">
 		<PlatformTarget>AnyCPU</PlatformTarget>
