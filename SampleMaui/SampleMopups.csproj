@@ -35,6 +35,9 @@
 		<MauiAsset Include="Resources\Raw\**" LogicalName="%(RecursiveDir)%(Filename)%(Extension)" />
 	</ItemGroup>
 	<ItemGroup>
+	  <PackageReference Include="AsyncAwaitBestPractices.MVVM" Version="6.0.4" />
+	</ItemGroup>
+	<ItemGroup>
 	  <ProjectReference Include="..\Mopups\Mopups.Maui\Mopups.csproj" />
 	</ItemGroup>
 </Project>
