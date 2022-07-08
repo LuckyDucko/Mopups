@@ -3,21 +3,24 @@ name: Build
 on:
   workflow_dispatch:
   push:
-    branches: [master]
+    branches: [main]
   pull_request:
-    branches: [master]
+    branches: [main]
 
 jobs: 
   build:
-    name: Build
+    name: Build ${{ matrix.configuration }}
     runs-on: windows-2022
+    strategy:
+      matrix:
+        configuration: ['Debug', 'Release']
     steps:
     - uses: actions/checkout@v2
     - name: Install workload
-      run: dotnet workload install maui
+      run: dotnet workload install maui-android
     - name: Setup Java SDK
       uses: actions/setup-java@v1
       with:
         java-version: 17
     - name: Build
-      run: dotnet build -c Release
+      run: dotnet build -c ${{ matrix.configuration }}
