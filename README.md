@@ -12,14 +12,18 @@ In SampleMaui, you will see the general idea of how to get this up and running, 
 
 --
 
-Currently only supporting Android, i plan on iOS in the coming months aswell as other platforms
+Platforms Supported (Current)
+- Android 
+- iOS
+
+Platforms Planned (Future)
+- UWP
+- MacOS
+
+Nice to have Platforms
+
+- GTK
+- Tizen
 
 --
 
-TODO:
-iOS
-Blazor?
-Animations
-Awaitable Tasks for end users
-Singleton integration
-and More!
