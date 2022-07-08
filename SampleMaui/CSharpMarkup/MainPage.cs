@@ -41,6 +41,17 @@ public partial class MainPage : ContentPage
         mainStackLayout.Add(PopupAnimationLengthSlider());
         mainStackLayout.Add(GeneratePopupButton("Open Login Popup", GenerateSimpleCommandForPopup<LoginPage>()));
         mainStackLayout.Add(GeneratePopupButton("Open Aswins Popup", GenerateSimpleCommandForPopup<AswinPage>()));
+        var newButton = new Button
+        {
+            Text = "New page test",
+            BackgroundColor = Color.FromArgb("#FF7DBBE6"),
+            TextColor = Color.FromRgb(255, 255, 255),
+            Command = new AsyncCommand(async () =>
+            {
+                await Navigation.PushAsync(new TestPage());
+            })
+        };
+        mainStackLayout.Add(newButton);
         return mainStackLayout;
 
         Picker PopupAnimationPicker()

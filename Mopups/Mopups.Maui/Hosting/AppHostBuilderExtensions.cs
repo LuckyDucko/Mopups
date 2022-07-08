@@ -8,9 +8,12 @@ namespace Mopups.Hosting;
 /// </summary>
 public static class AppHostBuilderExtensions
 {
+
     /// <summary>
-    /// Configures the implemented handlers in Syncfusion.Maui.Core.
+    /// Automatically sets up lifecycle events and Maui Handlers
     /// </summary>
+    /// <param name="builder"></param>
+    /// <returns></returns>
     public static MauiAppBuilder ConfigureMopups(this MauiAppBuilder builder)
     {
         builder
@@ -19,7 +22,8 @@ public static class AppHostBuilderExtensions
 #if ANDROID
                 lifecycle.AddAndroid(d =>
                 {
-                    d.OnBackPressed(activity => Droid.Implementation.AndroidMopups.SendBackPressed(activity.OnBackPressed));
+
+                    d.OnBackPressed(activity => Droid.Implementation.AndroidMopups.SendBackPressed());
                 });
 #endif
             })
@@ -34,4 +38,37 @@ public static class AppHostBuilderExtensions
             });
         return builder;
     }
+
+
+    /// <summary>
+    /// Automatically sets up lifecycle events and maui handlers, with the additional option to have additional back press logic
+    /// </summary>
+    /// <param name="builder"></param>
+    /// <param name="backPressHandler"></param>
+    /// <returns></returns>
+    public static MauiAppBuilder ConfigureMopups(this MauiAppBuilder builder, Action? backPressHandler)
+    {
+        builder
+            .ConfigureLifecycleEvents(lifecycle =>
+            {
+#if ANDROID
+                lifecycle.AddAndroid(d =>
+                {
+                    
+                    d.OnBackPressed(activity => Droid.Implementation.AndroidMopups.SendBackPressed(backPressHandler));
+                });
+#endif
+            })
+            .ConfigureMauiHandlers(handlers =>
+            {
+#if ANDROID
+                handlers.AddHandler(typeof(PopupPage), typeof(PopupPageHandler));
+#endif
+#if IOS
+                handlers.AddHandler(typeof(PopupPage), typeof(Platforms.iOS.PopupPageHandler));
+#endif
+            });
+        return builder;
+    }
+
 }
