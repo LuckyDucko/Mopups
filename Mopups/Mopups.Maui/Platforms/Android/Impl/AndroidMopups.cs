@@ -48,7 +48,7 @@ public class AndroidMopups : IPopupPlatform
 
             static void HandleAccessibility()
             {
-                Page mainPage = Application.Current?.MainPage;
+                Page? mainPage = Application.Current?.MainPage;
 
                 if (mainPage is null)
                 {
@@ -127,7 +127,7 @@ public class AndroidMopups : IPopupPlatform
 
         static void HandleAccessibility()
         {
-            Page mainPage = Application.Current?.MainPage;
+            Page? mainPage = Application.Current?.MainPage;
 
             if(mainPage is null)
             {
