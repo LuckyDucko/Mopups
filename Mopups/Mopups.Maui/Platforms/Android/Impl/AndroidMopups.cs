@@ -38,52 +38,14 @@ public class AndroidMopups : IPopupPlatform
     {
         try
         {
-            HandleAccessibility();
+            HandleAccessibility(ImportantForAccessibility.NoHideDescendants);
+            DisableFocusableInTouchMode((Application.Current?.MainPage?.Handler?.PlatformView as Android.Views.View)?.Parent);
 
             page.Parent = MauiApplication.Current.Application.Windows[0].Content as Element;
             var AndroidNativeView = IPopupPlatform.GetOrCreateHandler<PopupPageHandler>(page).PlatformView as Android.Views.View;
             DecoreView?.AddView(AndroidNativeView);
 
             return PostAsync(AndroidNativeView);
-
-            static void HandleAccessibility()
-            {
-                Page? mainPage = Application.Current?.MainPage;
-
-                if (mainPage is null)
-                {
-                    return;
-                }
-
-                int navCount = mainPage.Navigation.NavigationStack.Count;
-                int modalCount = mainPage.Navigation.ModalStack.Count;
-
-                Android.Views.View? platformMainPage = mainPage.Handler?.PlatformView as Android.Views.View;
-                if(platformMainPage is not null)
-                {
-                    platformMainPage.ImportantForAccessibility = ImportantForAccessibility.NoHideDescendants;
-                }
-
-                if (navCount > 0)
-                {
-                    Android.Views.View? currentPage = mainPage.Navigation?.NavigationStack[navCount - 1]?.Handler?.PlatformView as Android.Views.View;
-                    if (currentPage is not null)
-                    {
-                        currentPage.ImportantForAccessibility = ImportantForAccessibility.NoHideDescendants;
-                    }
-                }
-                
-                if (modalCount > 0)
-                {
-                    Android.Views.View? backgroundModelPage = mainPage.Navigation?.ModalStack[modalCount - 1]?.Handler?.PlatformView as Android.Views.View;
-                    if (backgroundModelPage is not null)
-                    {
-                        backgroundModelPage.ImportantForAccessibility = ImportantForAccessibility.NoHideDescendants;
-                    }
-                }
-
-                DisableFocusableInTouchMode((mainPage.Handler?.PlatformView as Android.Views.View)?.Parent);
-            }
 
             static void DisableFocusableInTouchMode(IViewParent? parent)
             {
@@ -114,7 +76,7 @@ public class AndroidMopups : IPopupPlatform
         var renderer = IPopupPlatform.GetOrCreateHandler<PopupPageHandler>(page);
         if (renderer != null)
         {
-            HandleAccessibility();
+            HandleAccessibility(ImportantForAccessibility.Auto);
 
             DecoreView?.RemoveView(renderer.PlatformView as Android.Views.View);
             renderer.DisconnectHandler(); //?? no clue if works
@@ -124,41 +86,41 @@ public class AndroidMopups : IPopupPlatform
         }
 
         return Task.CompletedTask;
+    }
 
-        static void HandleAccessibility()
+    static void HandleAccessibility(ImportantForAccessibility importantForAccessibility)
+    {
+        Page? mainPage = Application.Current?.MainPage;
+
+        if (mainPage is null)
         {
-            Page? mainPage = Application.Current?.MainPage;
+            return;
+        }
 
-            if(mainPage is null)
+        int navCount = mainPage.Navigation.NavigationStack.Count;
+        int modalCount = mainPage.Navigation.ModalStack.Count;
+
+        Android.Views.View? platformMainPage = mainPage.Handler?.PlatformView as Android.Views.View;
+        if (platformMainPage is not null)
+        {
+            platformMainPage.ImportantForAccessibility = importantForAccessibility;
+        }
+
+        if (navCount > 0)
+        {
+            Android.Views.View? currentPage = mainPage.Navigation?.NavigationStack[navCount - 1]?.Handler?.PlatformView as Android.Views.View;
+            if (currentPage is not null)
             {
-                return;
+                currentPage.ImportantForAccessibility = importantForAccessibility;
             }
+        }
 
-            int navCount = mainPage.Navigation.NavigationStack.Count;
-            int modalCount = mainPage.Navigation.ModalStack.Count;
-
-            Android.Views.View? platformMainPage = mainPage.Handler?.PlatformView as Android.Views.View;
-            if (platformMainPage is not null)
+        if (modalCount > 0)
+        {
+            Android.Views.View? backgroundModelPage = mainPage.Navigation?.ModalStack[modalCount - 1]?.Handler?.PlatformView as Android.Views.View;
+            if (backgroundModelPage is not null)
             {
-                platformMainPage.ImportantForAccessibility = ImportantForAccessibility.Auto;
-            }
-
-            if (navCount > 0)
-            {
-                Android.Views.View? currentPage = mainPage.Navigation?.NavigationStack[navCount - 1]?.Handler?.PlatformView as Android.Views.View;
-                if (currentPage is not null)
-                {
-                    currentPage.ImportantForAccessibility = ImportantForAccessibility.Auto;
-                }
-            }
-
-            if (modalCount > 0)
-            {
-                Android.Views.View? backgroundModelPage = mainPage.Navigation?.ModalStack[modalCount - 1]?.Handler?.PlatformView as Android.Views.View;
-                if (backgroundModelPage is not null)
-                {
-                    backgroundModelPage.ImportantForAccessibility = ImportantForAccessibility.Auto;
-                }
+                backgroundModelPage.ImportantForAccessibility = importantForAccessibility;
             }
         }
     }
