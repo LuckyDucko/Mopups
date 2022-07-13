@@ -1,7 +1,7 @@
 ﻿using ObjCRuntime;
 using UIKit;
 
-namespace MopupsEx;
+namespace SampleMaui;
 
 public class Program
 {

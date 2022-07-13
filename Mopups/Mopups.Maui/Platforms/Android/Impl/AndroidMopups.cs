@@ -28,9 +28,7 @@ public class AndroidMopups : IPopupPlatform
 
             return true;
         }
-
         backPressedHandler?.Invoke();
-
         return false;
     }
 
