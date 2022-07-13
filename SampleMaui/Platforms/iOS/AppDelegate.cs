@@ -1,6 +1,7 @@
 ﻿using Foundation;
 
-namespace MopupsEx;
+using SampleMaui;
+
 
 [Register("AppDelegate")]
 public class AppDelegate : MauiUIApplicationDelegate

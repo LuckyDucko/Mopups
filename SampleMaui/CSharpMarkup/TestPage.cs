@@ -1,23 +1,35 @@
 ﻿using AsyncAwaitBestPractices.MVVM;
 
 using Mopups.Animations;
-
 using Mopups.Pages;
 using Mopups.Services;
 
 using SampleMopups.XAML;
 
-using Button = Microsoft.Maui.Controls.Button;
-using ScrollView = Microsoft.Maui.Controls.ScrollView;
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace SampleMaui.CSharpMarkup;
-
-public partial class MainPage : ContentPage
+public class TestPage : ContentPage
 {
     public double AnimationLength { get; set; }
     public int AnimationType { get; set; }
     public int AnimationEasing { get; set; }
 
+
+    public TestPage()
+    {
+        BuildContent();
+
+        MopupService.Instance.Pushing += (sender, e) => Debug.WriteLine($"[Popup] Pushing: {e.GetType().Name}");
+        MopupService.Instance.Pushed += (sender, e) => Debug.WriteLine($"[Popup] Pushed: {e.GetType().Name}");
+        MopupService.Instance.Popping += (sender, e) => Debug.WriteLine($"[Popup] Popping: {e.GetType().Name}");
+        MopupService.Instance.Popped += (sender, e) => Debug.WriteLine($"[Popup] Popped: {e.GetType().Name}");
+    }
     protected void BuildContent()
     {
         BackgroundColor = Color.FromRgb(255, 255, 255);
@@ -41,6 +53,19 @@ public partial class MainPage : ContentPage
         mainStackLayout.Add(PopupAnimationLengthSlider());
         mainStackLayout.Add(GeneratePopupButton("Open Login Popup", GenerateSimpleCommandForPopup<LoginPage>()));
         mainStackLayout.Add(GeneratePopupButton("Open Aswins Popup", GenerateSimpleCommandForPopup<AswinPage>()));
+
+
+        var newButton = new Button
+        {
+            Text = "New page test",
+            BackgroundColor = Color.FromArgb("#FF7DBBE6"),
+            TextColor = Color.FromRgb(255, 255, 255),
+            Command = new AsyncCommand(async () =>
+            {
+                await Navigation.PushAsync(new TestPage());
+            })
+        };
+        mainStackLayout.Add(newButton);
         return mainStackLayout;
 
         Picker PopupAnimationPicker()
