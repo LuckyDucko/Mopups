@@ -8,6 +8,8 @@
 		<SingleProject>true</SingleProject>
 		<PackageId>Mopups</PackageId>
 		<Description>Popups for MAUI</Description>
+		<PackageProjectUrl>https://github.com/LuckyDucko/Mopups</PackageProjectUrl>
+		<PackageLicenseExpression>MIT</PackageLicenseExpression>
 		<DisableFastUpToDateCheck>true</DisableFastUpToDateCheck>
 		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">21.0</SupportedOSPlatformVersion>
 		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios'">14.2</SupportedOSPlatformVersion>
@@ -26,7 +28,7 @@
 		<GenerateDocumentationFile>True</GenerateDocumentationFile>
 		<Authors>Tyson Hooker,Maksym Koshovyi,Aswin P G, Kirill Lyubimov, Martijn Van Dijk</Authors>
 		<Company>$(CompanyName)</Company>
-		<PackageTags>Popups;Maui</PackageTags>
+		<PackageTags>Popups;Maui;rg;Xamarin;ios;android;</PackageTags>
 		<Version>1.0.1</Version>
 		<Title>Mopups (Maui Popups)</Title>
 		<PackageReleaseNotes>Fixed bug surrounding the use of the back button, now provide an overload for configureMopups</PackageReleaseNotes>
