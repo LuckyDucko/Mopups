@@ -2,7 +2,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
 		<TargetFrameworks>net6.0-android;net6.0-ios;net6.0-maccatalyst</TargetFrameworks>
-		<TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('windows'))">$(TargetFrameworks);net6.0-windows10.0.19041.0</TargetFrameworks>
+		<!-- <TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('windows'))">$(TargetFrameworks);net6.0-windows10.0.19041.0</TargetFrameworks> -->
 		<!-- Uncomment to also build the tizen app. You will need to install tizen by following this: https://github.com/Samsung/Tizen.NET -->
 		<!-- <TargetFrameworks>$(TargetFrameworks);net6.0-tizen</TargetFrameworks> -->
 		<OutputType>Exe</OutputType>
@@ -27,12 +27,23 @@
 	</PropertyGroup>
 	<ItemGroup>
 		<!-- App Icon -->
-		<MauiIcon Include="Resources\AppIcon\appicon.svg" ForegroundFile="Resources\AppIcon\appiconfg.svg" Color="#512BD4" />
+		<MauiIcon Include="Resources\AppIcon\appicon.svg">
+		  <Color>#512BD4</Color>
+		  <ForegroundFile>Resources\AppIcon\appiconfg.svg</ForegroundFile>
+		</MauiIcon>
+		<MauiIcon Include="Resources\AppIcon\appiconfg.svg" ForegroundFile="Resources\AppIcon\appiconfg.svg" Color="#512BD4" />
 		<!-- Splash Screen -->
 		<MauiImage Include="Resources\Images\*" />
 		<MauiFont Include="Resources\Fonts\*" />
 		<!-- Raw Assets (also remove the "Resources\Raw" prefix) -->
 		<MauiAsset Include="Resources\Raw\**" LogicalName="%(RecursiveDir)%(Filename)%(Extension)" />
+	</ItemGroup>
+	<ItemGroup>
+	  <None Remove="Resources\AppIcon\appicon.svg" />
+	</ItemGroup>
+	<ItemGroup>
+	  <PackageReference Include="AsyncAwaitBestPractices" Version="6.0.5" />
+	  <PackageReference Include="AsyncAwaitBestPractices.MVVM" Version="6.0.5" />
 	</ItemGroup>
 	<ItemGroup>
 	  <ProjectReference Include="..\Mopups\Mopups.Maui\Mopups.csproj" />

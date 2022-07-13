@@ -28,11 +28,10 @@
 		<GenerateDocumentationFile>True</GenerateDocumentationFile>
 		<Authors>Tyson Hooker,Maksym Koshovyi,Aswin P G, Kirill Lyubimov, Martijn Van Dijk</Authors>
 		<Company>$(CompanyName)</Company>
-
-		<PackageTags>Popups;Maui;rg;</PackageTags>
-		<Version>1.0.0</Version>
+		<PackageTags>Popups;Maui;rg;Xamarin;ios;android;</PackageTags>
+		<Version>1.0.1</Version>
 		<Title>Mopups (Maui Popups)</Title>
-		<PackageReleaseNotes>First official release! This runs on iOS and Android. There is still much work to be done, and plenty of bugs to find.</PackageReleaseNotes>
+		<PackageReleaseNotes>Fixed bug surrounding the use of the back button, now provide an overload for configureMopups</PackageReleaseNotes>
 	</PropertyGroup>
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net6.0-android|AnyCPU'">
 		<PlatformTarget>AnyCPU</PlatformTarget>
