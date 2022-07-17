@@ -20,10 +20,12 @@ public static class MopupService
         get
         {
             IPopupNavigation lazyEvalPopupNavigation = _customNavigation ?? implementation.Value;
+
             if (lazyEvalPopupNavigation == null)
             {
                 throw NotImplementedInReferenceAssembly();
             }
+
             return lazyEvalPopupNavigation;
         }
     }

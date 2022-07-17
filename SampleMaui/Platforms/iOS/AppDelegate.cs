@@ -2,7 +2,6 @@
 
 using SampleMaui;
 
-
 [Register("AppDelegate")]
 public class AppDelegate : MauiUIApplicationDelegate
 {

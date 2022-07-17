@@ -48,6 +48,7 @@ public partial class LoginPage : PopupPage
             VerticalOptions = LayoutOptions.Center,
             Content = GenerateFrameContainerContent()
         };
+
         return FrameContainer;
     }
 
@@ -56,13 +57,12 @@ public partial class LoginPage : PopupPage
     [MemberNotNull(nameof(LoginButton))]
     private VerticalStackLayout GenerateFrameContainerContent()
     {
-
         var frameContainerContent = new VerticalStackLayout
         {
-            
             Margin = new Thickness(1),
             Padding = new Thickness(1, 1),
         };
+
         UsernameEntry = new Entry
         {
             HorizontalOptions = LayoutOptions.Center,
@@ -89,6 +89,7 @@ public partial class LoginPage : PopupPage
         frameContainerContent.Add(UsernameEntry);
         frameContainerContent.Add(PasswordEntry);
         frameContainerContent.Add(LoginButton);
+
         return frameContainerContent;
     }
 

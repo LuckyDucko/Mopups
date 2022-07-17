@@ -52,6 +52,7 @@ public partial class MainPage : ContentPage
             })
         };
         mainStackLayout.Add(newButton);
+
         return mainStackLayout;
 
         Picker PopupAnimationPicker()
@@ -60,9 +61,10 @@ public partial class MainPage : ContentPage
             {
                 Items = { "FadeAnimation", "MoveAnimation", "ScaleAnimation" }
             };
-            animationPicker.SelectedIndexChanged += OnAnimationPickerSelectedIndexChanged;
-            return animationPicker;
 
+            animationPicker.SelectedIndexChanged += OnAnimationPickerSelectedIndexChanged;
+
+            return animationPicker;
         }
 
         Picker EasingAnimationPicker()
@@ -71,7 +73,9 @@ public partial class MainPage : ContentPage
             {
                 Items = { "Linear", "BounceIn", "BounceOut", "CubicIn", "CubicOut", "SinIn", "SinInOut", "SinOut", "SpringIn", "SpringOut" }
             };
+
             animationPicker.SelectedIndexChanged += OnEasingPickerSelectedIndexChanged;
+
             return animationPicker;
 
         }
@@ -84,6 +88,7 @@ public partial class MainPage : ContentPage
                 FlowDirection = FlowDirection.LeftToRight,
 
             };
+
             animationSlider.ValueChanged += OnSliderValueChanged;
 
             return animationSlider;
@@ -97,6 +102,7 @@ public partial class MainPage : ContentPage
         int selectedIndex = picker.SelectedIndex;
         AnimationType = selectedIndex;
     }
+
     void OnAnimationPickerSelectedIndexChanged(object sender, EventArgs e)
     {
         var picker = (Picker)sender;
@@ -108,8 +114,6 @@ public partial class MainPage : ContentPage
     {
         AnimationLength = args.NewValue;
     }
-
-
 
     private static Button GeneratePopupButton(string buttonText, AsyncCommand buttonCommand)
     {
@@ -130,6 +134,7 @@ public partial class MainPage : ContentPage
             {
                 var page = new TPopupPage();
                 var easing = Easing.Linear;
+
                 switch (AnimationEasing)
                 {
                     case 0:

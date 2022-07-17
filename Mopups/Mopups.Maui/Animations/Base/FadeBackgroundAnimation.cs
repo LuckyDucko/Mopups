@@ -1,7 +1,4 @@
-﻿
-
-using Mopups.Animations.Base;
-using Mopups.Pages;
+﻿using Mopups.Pages;
 
 namespace Mopups.Animations.Base;
 
@@ -16,7 +13,6 @@ public abstract class FadeBackgroundAnimation : BaseAnimation
         _backgroundColor = page.BackgroundColor;
 
         page.BackgroundColor = GetColor(0);
-        
     }
 
     public override void Disposing(View content, PopupPage page)
@@ -40,6 +36,7 @@ public abstract class FadeBackgroundAnimation : BaseAnimation
 
             return taskSource.Task;
         }
+
         return Task.CompletedTask;
     }
 
