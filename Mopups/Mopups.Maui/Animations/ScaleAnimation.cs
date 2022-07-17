@@ -129,6 +129,7 @@ public class ScaleAnimation : FadeAnimation
                 taskList.Add(content.TranslateTo(leftOffset, _defaultTranslationY, DurationOut, EasingOut));
             }
         }
+
         await Task.WhenAll(taskList);
     }
 
@@ -146,6 +147,7 @@ public class ScaleAnimation : FadeAnimation
         {
             task.SetResult(true);
         });
+
         return task.Task;
     }
 
@@ -153,8 +155,10 @@ public class ScaleAnimation : FadeAnimation
     {
         _defaultScale = content.Scale;
         _defaultOpacity = content.Opacity;
+
         if (double.IsNaN(_defaultOpacity))
             _defaultOpacity = 1;
+
         _defaultTranslationX = content.TranslationX;
         _defaultTranslationY = content.TranslationY;
     }

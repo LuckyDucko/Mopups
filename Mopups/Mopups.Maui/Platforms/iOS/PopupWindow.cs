@@ -2,7 +2,6 @@
 
 using Mopups.Pages;
 
-
 using UIKit;
 
 namespace Mopups.Platforms.iOS
@@ -39,11 +38,11 @@ namespace Mopups.Platforms.iOS
             if (formsElement.BackgroundInputTransparent && renderer?.PlatformView == hitTestResult)
             {
                 formsElement.SendBackgroundClick();
+
                 return null!;
             }
 
             return hitTestResult;
         }
     }
-
 }

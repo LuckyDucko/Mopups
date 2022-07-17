@@ -33,6 +33,7 @@ internal class iOSMopups : IPopupPlatform
         var handler = (PopupPageHandler)IPopupPlatform.GetOrCreateHandler<PopupPageHandler>(page);
 
         PopupWindow window;
+
         if (IsiOS13OrNewer)
         {
             var connectedScene = UIApplication.SharedApplication.ConnectedScenes.ToArray().FirstOrDefault(x => x.ActivationState == UISceneActivationState.ForegroundActive);
@@ -48,8 +49,10 @@ internal class iOSMopups : IPopupPlatform
 
         window.BackgroundColor = Colors.Transparent.ToUIColor();
         window.RootViewController = new PopupPageRenderer(handler);
+
         if (window.RootViewController.View != null)
             window.RootViewController.View.BackgroundColor = Colors.Transparent.ToUIColor();
+
         window.WindowLevel = UIWindowLevel.Normal;
         window.MakeKeyAndVisible();
 
@@ -75,19 +78,24 @@ internal class iOSMopups : IPopupPlatform
         {
             var window = viewController.View?.Window;
             page.Parent = null;
+
             if (window != null)
             {
                 var rvc = window.RootViewController;
+
                 if (rvc != null)
                 {
                     await rvc.DismissViewControllerAsync(false);
                     DisposeModelAndChildrenHandlers(page);
                     rvc.Dispose();
                 }
+
                 window.RootViewController = null;
                 window.Hidden = true;
+
                 if (IsiOS13OrNewer && _windows.Contains(window))
                     _windows.Remove(window);
+
                 window.Dispose();
                 window = null;
             }

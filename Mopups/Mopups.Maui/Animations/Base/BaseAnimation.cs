@@ -6,8 +6,6 @@ using Mopups.Pages;
 
 namespace Mopups.Animations.Base;
 
-
-
 public class EasingTypeConverter : TypeConverter
 {
     public override object? ConvertFrom(ITypeDescriptorContext? context, CultureInfo? culture, object value)
@@ -18,15 +16,18 @@ public class EasingTypeConverter : TypeConverter
             {
                 if (fi.IsStatic)
                     return fi.Name == value.ToString();
+
                 return false;
             });
             if (fieldInfo != null)
             {
                 var fieldValue = fieldInfo.GetValue(null);
+
                 if (fieldValue != null)
                     return (Easing)fieldValue;
             }
         }
+
         throw new InvalidOperationException($"Cannot convert \"{value}\" into {typeof(Easing)}");
     }
 }
@@ -84,7 +85,6 @@ public abstract class BaseAnimation : IPopupAnimation
     {
         return (int)(content.Width + page.Width) / 2;
     }
-
 
     /// <summary>
     /// Cannot use Page.IsVisible as this will remove the ability to use GetTopOffset/GetLeftOffset

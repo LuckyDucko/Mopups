@@ -17,79 +17,76 @@ public partial class PopupPage : ContentPage
 
     internal Task? DisappearingTransactionTask { get; set; }
 
-
-
-
     public static readonly BindableProperty IsAnimationEnabledProperty = BindableProperty.Create(nameof(IsAnimationEnabled), typeof(bool), typeof(PopupPage), true);
 
     public bool IsAnimationEnabled
     {
-        get { return (bool)GetValue(IsAnimationEnabledProperty); }
-        set { SetValue(IsAnimationEnabledProperty, value); }
+        get => (bool)GetValue(IsAnimationEnabledProperty);
+        set => SetValue(IsAnimationEnabledProperty, value);
     }
 
     public static readonly BindableProperty HasSystemPaddingProperty = BindableProperty.Create(nameof(HasSystemPadding), typeof(bool), typeof(PopupPage), true);
 
     public bool HasSystemPadding
     {
-        get { return (bool)GetValue(HasSystemPaddingProperty); }
-        set { SetValue(HasSystemPaddingProperty, value); }
+        get => (bool)GetValue(HasSystemPaddingProperty);
+        set => SetValue(HasSystemPaddingProperty, value);
     }
 
     public static readonly BindableProperty AnimationProperty = BindableProperty.Create(nameof(Animation), typeof(IPopupAnimation), typeof(PopupPage), new ScaleAnimation());
 
     public IPopupAnimation Animation
     {
-        get { return (IPopupAnimation)GetValue(AnimationProperty); }
-        set { SetValue(AnimationProperty, value); }
+        get => (IPopupAnimation)GetValue(AnimationProperty);
+        set => SetValue(AnimationProperty, value);
     }
 
     public static readonly BindableProperty SystemPaddingProperty = BindableProperty.Create(nameof(SystemPadding), typeof(Thickness), typeof(PopupPage), default(Thickness), BindingMode.OneWayToSource);
 
     public Thickness SystemPadding
     {
-        get { return (Thickness)GetValue(SystemPaddingProperty); }
-        internal set { SetValue(SystemPaddingProperty, value); }
+        get => (Thickness)GetValue(SystemPaddingProperty);
+        internal set => SetValue(SystemPaddingProperty, value);
     }
 
     public static readonly BindableProperty SystemPaddingSidesProperty = BindableProperty.Create(nameof(SystemPaddingSides), typeof(PaddingSide), typeof(PopupPage), PaddingSide.All);
 
     public PaddingSide SystemPaddingSides
     {
-        get { return (PaddingSide)GetValue(SystemPaddingSidesProperty); }
-        set { SetValue(SystemPaddingSidesProperty, value); }
+        get => (PaddingSide)GetValue(SystemPaddingSidesProperty);
+        set => SetValue(SystemPaddingSidesProperty, value);
     }
 
     public static readonly BindableProperty CloseWhenBackgroundIsClickedProperty = BindableProperty.Create(nameof(CloseWhenBackgroundIsClicked), typeof(bool), typeof(PopupPage), true);
 
     public bool CloseWhenBackgroundIsClicked
     {
-        get { return (bool)GetValue(CloseWhenBackgroundIsClickedProperty); }
-        set { SetValue(CloseWhenBackgroundIsClickedProperty, value); }
+        get => (bool)GetValue(CloseWhenBackgroundIsClickedProperty);
+        set => SetValue(CloseWhenBackgroundIsClickedProperty, value);
     }
 
     public static readonly BindableProperty BackgroundInputTransparentProperty = BindableProperty.Create(nameof(BackgroundInputTransparent), typeof(bool), typeof(PopupPage), false);
 
     public bool BackgroundInputTransparent
     {
-        get { return (bool)GetValue(BackgroundInputTransparentProperty); }
-        set { SetValue(BackgroundInputTransparentProperty, value); }
+        get => (bool)GetValue(BackgroundInputTransparentProperty);
+        set => SetValue(BackgroundInputTransparentProperty, value);
     }
 
     public static readonly BindableProperty HasKeyboardOffsetProperty = BindableProperty.Create(nameof(HasKeyboardOffset), typeof(bool), typeof(PopupPage), true);
 
     public bool HasKeyboardOffset
     {
-        get { return (bool)GetValue(HasKeyboardOffsetProperty); }
-        set { SetValue(HasKeyboardOffsetProperty, value); }
+        get => (bool)GetValue(HasKeyboardOffsetProperty);
+        set => SetValue(HasKeyboardOffsetProperty, value);
     }
 
     public static readonly BindableProperty KeyboardOffsetProperty = BindableProperty.Create(nameof(KeyboardOffset), typeof(double), typeof(PopupPage), 0d, BindingMode.OneWayToSource);
 
     public double KeyboardOffset
     {
-        get { return (double)GetValue(KeyboardOffsetProperty); }
-        private set { SetValue(KeyboardOffsetProperty, value); }
+        get => (double)GetValue(KeyboardOffsetProperty);
+        private set => SetValue(KeyboardOffsetProperty, value);
     }
 
     public static readonly BindableProperty BackgroundClickedCommandProperty = BindableProperty.Create(nameof(BackgroundClickedCommand), typeof(ICommand), typeof(PopupPage));
@@ -118,7 +115,6 @@ public partial class PopupPage : ContentPage
 
     public PopupPage()
     {
-        
         BackgroundColor = Colors.Transparent;//Color.FromArgb("#80000000");
     }
 
@@ -180,6 +176,7 @@ public partial class PopupPage : ContentPage
         {
             height -= KeyboardOffset;
         }
+
         base.LayoutChildren(x, y, width, height);
     }
 
@@ -223,7 +220,6 @@ public partial class PopupPage : ContentPage
     }
 
     #endregion
-
 
     #region Override Animation Methods
 
@@ -273,6 +269,7 @@ public partial class PopupPage : ContentPage
     internal void SendBackgroundClick()
     {
         BackgroundClicked?.Invoke(this, EventArgs.Empty);
+
         if (BackgroundClickedCommand?.CanExecute(BackgroundClickedCommandParameter) == true)
         {
             BackgroundClickedCommand.Execute(BackgroundClickedCommandParameter);

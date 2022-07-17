@@ -14,12 +14,12 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace SampleMaui.CSharpMarkup;
+
 public class TestPage : ContentPage
 {
     public double AnimationLength { get; set; }
     public int AnimationType { get; set; }
     public int AnimationEasing { get; set; }
-
 
     public TestPage()
     {
@@ -30,6 +30,7 @@ public class TestPage : ContentPage
         MopupService.Instance.Popping += (sender, e) => Debug.WriteLine($"[Popup] Popping: {e.GetType().Name}");
         MopupService.Instance.Popped += (sender, e) => Debug.WriteLine($"[Popup] Popped: {e.GetType().Name}");
     }
+
     protected void BuildContent()
     {
         BackgroundColor = Color.FromRgb(255, 255, 255);
@@ -65,7 +66,9 @@ public class TestPage : ContentPage
                 await Navigation.PushAsync(new TestPage());
             })
         };
+
         mainStackLayout.Add(newButton);
+
         return mainStackLayout;
 
         Picker PopupAnimationPicker()
@@ -74,9 +77,10 @@ public class TestPage : ContentPage
             {
                 Items = { "FadeAnimation", "MoveAnimation", "ScaleAnimation" }
             };
-            animationPicker.SelectedIndexChanged += OnAnimationPickerSelectedIndexChanged;
-            return animationPicker;
 
+            animationPicker.SelectedIndexChanged += OnAnimationPickerSelectedIndexChanged;
+
+            return animationPicker;
         }
 
         Picker EasingAnimationPicker()
@@ -85,9 +89,10 @@ public class TestPage : ContentPage
             {
                 Items = { "Linear", "BounceIn", "BounceOut", "CubicIn", "CubicOut", "SinIn", "SinInOut", "SinOut", "SpringIn", "SpringOut" }
             };
-            animationPicker.SelectedIndexChanged += OnEasingPickerSelectedIndexChanged;
-            return animationPicker;
 
+            animationPicker.SelectedIndexChanged += OnEasingPickerSelectedIndexChanged;
+
+            return animationPicker;
         }
         Slider PopupAnimationLengthSlider()
         {
@@ -102,7 +107,6 @@ public class TestPage : ContentPage
 
             return animationSlider;
         }
-
     }
 
     void OnEasingPickerSelectedIndexChanged(object sender, EventArgs e)
@@ -111,6 +115,7 @@ public class TestPage : ContentPage
         int selectedIndex = picker.SelectedIndex;
         AnimationType = selectedIndex;
     }
+
     void OnAnimationPickerSelectedIndexChanged(object sender, EventArgs e)
     {
         var picker = (Picker)sender;
@@ -122,8 +127,6 @@ public class TestPage : ContentPage
     {
         AnimationLength = args.NewValue;
     }
-
-
 
     private static Button GeneratePopupButton(string buttonText, AsyncCommand buttonCommand)
     {

@@ -30,7 +30,9 @@ public class AndroidMopups : IPopupPlatform
 
             return true;
         }
+
         backPressedHandler?.Invoke();
+
         return false;
     }
 
@@ -43,6 +45,7 @@ public class AndroidMopups : IPopupPlatform
             page.Parent = MauiApplication.Current.Application.Windows[0].Content as Element;
             var AndroidNativeView = IPopupPlatform.GetOrCreateHandler<PopupPageHandler>(page).PlatformView as Android.Views.View;
             decoreView?.AddView(AndroidNativeView);
+
             return PostAsync(AndroidNativeView);
         }
         catch (Exception)
@@ -54,6 +57,7 @@ public class AndroidMopups : IPopupPlatform
     public Task RemoveAsync(PopupPage page)
     {
         var renderer = IPopupPlatform.GetOrCreateHandler<PopupPageHandler>(page);
+
         if (renderer != null)
         {
             DecoreView?.RemoveView(renderer.PlatformView as Android.Views.View);
@@ -72,6 +76,7 @@ public class AndroidMopups : IPopupPlatform
         {
             return Task.FromResult(true);
         }
+
         var tcs = new TaskCompletionSource<bool>();
 
         nativeView.Post(() => tcs.SetResult(true));

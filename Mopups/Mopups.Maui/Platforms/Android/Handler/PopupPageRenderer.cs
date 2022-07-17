@@ -8,7 +8,6 @@ using Android.Content;
 using Android.Graphics;
 using Android.Views;
 
-
 using Microsoft.Maui.Platform;
 
 using AndroidGraphics = Android.Graphics; //Weird conflict with Microsoft namespace?
@@ -20,6 +19,7 @@ using Android.OS;
 using Rect = Microsoft.Maui.Graphics.Rect;
 
 namespace Mopups.Platforms.Android.Renderers;
+
 public class PopupPageRenderer : ContentViewGroup
 {
     public PopupPageHandler PopupHandler;
@@ -29,6 +29,7 @@ public class PopupPageRenderer : ContentViewGroup
     private DateTime _downTime;
     private Microsoft.Maui.Graphics.Point _downPosition;
     private bool _disposed;
+
     public PopupPageRenderer(Context context) : base(context)
     {
         _gestureDetectorListener = new MopupGestureDetectorListener();
@@ -60,7 +61,6 @@ public class PopupPageRenderer : ContentViewGroup
 
             Thickness systemPadding;
             var keyboardOffset = 0d;
-
 
             var visibleRect = new AndroidGraphics.Rect();
 
@@ -130,9 +130,7 @@ public class PopupPageRenderer : ContentViewGroup
         {
             throw;
         }
-
     }
-
 
     protected override void OnAttachedToWindow()
     {
@@ -152,6 +150,7 @@ public class PopupPageRenderer : ContentViewGroup
             Context.HideKeyboard(decoreView);
             return false;
         });
+
         base.OnDetachedFromWindow();
     }
 
@@ -175,7 +174,9 @@ public class PopupPageRenderer : ContentViewGroup
         {
             return base.DispatchTouchEvent(e);
         }
+
         base.DispatchTouchEvent(e);
+
         return true;
     }
 
@@ -196,15 +197,17 @@ public class PopupPageRenderer : ContentViewGroup
                 if ((ChildCount > 0 && !IsInRegion(e.RawX, e.RawY, PopupHandler?.PlatformView.GetChildAt(0)!)) || ChildCount == 0)
                 {
                     (PopupHandler?.VirtualView as PopupPage).SendBackgroundClick();
+
                     return false;
                 }
             }
+
             return baseValue;
         }
         catch (Exception f)
         {
-
         }
+
         return base.OnTouchEvent(e);
     }
 
@@ -231,5 +234,4 @@ public class PopupPageRenderer : ContentViewGroup
             (PopupHandler.VirtualView as PopupPage).SendBackgroundClick();
         }
     }
-
 }

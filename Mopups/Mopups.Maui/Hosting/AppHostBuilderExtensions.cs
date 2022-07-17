@@ -8,7 +8,6 @@ namespace Mopups.Hosting;
 /// </summary>
 public static class AppHostBuilderExtensions
 {
-
     /// <summary>
     /// Automatically sets up lifecycle events and Maui Handlers
     /// </summary>
@@ -22,7 +21,6 @@ public static class AppHostBuilderExtensions
 #if ANDROID
                 lifecycle.AddAndroid(d =>
                 {
-
                     d.OnBackPressed(activity => Droid.Implementation.AndroidMopups.SendBackPressed());
                 });
 #endif

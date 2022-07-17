@@ -46,6 +46,7 @@ namespace Mopups.Platforms.iOS
                 _handler = null; 
                 View?.RemoveGestureRecognizer(_tapGestureRecognizer);
             }
+
             base.Dispose(disposing);
             _isDisposed = true;
         }
@@ -56,6 +57,7 @@ namespace Mopups.Platforms.iOS
             var view = e.View;
             var location = e.LocationInView(view);
             var subview = view.HitTest(location, null);
+
             if (Equals(subview, view))
             {
                 ((PopupPage)Handler.VirtualView).SendBackgroundClick();
@@ -155,7 +157,6 @@ namespace Mopups.Platforms.iOS
             }
         }
 
-
         public override void ViewDidLoad()
         {
             base.ViewDidLoad();
@@ -187,7 +188,6 @@ namespace Mopups.Platforms.iOS
 
             _willHideNotificationObserver = UIKeyboard.Notifications.ObserveWillHide(async (sender, args) =>
             {
-
                 KeyboardBounds = CGRect.Empty;
 
                 if (args.AnimationDuration > 0.01)
@@ -217,7 +217,6 @@ namespace Mopups.Platforms.iOS
             UnregisterAllObservers();
         }
 
-
         private void UnregisterAllObservers()
         {
             
@@ -228,5 +227,4 @@ namespace Mopups.Platforms.iOS
             _willHideNotificationObserver = null;
         }
     }
-
 }
