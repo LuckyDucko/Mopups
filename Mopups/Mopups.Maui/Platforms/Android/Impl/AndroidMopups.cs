@@ -28,7 +28,9 @@ public class AndroidMopups : IPopupPlatform
 
             return true;
         }
+
         backPressedHandler?.Invoke();
+
         return false;
     }
 
@@ -72,6 +74,7 @@ public class AndroidMopups : IPopupPlatform
     public Task RemoveAsync(PopupPage page)
     {
         var renderer = IPopupPlatform.GetOrCreateHandler<PopupPageHandler>(page);
+
         if (renderer != null)
         {
             HandleAccessibility(ImportantForAccessibility.Auto);
@@ -129,6 +132,7 @@ public class AndroidMopups : IPopupPlatform
         {
             return Task.FromResult(true);
         }
+
         var tcs = new TaskCompletionSource<bool>();
 
         nativeView.Post(() => tcs.SetResult(true));
