@@ -82,9 +82,7 @@ public class AndroidMopups : IPopupPlatform
         int navCount = mainPage.Navigation.NavigationStack.Count;
         int modalCount = mainPage.Navigation.ModalStack.Count;
 
-        Android.Views.View? platformMainPage = mainPage.Handler?.PlatformView as Android.Views.View;
-
-        ProcessView(showPopup, platformMainPage);
+        ProcessView(showPopup, mainPage.Handler?.PlatformView as Android.Views.View);
 
         if (navCount > 0)
         {
