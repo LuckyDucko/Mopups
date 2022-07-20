@@ -109,26 +109,17 @@ internal class iOSMopups : IPopupPlatform
 
     private static void DisposeModelAndChildrenHandlers(VisualElement view)
     {
-        //    IVisualElementHandler handler;
-        //    foreach (VisualElement child in view.Descendants())
-        //    {
-        //        handler = XFPlatform.GetHandler(child);
-        //        XFPlatform.SetHandler(child, null);
+        foreach (VisualElement child in view.GetVisualTreeDescendants())
+        {
+            IViewHandler handler = child.Handler;
+            child?.Handler?.DisconnectHandler();
+            (handler?.PlatformView as UIView)?.RemoveFromSuperview();
+            (handler?.PlatformView as UIView)?.Dispose();
+        }
 
-        //        if (handler != null)
-        //        {
-        //            handler.NativeView.RemoveFromSuperview();
-        //            handler.Dispose();
-        //        }
-        //    }
-
-        //    handler = XFPlatform.GetHandler(view);
-        //    if (handler != null)
-        //    {
-        //        handler.NativeView.RemoveFromSuperview();
-        //        handler.Dispose();
-        //    }
-        //    XFPlatform.SetHandler(view, null);
+        view?.Handler?.DisconnectHandler();
+        (view?.Handler?.PlatformView as UIView)?.RemoveFromSuperview();
+        (view?.Handler?.PlatformView as UIView)?.Dispose();
     }
 
     private void HandleChildRemoved(object sender, ElementEventArgs e)

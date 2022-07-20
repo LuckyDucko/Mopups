@@ -10,7 +10,6 @@ namespace Mopups.Platforms.iOS
     {
         public PopupWindow(IntPtr handle) : base(handle)
         {
-            // Fix #307
         }
 
         public PopupWindow()

@@ -36,7 +36,6 @@ namespace Mopups.Platforms.iOS
 
         public PopupPageRenderer(IntPtr handle) : base(handle)
         {
-            // Fix #307
         }
 
         protected override void Dispose(bool disposing)
@@ -64,61 +63,6 @@ namespace Mopups.Platforms.iOS
             }
         }
 
-        //public override UIInterfaceOrientationMask GetSupportedInterfaceOrientations()
-        //{
-        //    if ((ChildViewControllers != null) && (ChildViewControllers.Length > 0))
-        //    {
-        //        return ChildViewControllers[0].GetSupportedInterfaceOrientations();
-        //    }
-        //    return base.GetSupportedInterfaceOrientations();
-        //}
-
-        //public override UIInterfaceOrientation PreferredInterfaceOrientationForPresentation()
-        //{
-        //    if ((ChildViewControllers != null) && (ChildViewControllers.Length > 0))
-        //    {
-        //        return ChildViewControllers[0].PreferredInterfaceOrientationForPresentation();
-        //    }
-        //    return base.PreferredInterfaceOrientationForPresentation();
-        //}
-
-        //public override UIViewController ChildViewControllerForStatusBarHidden()
-        //{
-        //    return _handler?.ViewController!;
-        //}
-
-        //public override bool PrefersStatusBarHidden()
-        //{
-        //    return _handler?.ViewController.PrefersStatusBarHidden() ?? false;
-        //}
-
-        //public override UIViewController ChildViewControllerForStatusBarStyle()
-        //{
-        //    return _handler?.ViewController!;
-        //}
-
-        //public override UIStatusBarStyle PreferredStatusBarStyle()
-        //{
-        //    return (UIStatusBarStyle)(_handler?.ViewController.PreferredStatusBarStyle())!;
-        //}
-
-        //public override bool ShouldAutorotate()
-        //{
-        //    if ((ChildViewControllers != null) && (ChildViewControllers.Length > 0))
-        //    {
-        //        return ChildViewControllers[0].ShouldAutorotate();
-        //    }
-        //    return base.ShouldAutorotate();
-        //}
-
-        //public override bool ShouldAutorotateToInterfaceOrientation(UIInterfaceOrientation toInterfaceOrientation)
-        //{
-        //    if ((ChildViewControllers != null) && (ChildViewControllers.Length > 0))
-        //    {
-        //        return ChildViewControllers[0].ShouldAutorotateToInterfaceOrientation(toInterfaceOrientation);
-        //    }
-        //    return base.ShouldAutorotateToInterfaceOrientation(toInterfaceOrientation);
-        //}
 
         public override bool ShouldAutomaticallyForwardRotationMethods => true;
 
