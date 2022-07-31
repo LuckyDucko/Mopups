@@ -61,6 +61,8 @@ public partial class LoginPage : PopupPage
         {
             Margin = new Thickness(1),
             Padding = new Thickness(1, 1),
+            HorizontalOptions = LayoutOptions.Center,
+            VerticalOptions = LayoutOptions.Center
         };
 
         UsernameEntry = new Entry

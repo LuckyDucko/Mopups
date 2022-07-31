@@ -132,7 +132,7 @@ public partial class MainPage : ContentPage
         {
             try
             {
-                var page = new TPopupPage();
+                var page = new TPopupPage() { };
                 var easing = Easing.Linear;
 
                 switch (AnimationEasing)

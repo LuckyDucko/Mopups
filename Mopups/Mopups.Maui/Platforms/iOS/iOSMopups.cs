@@ -12,7 +12,7 @@ namespace Mopups.iOS.Implementation;
 
 internal class iOSMopups : IPopupPlatform
 {
-    // It's necessary because GC in Xamarin.iOS 13 removes all UIWindow if there are not any references to them. See #459
+    // to avoid GC UIWindow requires references
     private readonly List<UIWindow> _windows = new List<UIWindow>();
 
     private static bool IsiOS9OrNewer => UIDevice.CurrentDevice.CheckSystemVersion(9, 0);
@@ -55,10 +55,7 @@ internal class iOSMopups : IPopupPlatform
 
         window.WindowLevel = UIWindowLevel.Normal;
         window.MakeKeyAndVisible();
-
-        if (!IsiOS9OrNewer)
-            window.Frame = new CGRect(new System.Runtime.InteropServices.NFloat(0), new System.Runtime.InteropServices.NFloat(0), UIScreen.MainScreen.Bounds.Width, UIScreen.MainScreen.Bounds.Height);
-
+        window.Frame = new CGRect(new System.Runtime.InteropServices.NFloat(0), new System.Runtime.InteropServices.NFloat(0), UIScreen.MainScreen.Bounds.Width, UIScreen.MainScreen.Bounds.Height);
         return window.RootViewController.PresentViewControllerAsync(handler.ViewController, false);
     }
 
