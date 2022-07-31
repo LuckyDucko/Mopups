@@ -38,32 +38,13 @@ public class AndroidMopups : IPopupPlatform
     {
         try
         {
-            HandleAccessibility(ImportantForAccessibility.NoHideDescendants);
-            DisableFocusableInTouchMode((Application.Current?.MainPage?.Handler?.PlatformView as Android.Views.View)?.Parent);
+            HandleAccessibility(true);
 
             page.Parent = MauiApplication.Current.Application.Windows[0].Content as Element;
             var AndroidNativeView = IPopupPlatform.GetOrCreateHandler<PopupPageHandler>(page).PlatformView as Android.Views.View;
             DecoreView?.AddView(AndroidNativeView);
 
             return PostAsync(AndroidNativeView);
-
-            static void DisableFocusableInTouchMode(IViewParent? parent)
-            {
-                var view = parent;
-                string className = $"{view?.GetType().Name}";
-
-                while (!className.Contains("PlatformRenderer") && view != null)
-                {
-                    view = view.Parent;
-                    className = $"{view?.GetType().Name}";
-                }
-
-                if (view is Android.Views.View androidView)
-                {
-                    androidView.Focusable = false;
-                    androidView.FocusableInTouchMode = false;
-                }
-            }
         }
         catch (Exception)
         {
@@ -77,7 +58,7 @@ public class AndroidMopups : IPopupPlatform
 
         if (renderer != null)
         {
-            HandleAccessibility(ImportantForAccessibility.Auto);
+            HandleAccessibility(false);
 
             DecoreView?.RemoveView(renderer.PlatformView as Android.Views.View);
             renderer.DisconnectHandler(); //?? no clue if works
@@ -89,7 +70,7 @@ public class AndroidMopups : IPopupPlatform
         return Task.CompletedTask;
     }
 
-    static void HandleAccessibility(ImportantForAccessibility importantForAccessibility)
+    static void HandleAccessibility(bool showPopup)
     {
         Page? mainPage = Application.Current?.MainPage;
 
@@ -101,28 +82,31 @@ public class AndroidMopups : IPopupPlatform
         int navCount = mainPage.Navigation.NavigationStack.Count;
         int modalCount = mainPage.Navigation.ModalStack.Count;
 
-        Android.Views.View? platformMainPage = mainPage.Handler?.PlatformView as Android.Views.View;
-        if (platformMainPage is not null)
-        {
-            platformMainPage.ImportantForAccessibility = importantForAccessibility;
-        }
+        ProcessView(showPopup, mainPage.Handler?.PlatformView as Android.Views.View);
 
         if (navCount > 0)
         {
-            Android.Views.View? currentPage = mainPage.Navigation?.NavigationStack[navCount - 1]?.Handler?.PlatformView as Android.Views.View;
-            if (currentPage is not null)
-            {
-                currentPage.ImportantForAccessibility = importantForAccessibility;
-            }
+            ProcessView(showPopup, mainPage.Navigation?.NavigationStack[navCount - 1]?.Handler?.PlatformView as Android.Views.View);
         }
 
         if (modalCount > 0)
         {
-            Android.Views.View? backgroundModelPage = mainPage.Navigation?.ModalStack[modalCount - 1]?.Handler?.PlatformView as Android.Views.View;
-            if (backgroundModelPage is not null)
+            ProcessView(showPopup, mainPage.Navigation?.ModalStack[modalCount - 1]?.Handler?.PlatformView as Android.Views.View);
+        }
+
+        static void ProcessView(bool showPopup, Android.Views.View? view)
+        {
+            if (view is null)
             {
-                backgroundModelPage.ImportantForAccessibility = importantForAccessibility;
+                return;   
             }
+
+            // Screen reader
+            view.ImportantForAccessibility = showPopup ? ImportantForAccessibility.NoHideDescendants : ImportantForAccessibility.Auto;
+
+            // Keyboard navigation
+            ((ViewGroup)view).DescendantFocusability = showPopup ? DescendantFocusability.BlockDescendants : DescendantFocusability.AfterDescendants;
+            view.ClearFocus();
         }
     }
 
