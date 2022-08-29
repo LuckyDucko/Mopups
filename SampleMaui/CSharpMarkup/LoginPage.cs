@@ -24,7 +24,10 @@ public partial class LoginPage : PopupPage
         try
         {
             this.Content = GenerateLoginView();
-            this.Background = Colors.AliceBlue;
+            this.Background = Colors.WhiteSmoke;
+            this.HasSystemPadding = false;
+            this.BackgroundInputTransparent = true;
+            this.CloseWhenBackgroundIsClicked = true;
             this.IsAnimationEnabled = true;
         }
         catch (Exception)

@@ -6,8 +6,7 @@ using Mopups.Interfaces;
 using Mopups.Pages;
 using Mopups.Platforms.iOS;
 
-using UIKit;
-
+using UIKit; 
 namespace Mopups.iOS.Implementation;
 
 internal class iOSMopups : IPopupPlatform
@@ -27,8 +26,9 @@ internal class iOSMopups : IPopupPlatform
 
         page.DescendantRemoved += HandleChildRemoved;
 
-        if (UIApplication.SharedApplication.KeyWindow.WindowLevel.Equals(UIWindowLevel.Normal))
-            UIApplication.SharedApplication.KeyWindow.WindowLevel = new System.Runtime.InteropServices.NFloat(-1);
+        var keyWindow = GetKeyWindow(UIApplication.SharedApplication);
+        if (keyWindow?.WindowLevel == UIWindowLevel.Normal)
+            keyWindow.WindowLevel = -1;
 
         var handler = (PopupPageHandler)IPopupPlatform.GetOrCreateHandler<PopupPageHandler>(page);
 
@@ -47,19 +47,35 @@ internal class iOSMopups : IPopupPlatform
         else
             window = new PopupWindow();
 
-        window.BackgroundColor = Colors.Transparent.ToUIColor();
+        window.BackgroundColor = UIColor.Clear;
         window.RootViewController = new PopupPageRenderer(handler);
 
         if (window.RootViewController.View != null)
-            window.RootViewController.View.BackgroundColor = Colors.Transparent.ToUIColor();
+            window.RootViewController.View.BackgroundColor = UIColor.Clear;
 
         window.WindowLevel = UIWindowLevel.Normal;
         window.MakeKeyAndVisible();
 
-        if (!IsiOS9OrNewer)
-            window.Frame = new CGRect(new System.Runtime.InteropServices.NFloat(0), new System.Runtime.InteropServices.NFloat(0), UIScreen.MainScreen.Bounds.Width, UIScreen.MainScreen.Bounds.Height);
+        handler.ViewController.ModalPresentationStyle = UIModalPresentationStyle.OverCurrentContext;
+        handler.ViewController.ModalTransitionStyle = UIModalTransitionStyle.CoverVertical;
+        
 
         return window.RootViewController.PresentViewControllerAsync(handler.ViewController, false);
+
+        UIWindow GetKeyWindow(UIApplication application)
+        {
+            if (!IsiOS13OrNewer)
+                return UIApplication.SharedApplication.KeyWindow;
+
+            var window = application
+                .ConnectedScenes
+                .ToArray()
+                .OfType<UIWindowScene>()
+                .SelectMany(scene => scene.Windows)
+                .FirstOrDefault(window => window.IsKeyWindow);
+
+            return window;
+        }
     }
 
     public async Task RemoveAsync(PopupPage page)
@@ -127,4 +143,5 @@ internal class iOSMopups : IPopupPlatform
         var view = e.Element;
         DisposeModelAndChildrenHandlers((VisualElement)view);
     }
+
 }

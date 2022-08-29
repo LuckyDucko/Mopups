@@ -14,7 +14,7 @@ namespace Mopups.Platforms.iOS
 {
     internal class PopupPageRenderer : UIViewController
     {
-        private PopupPageHandler? _handler;
+        private PopupPageHandler? _renderer;
         private readonly UIGestureRecognizer _tapGestureRecognizer;
         private NSObject? _willChangeFrameNotificationObserver;
         private NSObject? _willHideNotificationObserver;
@@ -22,11 +22,11 @@ namespace Mopups.Platforms.iOS
 
         internal CGRect KeyboardBounds { get; private set; } = CGRect.Empty;
 
-        public PopupPageHandler? Handler => _handler;
+        public PopupPageHandler? Handler => _renderer;
 
         public PopupPageRenderer(PopupPageHandler handler)
         {
-            _handler = handler;
+            _renderer = handler;
 
             _tapGestureRecognizer = new UITapGestureRecognizer(OnTap)
             {
@@ -42,7 +42,7 @@ namespace Mopups.Platforms.iOS
         {
             if (disposing)
             {
-                _handler = null; 
+                _renderer = null; 
                 View?.RemoveGestureRecognizer(_tapGestureRecognizer);
             }
 
@@ -169,6 +169,62 @@ namespace Mopups.Platforms.iOS
 
             _willChangeFrameNotificationObserver = null;
             _willHideNotificationObserver = null;
+        }
+
+        public override UIInterfaceOrientationMask GetSupportedInterfaceOrientations()
+        {
+            if ((ChildViewControllers != null) && (ChildViewControllers.Length > 0))
+            {
+                return ChildViewControllers[0].GetSupportedInterfaceOrientations();
+            }
+            return base.GetSupportedInterfaceOrientations();
+        }
+
+        public override UIInterfaceOrientation PreferredInterfaceOrientationForPresentation()
+        {
+            if ((ChildViewControllers != null) && (ChildViewControllers.Length > 0))
+            {
+                return ChildViewControllers[0].PreferredInterfaceOrientationForPresentation();
+            }
+            return base.PreferredInterfaceOrientationForPresentation();
+        }
+
+        public override UIViewController ChildViewControllerForStatusBarHidden()
+        {
+            return _renderer?.ViewController!;
+        }
+
+        public override bool PrefersStatusBarHidden()
+        {
+            return _renderer?.ViewController.PrefersStatusBarHidden() ?? false;
+        }
+
+        public override UIViewController ChildViewControllerForStatusBarStyle()
+        {
+            return _renderer?.ViewController!;
+        }
+
+        public override UIStatusBarStyle PreferredStatusBarStyle()
+        {
+            return (UIStatusBarStyle)(_renderer?.ViewController.PreferredStatusBarStyle())!;
+        }
+
+        public override bool ShouldAutorotate()
+        {
+            if ((ChildViewControllers != null) && (ChildViewControllers.Length > 0))
+            {
+                return ChildViewControllers[0].ShouldAutorotate();
+            }
+            return base.ShouldAutorotate();
+        }
+
+        public override bool ShouldAutorotateToInterfaceOrientation(UIInterfaceOrientation toInterfaceOrientation)
+        {
+            if ((ChildViewControllers != null) && (ChildViewControllers.Length > 0))
+            {
+                return ChildViewControllers[0].ShouldAutorotateToInterfaceOrientation(toInterfaceOrientation);
+            }
+            return base.ShouldAutorotateToInterfaceOrientation(toInterfaceOrientation);
         }
     }
 }

@@ -11,6 +11,7 @@ public partial class AswinPage : PopupPage
 
     private void PopupPage_BackgroundClicked(object sender, EventArgs e)
     {
+        Console.WriteLine(1);
     }
 
     private async void blahButton_Clicked(object sender, EventArgs e)
