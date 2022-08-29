@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
-		<TargetFrameworks><!--net6.0;net6.0-android;-->net6.0-ios;<!--net6.0-maccatalyst;--></TargetFrameworks>
+		<TargetFrameworks>net6.0;net6.0-android;net6.0-ios;<!--net6.0-maccatalyst;--></TargetFrameworks>
 		<!-- iOS, Android, MacCatalyst -->
 		<UseMaui>true</UseMaui>
 		<UseMauiEssentials>true</UseMauiEssentials>
@@ -29,9 +29,9 @@
 		<Authors>Tyson Hooker,Maksym Koshovyi,Aswin P G, Kirill Lyubimov, Martijn Van Dijk</Authors>
 		<Company>$(CompanyName)</Company>
 		<PackageTags>Popups;Maui;rg;Xamarin;ios;android;</PackageTags>
-		<Version>1.0.1</Version>
+		<Version>1.0.2</Version>
 		<Title>Mopups (Maui Popups)</Title>
-		<PackageReleaseNotes>Fixed bug surrounding the use of the back button, now provide an overload for configureMopups</PackageReleaseNotes>
+		<PackageReleaseNotes>Applied a patch for iOS renderering bug</PackageReleaseNotes>
 	</PropertyGroup>
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net6.0-android|AnyCPU'">
 		<PlatformTarget>AnyCPU</PlatformTarget>
