@@ -35,10 +35,10 @@ public class PopupNavigation : IPopupNavigation
         {
 #if ANDROID
             return new Mopups.Droid.Implementation.AndroidMopups();
-#endif
-
-#if IOS
+#elif IOS
             return new Mopups.iOS.Implementation.iOSMopups();
+#elif MACCATALYST
+            return new Mopups.MacCatalyst.Implementation.MacOSMopups();
 #endif
 
             throw new PlatformNotSupportedException();
