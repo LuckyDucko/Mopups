@@ -29,9 +29,9 @@
 		<Authors>Tyson Hooker,Maksym Koshovyi,Aswin P G, Kirill Lyubimov, Martijn Van Dijk</Authors>
 		<Company>$(CompanyName)</Company>
 		<PackageTags>Popups;Maui;rg;Xamarin;ios;android;</PackageTags>
-		<Version>1.0.2</Version>
+		<Version>1.0.3</Version>
 		<Title>Mopups (Maui Popups)</Title>
-		<PackageReleaseNotes>Applied a patch for iOS renderering bug</PackageReleaseNotes>
+		<PackageReleaseNotes>Applied a Patch concerning closing a popup on iOS</PackageReleaseNotes>
 	</PropertyGroup>
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net6.0-android|AnyCPU'">
 		<PlatformTarget>AnyCPU</PlatformTarget>

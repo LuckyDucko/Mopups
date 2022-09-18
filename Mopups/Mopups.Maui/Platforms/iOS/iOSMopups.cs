@@ -125,9 +125,9 @@ internal class iOSMopups : IPopupPlatform
 
     private static void DisposeModelAndChildrenHandlers(VisualElement view)
     {
-        foreach (VisualElement child in view.GetVisualTreeDescendants())
+        foreach (Element child in view.GetVisualTreeDescendants())
         {
-            IViewHandler handler = child.Handler;
+            IElementHandler handler = child.Handler;
             child?.Handler?.DisconnectHandler();
             (handler?.PlatformView as UIView)?.RemoveFromSuperview();
             (handler?.PlatformView as UIView)?.Dispose();
