@@ -68,6 +68,7 @@ public class PopupNavigation : IPopupNavigation
         {
             page.PreparingAnimation();
             await PopupPlatform.AddAsync(page);
+            page.SendAppearing();
             await page.AppearingAnimation();
             Pushed?.Invoke(this, new PopupNavigationEventArgs(page, animate));
         };
@@ -113,6 +114,7 @@ public class PopupNavigation : IPopupNavigation
 
             Popping?.Invoke(this, new PopupNavigationEventArgs(page, animate));
             await page.DisappearingAnimation();
+            page.SendDisappearing();
             await PopupPlatform.RemoveAsync(page);
             page.DisposingAnimation();
 
