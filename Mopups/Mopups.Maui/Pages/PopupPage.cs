@@ -143,42 +143,49 @@ public partial class PopupPage : ContentPage
         }
     }
 
-    protected override void LayoutChildren(double x, double y, double width, double height)
-    {
-        if (HasSystemPadding)
-        {
-            var systemPadding = SystemPadding;
-            var systemPaddingSide = SystemPaddingSides;
-            var left = 0d;
-            var top = 0d;
-            var right = 0d;
-            var bottom = 0d;
 
-            if (systemPaddingSide.HasFlag(PaddingSide.Left))
-                left = systemPadding.Left;
-            if (systemPaddingSide.HasFlag(PaddingSide.Top))
-                top = systemPadding.Top;
-            if (systemPaddingSide.HasFlag(PaddingSide.Right))
-                right = systemPadding.Right;
-            if (systemPaddingSide.HasFlag(PaddingSide.Bottom))
-                bottom = systemPadding.Bottom;
 
-            x += left;
-            y += top;
-            width -= left + right;
+    /// <summary>
+    /// LayoutChildren is not working.. Maui Bug???
+    /// </summary>
 
-            if (HasKeyboardOffset)
-                height -= top + Math.Max(bottom, KeyboardOffset);
-            else
-                height -= top + bottom;
-        }
-        else if (HasKeyboardOffset)
-        {
-            height -= KeyboardOffset;
-        }
 
-        base.LayoutChildren(x, y, width, height);
-    }
+    //protected override void LayoutChildren(double x, double y, double width, double height)
+    //{
+    //    if (HasSystemPadding)
+    //    {
+    //        var systemPadding = SystemPadding;
+    //        var systemPaddingSide = SystemPaddingSides;
+    //        var left = 0d;
+    //        var top = 0d;
+    //        var right = 0d;
+    //        var bottom = 0d;
+
+    //        if (systemPaddingSide.HasFlag(PaddingSide.Left))
+    //            left = systemPadding.Left;
+    //        if (systemPaddingSide.HasFlag(PaddingSide.Top))
+    //            top = systemPadding.Top;
+    //        if (systemPaddingSide.HasFlag(PaddingSide.Right))
+    //            right = systemPadding.Right;
+    //        if (systemPaddingSide.HasFlag(PaddingSide.Bottom))
+    //            bottom = systemPadding.Bottom;
+
+    //        x += left;
+    //        y += top;
+    //        width -= left + right;
+
+    //        if (HasKeyboardOffset)
+    //            height -= top + Math.Max(bottom, KeyboardOffset);
+    //        else
+    //            height -= top + bottom;
+    //    }
+    //    else if (HasKeyboardOffset)
+    //    {
+    //        height -= KeyboardOffset;
+    //    }
+
+    //    base.LayoutChildren(x, y, width, height);
+    //}
 
 
     #region Animation Methods

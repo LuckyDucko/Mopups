@@ -68,6 +68,11 @@ public class PopupNavigation : IPopupNavigation
         {
             page.PreparingAnimation();
             await PopupPlatform.AddAsync(page);
+
+            //Hack to make the popup to render within safe area
+            page.Padding = new Thickness(page.SystemPadding.Left, page.SystemPadding.Top, page.SystemPadding.Right, page.SystemPadding.Bottom);
+
+            page.SendAppearing();
             await page.AppearingAnimation();
             Pushed?.Invoke(this, new PopupNavigationEventArgs(page, animate));
         };
@@ -113,6 +118,7 @@ public class PopupNavigation : IPopupNavigation
 
             Popping?.Invoke(this, new PopupNavigationEventArgs(page, animate));
             await page.DisappearingAnimation();
+            page.SendDisappearing();
             await PopupPlatform.RemoveAsync(page);
             page.DisposingAnimation();
 

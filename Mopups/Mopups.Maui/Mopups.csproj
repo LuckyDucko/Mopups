@@ -21,7 +21,6 @@
 	</PropertyGroup>
 	<PropertyGroup>
 		<InvariantGlobalization Condition="$(TargetFramework.Contains('-maccatalyst'))">true</InvariantGlobalization>
-		<RuntimeIdentifier Condition="$(TargetFramework.Contains('-ios'))">iossimulator-x64</RuntimeIdentifier>
 		<RuntimeIdentifier Condition="$(TargetFramework.Contains('-maccatalyst'))">maccatalyst-x64</RuntimeIdentifier>
 		<UseInterpreter Condition="$(TargetFramework.Contains('-android'))">False</UseInterpreter>
 		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
@@ -29,9 +28,9 @@
 		<Authors>Tyson Hooker,Maksym Koshovyi,Aswin P G, Kirill Lyubimov, Martijn Van Dijk</Authors>
 		<Company>$(CompanyName)</Company>
 		<PackageTags>Popups;Maui;rg;Xamarin;ios;android;</PackageTags>
-		<Version>1.0.2</Version>
+		<Version>1.0.4</Version>
 		<Title>Mopups (Maui Popups)</Title>
-		<PackageReleaseNotes>Applied a patch for iOS renderering bug</PackageReleaseNotes>
+		<PackageReleaseNotes>Fixed OnAppearing/OnDisappearing Event not firing</PackageReleaseNotes>
 	</PropertyGroup>
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net6.0-android|AnyCPU'">
 		<PlatformTarget>AnyCPU</PlatformTarget>

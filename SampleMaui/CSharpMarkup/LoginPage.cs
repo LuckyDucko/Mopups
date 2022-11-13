@@ -82,10 +82,10 @@ public partial class LoginPage : PopupPage
             PlaceholderColor = Color.FromArgb("#FF9CDAF1"),
             TextColor = Color.FromArgb("#FF7DBBE6")
         };
-        
+
         LoginButton = new Button
         {
-            Command = new Command(() => MopupService.Instance.PopAllAsync())
+            Command = new Command(() => MopupService.Instance.PopAsync())
         };
         
         frameContainerContent.Add(DotNetBotImage);
