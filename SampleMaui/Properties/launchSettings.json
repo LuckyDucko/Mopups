@@ -3,6 +3,10 @@
     "SampleMopups": {
       "commandName": "Project",
       "hotReloadEnabled": true
+    },
+    "Windows Machine": {
+      "commandName": "MsixPackage",
+      "nativeDebugging": false
     }
   }
 }
