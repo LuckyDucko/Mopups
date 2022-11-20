@@ -1,6 +1,4 @@
 ﻿using Microsoft.Maui.Platform;
-using Windows.Graphics.Display;
-using Windows.UI.Core;
 using Windows.UI.ViewManagement;
 using Rect = Windows.Foundation.Rect;
 using Size = Windows.Foundation.Size;
@@ -48,6 +46,7 @@ namespace Mopups.Platforms.Windows
         internal void Prepare(WinPopup container)
         {
             Container = container;
+            UpdateElementSize();
 
             // Not sure off hand the replacement on these 
             //var inputPane = InputPane.GetForCurrentView();
@@ -71,7 +70,7 @@ namespace Mopups.Platforms.Windows
 
         private void OnDisplayInfoChanged(object? sender, DisplayInfoChangedEventArgs e)
         {
-            //Handled size and orientation changes here
+            UpdateElementSize();
         }
 
         internal void Destroy()
@@ -87,16 +86,6 @@ namespace Mopups.Platforms.Windows
             //inputPane.Hiding -= OnKeyboardHiding;
 
             PointerPressed -= OnBackgroundClick;
-        }
-
-        private void OnOrientationChanged(DisplayInformation sender, object args)
-        {
-            UpdateElementSize();
-        }
-
-        private void OnSizeChanged(object sender, WindowSizeChangedEventArgs e)
-        {
-            UpdateElementSize();
         }
 
         private void OnBackgroundClick(object sender, PointerRoutedEventArgs e)
@@ -133,12 +122,18 @@ namespace Mopups.Platforms.Windows
 
                 capturedElement.SetValue(PopupPage.SystemPaddingProperty, systemPadding);
                 capturedElement.SetValue(PopupPage.KeyboardOffsetProperty, keyboardHeight);
+                capturedElement.HeightRequest = windowBound.Height;
+                capturedElement.WidthRequest = windowBound.Width;
+
+                //(capturedElement as IView).Measure(windowBound.Width, windowBound.Height);
+                //(capturedElement as IView).Arrange(new Microsoft.Maui.Graphics.Rect(windowBound.X, windowBound.Y, windowBound.Width, windowBound.Height));
+
                 //if its not invoked on MainThread when the popup is showed it will be blank until the user manually resizes of owner window
-                this.DispatcherQueue.TryEnqueue(() =>
-                {
-                    capturedElement.Layout(new Microsoft.Maui.Graphics.Rect(windowBound.X, windowBound.Y, windowBound.Width, windowBound.Height));
-                    capturedElement.ForceLayout();
-                });
+                //this.DispatcherQueue.TryEnqueue(() =>
+                //{
+                //    capturedElement.Layout(new Microsoft.Maui.Graphics.Rect(windowBound.X, windowBound.Y, windowBound.Width, windowBound.Height));
+                //    capturedElement.ForceLayout();
+                //});
             }
         }
     }

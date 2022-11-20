@@ -143,6 +143,16 @@ public partial class PopupPage : ContentPage
         }
     }
 
+    protected override Size ArrangeOverride(Rect bounds)
+    {
+        return base.ArrangeOverride(bounds);
+    }
+
+    protected override Size MeasureOverride(double widthConstraint, double heightConstraint)
+    {
+        return base.MeasureOverride(widthConstraint, heightConstraint);
+    }
+
 
 
     /// <summary>
