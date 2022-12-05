@@ -25,12 +25,14 @@
 		<UseInterpreter Condition="$(TargetFramework.Contains('-android'))">False</UseInterpreter>
 		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
 		<GenerateDocumentationFile>True</GenerateDocumentationFile>
-		<Authors>Tyson Hooker,Maksym Koshovyi,Aswin P G, Kirill Lyubimov, Martijn Van Dijk</Authors>
+		<Authors>Tyson Hooker,Maksym Koshovyi,Aswin P G, Kirill Lyubimov, Martijn Van Dijk, Shane Neuville</Authors>
 		<Company>$(CompanyName)</Company>
-		<PackageTags>Popups;Maui;rg;Xamarin;ios;android;</PackageTags>
-		<Version>1.0.4</Version>
+		<PackageTags>Mopups;Popups;Maui;rg;Xamarin;ios;android;Windows;MacOS;Mopups;Dialogs;macos;windows</PackageTags>
+		<Version>1.1.0</Version>
 		<Title>Mopups (Maui Popups)</Title>
-		<PackageReleaseNotes>Fixed OnAppearing/OnDisappearing Event not firing</PackageReleaseNotes>
+		<PackageReleaseNotes>Added support for both Windows and MacOS</PackageReleaseNotes>
+		<IncludeSymbols>True</IncludeSymbols>
+		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
 	</PropertyGroup>
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net6.0-android|AnyCPU'">
 		<PlatformTarget>AnyCPU</PlatformTarget>
