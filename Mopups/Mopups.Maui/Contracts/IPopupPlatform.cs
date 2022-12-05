@@ -10,13 +10,6 @@ public interface IPopupPlatform
 
     public static IViewHandler GetOrCreateHandler<TPopupPageHandler>(VisualElement bindable) where TPopupPageHandler : IViewHandler, new()
     {
-        try
-        {
-            return bindable.Handler ??= new TPopupPageHandler();
-        }
-        catch (Exception ex)
-        {
-            throw ex;
-        }
+        return bindable.Handler ??= new TPopupPageHandler();
     }
 }
