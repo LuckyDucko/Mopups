@@ -21,7 +21,6 @@ public class PopupNavigation : IPopupNavigation
 
     public event EventHandler<PopupNavigationEventArgs>? Popped;
 
-
     private static readonly Lazy<IPopupPlatform> lazyImplementation = new(() => GeneratePopupPlatform(), System.Threading.LazyThreadSafetyMode.PublicationOnly);
 
     private readonly IPopupPlatform PopupPlatform = lazyImplementation.Value;
@@ -39,6 +38,8 @@ public class PopupNavigation : IPopupNavigation
             return new Mopups.iOS.Implementation.iOSMopups();
 #elif MACCATALYST
             return new Mopups.MacCatalyst.Implementation.MacOSMopups();
+#elif WINDOWS
+            return new Mopups.Windows.Implementation.PopupPlatformWindows();
 #endif
 
             throw new PlatformNotSupportedException();

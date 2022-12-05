@@ -1,6 +1,5 @@
 ﻿using CoreGraphics;
 
-using Microsoft.Maui.Controls.Compatibility.Platform.iOS;
 
 using Mopups.Interfaces;
 using Mopups.Pages;
