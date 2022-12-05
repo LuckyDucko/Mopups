@@ -115,7 +115,7 @@ public partial class PopupPage : ContentPage
 
     public PopupPage()
     {
-        BackgroundColor = Color.FromArgb("#80000000");
+        //BackgroundColor = Color.FromArgb("#80000000");
     }
 
     protected override bool OnBackButtonPressed()
