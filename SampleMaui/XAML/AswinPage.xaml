@@ -7,8 +7,11 @@
     xmlns:Mopups="clr-namespace:Mopups.Pages;assembly=Mopups"
     Title="Aswin"
     BackgroundClicked="PopupPage_BackgroundClicked"
-    BackgroundInputTransparent="True"
+    BackgroundInputTransparent="False"
     CloseWhenBackgroundIsClicked="True">
+    <Mopups:PopupPage.Animation>
+        <Animations:MoveAnimation PositionIn="Top" PositionOut="Top" />
+    </Mopups:PopupPage.Animation>
 
     <ScrollView
         Margin="0"

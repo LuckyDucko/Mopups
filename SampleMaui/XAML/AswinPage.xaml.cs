@@ -7,7 +7,8 @@ public partial class AswinPage : PopupPage
 	public AswinPage()
 	{
 		InitializeComponent();
-	}
+        BackgroundColor = Color.FromArgb("#80000000");
+    }
 
     private void PopupPage_BackgroundClicked(object sender, EventArgs e)
     {
