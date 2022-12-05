@@ -71,7 +71,10 @@ public class PopupNavigation : IPopupNavigation
             await PopupPlatform.AddAsync(page);
 
             //Hack to make the popup to render within safe area
-            page.Padding = new Thickness(page.SystemPadding.Left, page.SystemPadding.Top, page.SystemPadding.Right, page.SystemPadding.Bottom);
+            if (page.HasSystemPadding)
+            {
+                page.Padding = new Thickness(page.SystemPadding.Left, page.SystemPadding.Top, page.SystemPadding.Right, page.SystemPadding.Bottom);
+            }
 
             page.SendAppearing();
             await page.AppearingAnimation();
