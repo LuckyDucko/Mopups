@@ -286,7 +286,6 @@ public partial class PopupPage : ContentPage
     internal void SendBackgroundClick()
     {
         BackgroundClicked?.Invoke(this, EventArgs.Empty);
-
         if (BackgroundClickedCommand?.CanExecute(BackgroundClickedCommandParameter) == true)
         {
             BackgroundClickedCommand.Execute(BackgroundClickedCommandParameter);

@@ -34,10 +34,9 @@ namespace Mopups.Platforms.iOS
             if (formsElement.InputTransparent)
                 return null!;
 
-            if (formsElement.BackgroundInputTransparent && renderer?.PlatformView == hitTestResult)
+            if ((formsElement.BackgroundInputTransparent || formsElement.CloseWhenBackgroundIsClicked) && renderer?.PlatformView == hitTestResult)
             {
                 formsElement.SendBackgroundClick();
-
                 return null!;
             }
 
