@@ -36,7 +36,8 @@ namespace Mopups.Platforms.MacCatalyst
 
             if ((formsElement.BackgroundInputTransparent || formsElement.CloseWhenBackgroundIsClicked) && renderer?.PlatformView == hitTestResult)
             {
-                formsElement.SendBackgroundClick();
+                if(uievent?.ButtonMask != 0)
+                    formsElement.SendBackgroundClick();
                 if (formsElement.BackgroundInputTransparent)
                 {
                     return null!; //fires off other handlers? If hit test returns null, it seems that other elements will process the click instead
