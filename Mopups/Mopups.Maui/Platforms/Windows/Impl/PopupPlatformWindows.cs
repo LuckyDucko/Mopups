@@ -1,4 +1,5 @@
 ﻿
+using System;
 using Microsoft.Maui.Platform;
 using Mopups.Interfaces;
 using Mopups.Pages;
@@ -26,22 +27,28 @@ namespace Mopups.Windows.Implementation
             //SystemNavigationManager.GetForCurrentView().BackRequested += OnBackRequested;
         }
 
-        // Probably wire this through the life cycle parats like you have with android
-        //private async void OnBackRequested(object sender, BackRequestedEventArgs e)
-        //{
-        //    var lastPopupPage = PopupNavigationInstance.PopupStack.LastOrDefault();
+        public static bool SendBackPressed(Action? backPressedHandler = null)
+        {
+            var popupNavigationInstance = MopupService.Instance;
 
-        //    if (lastPopupPage != null)
-        //    {
-        //        var isPrevent = lastPopupPage.DisappearingTransactionTask != null || lastPopupPage.SendBackButtonPressed();
+            if (popupNavigationInstance.PopupStack.Count > 0)
+            {
+                var lastPage = popupNavigationInstance.PopupStack[popupNavigationInstance.PopupStack.Count - 1];
 
-        //        if (!isPrevent)
-        //        {
-        //            e.Handled = true;
-        //            await PopupNavigationInstance.PopAsync();
-        //        }
-        //    }
-        //}
+                var isPreventClose = lastPage.SendBackButtonPressed();
+
+                if (!isPreventClose)
+                {
+                    popupNavigationInstance.PopAsync().SafeFireAndForget();
+                }
+
+                return true;
+            }
+
+            backPressedHandler?.Invoke();
+
+            return false;
+        }
 
         public async Task AddAsync(PopupPage page)
         {

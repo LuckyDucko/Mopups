@@ -23,6 +23,7 @@ public static class AppHostBuilderExtensions
                 {
                     d.OnBackPressed(activity => Droid.Implementation.AndroidMopups.SendBackPressed());
                 });
+
 #endif
             })
             .ConfigureMauiHandlers(handlers =>
