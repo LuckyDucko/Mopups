@@ -52,7 +52,4 @@
 	<ItemGroup>
 	  <ProjectReference Include="..\Mopups\Mopups.Maui\Mopups.csproj" />
 	</ItemGroup>
-  <ItemGroup Condition="$(TargetFramework.Contains('-windows'))">
-    <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.2.221116.1" />
-  </ItemGroup>
 </Project>
