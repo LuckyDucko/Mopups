@@ -57,7 +57,7 @@ public partial class MainPage : ContentPage
                             TextColor = Color.FromRgb(255, 255, 255),
                             Command = new AsyncCommand(async () =>
                                                        {
-                                                           await Navigation.PushAsync(new TestPage());
+                                                           await Navigation.PushAsync(new MainPage());
                                                        })
                         };
         mainStackLayout.Add(newButton);
