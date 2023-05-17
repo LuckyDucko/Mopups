@@ -19,6 +19,10 @@ public partial class MainPage : ContentPage
 
     public Picker EasingInPicker { get; set; }
 
+    public Slider AnimationLengthOutSlider { get; set; }
+
+    public Picker EasingOutPicker { get; set; }
+
     protected void BuildContent()
     {
         BackgroundColor = Color.FromRgb(255, 255, 255);
@@ -35,11 +39,15 @@ public partial class MainPage : ContentPage
         var mainStackLayout = new StackLayout
                               {
                                   Spacing = 20,
-            Margin = new Thickness(10, 15)
+                                  Margin = new Thickness(10, 15)
                               };
         mainStackLayout.Add(AnimationPicker = PopupAnimationPicker());
+        mainStackLayout.Add(new Label() { Text = "In" });
         mainStackLayout.Add(EasingInPicker = EasingAnimationPicker());
         mainStackLayout.Add(AnimationLengthInSlider = PopupAnimationLengthSlider());
+        mainStackLayout.Add(new Label() { Text = "Out" });
+        mainStackLayout.Add(EasingOutPicker = EasingAnimationPicker());
+        mainStackLayout.Add(AnimationLengthOutSlider = PopupAnimationLengthSlider());
         mainStackLayout.Add(GeneratePopupButton("Open Login Popup", GenerateSimpleCommandForPopup<LoginPage>()));
         mainStackLayout.Add(GeneratePopupButton("Open Aswins Popup", GenerateSimpleCommandForPopup<AswinPage>()));
         var newButton = new Button
@@ -97,31 +105,32 @@ public partial class MainPage : ContentPage
         return new Button
                {
                    Text = buttonText,
-            BackgroundColor = Color.FromArgb("#FF7DBBE6"),
-            TextColor = Color.FromRgb(255, 255, 255),
+                   BackgroundColor = Color.FromArgb("#FF7DBBE6"),
+                   TextColor = Color.FromRgb(255, 255, 255),
                    Command = buttonCommand,
                };
     }
 
     private AsyncCommand GenerateSimpleCommandForPopup<TPopupPage>() where TPopupPage : PopupPage, new()
     {
-        return new AsyncCommand(async () =>
+        return new AsyncCommand(
+            async () =>
             {
                 try
                 {
                     var animation = (BaseAnimation)this.AnimationPicker.SelectedItem;
 
-                    animation.DurationIn = Convert.ToUInt32( AnimationLengthInSlider.Value );
-                    animation.DurationOut = animation.DurationIn;
-                    animation.EasingIn = (Easing)( (FieldInfo)EasingInPicker.SelectedItem ).GetValue( null );
-                    animation.EasingOut = animation.EasingIn;
+                    animation.DurationIn = Convert.ToUInt32(AnimationLengthInSlider.Value);
+                    animation.DurationOut = Convert.ToUInt32(AnimationLengthOutSlider.Value);
+                    animation.EasingIn = (Easing)((FieldInfo)EasingInPicker.SelectedItem).GetValue(null);
+                    animation.EasingOut = (Easing)((FieldInfo)EasingOutPicker.SelectedItem).GetValue(null);
 
-                    await MopupService.Instance.PushAsync( new TPopupPage { Animation = animation } );
+                    await MopupService.Instance.PushAsync(new TPopupPage { Animation = animation });
                 }
-            catch (Exception)
+                catch (Exception)
                 {
                     throw;
                 }
-        });
+            });
     }
 }
