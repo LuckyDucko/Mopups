@@ -115,7 +115,7 @@ public partial class PopupPage : ContentPage
 
     public PopupPage()
     {
-        //BackgroundColor = Color.FromArgb("#80000000");
+        BackgroundColor = Colors.Transparent; // Without this, I was unable to get a transparent background with a UIWindow, this fixed it for some reason.
     }
 
     protected override bool OnBackButtonPressed()
@@ -283,16 +283,21 @@ public partial class PopupPage : ContentPage
         return CloseWhenBackgroundIsClicked;
     }
 
-    internal void SendBackgroundClick()
+    internal bool SendBackgroundClick()
     {
         BackgroundClicked?.Invoke(this, EventArgs.Empty);
+        
         if (BackgroundClickedCommand?.CanExecute(BackgroundClickedCommandParameter) == true)
         {
             BackgroundClickedCommand.Execute(BackgroundClickedCommandParameter);
         }
+        
         if (OnBackgroundClicked())
         {
             MopupService.Instance.RemovePageAsync(this).SafeFireAndForget();
+            return true;
         }
+
+        return false;
     }
 }

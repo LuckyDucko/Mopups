@@ -38,13 +38,18 @@ public class AndroidMopups : IPopupPlatform
     {
         try
         {
-            HandleAccessibility(true);
+            HandleAccessibility(true, page.Parent as Page);
 
-            page.Parent = MauiApplication.Current.Application.Windows[0].Content as Element;
-            var AndroidNativeView = IPopupPlatform.GetOrCreateHandler<PopupPageHandler>(page).PlatformView as Android.Views.View;
-            DecoreView?.AddView(AndroidNativeView);
+            page.Parent ??= MauiApplication.Current.Application.Windows[0].Content as Element;
 
-            return PostAsync(AndroidNativeView);
+            var handler = page.Handler ??= new PopupPageHandler(page.Parent.Handler.MauiContext);
+            
+            var androidNativeView = handler.PlatformView as Android.Views.View;
+            var decoreView = Platform.CurrentActivity?.Window?.DecorView as FrameLayout;
+
+            decoreView?.AddView(androidNativeView);
+
+            return PostAsync(androidNativeView);
         }
         catch (Exception)
         {
@@ -58,7 +63,7 @@ public class AndroidMopups : IPopupPlatform
 
         if (renderer != null)
         {
-            HandleAccessibility(false);
+            HandleAccessibility(false, page.Parent as Page);
 
             DecoreView?.RemoveView(renderer.PlatformView as Android.Views.View);
             renderer.DisconnectHandler(); //?? no clue if works
@@ -70,9 +75,9 @@ public class AndroidMopups : IPopupPlatform
         return Task.CompletedTask;
     }
 
-    static void HandleAccessibility(bool showPopup)
+    static void HandleAccessibility(bool showPopup, Page? mainPage = null)
     {
-        Page? mainPage = Application.Current?.MainPage;
+        mainPage ??= Application.Current?.MainPage;
 
         if (mainPage is null)
         {

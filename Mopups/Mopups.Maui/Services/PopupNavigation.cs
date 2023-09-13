@@ -54,8 +54,6 @@ public class PopupNavigation : IPopupNavigation
         }
     }
 
-
-
     public Task PushAsync(PopupPage page, bool animate = true)
     {
         Pushing?.Invoke(this, new PopupNavigationEventArgs(page, animate));

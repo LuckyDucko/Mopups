@@ -10,7 +10,12 @@ public class PopupPageHandler : PageHandler
 
     public PopupPageHandler()
     {
-        this.SetMauiContext(MauiApplication.Current.Application.Windows[0].Handler.MauiContext);
+        SetMauiContext(MauiApplication.Current.Application.Windows[0].Handler.MauiContext);
+    }
+
+    public PopupPageHandler(IMauiContext context)
+    {
+        SetMauiContext(context);
     }
 
     protected override void ConnectHandler(ContentViewGroup platformView)
