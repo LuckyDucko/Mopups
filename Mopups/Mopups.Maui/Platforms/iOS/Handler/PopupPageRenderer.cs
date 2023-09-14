@@ -2,11 +2,6 @@
 
 using Foundation;
 using Mopups.Pages;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 using UIKit;
 
@@ -42,7 +37,7 @@ namespace Mopups.Platforms.iOS
         {
             if (disposing)
             {
-                _renderer = null; 
+                _renderer = null;
                 View?.RemoveGestureRecognizer(_tapGestureRecognizer);
             }
 
@@ -163,7 +158,7 @@ namespace Mopups.Platforms.iOS
 
         private void UnregisterAllObservers()
         {
-            
+
             _willChangeFrameNotificationObserver?.Dispose();
             _willHideNotificationObserver?.Dispose();
 

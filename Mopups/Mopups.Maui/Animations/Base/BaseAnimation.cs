@@ -1,8 +1,7 @@
-﻿using System.ComponentModel;
+﻿using Mopups.Pages;
+using System.ComponentModel;
 using System.Globalization;
 using System.Reflection;
-
-using Mopups.Pages;
 
 namespace Mopups.Animations.Base;
 
@@ -101,6 +100,6 @@ public abstract class BaseAnimation : IPopupAnimation
     /// <param name="page"></param>
     protected virtual void ShowPage(Page page)
     {
-        page.Dispatcher.Dispatch(() => page.Opacity = 1 );
+        page.Dispatcher.Dispatch(() => page.Opacity = 1);
     }
 }

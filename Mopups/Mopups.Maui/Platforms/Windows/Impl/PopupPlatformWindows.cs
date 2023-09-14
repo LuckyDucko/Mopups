@@ -69,7 +69,7 @@ namespace Mopups.Windows.Implementation
 
 
             // https://github.com/microsoft/microsoft-ui-xaml/issues/3389
-            popup.XamlRoot = 
+            popup.XamlRoot =
                 Application.Current.MainPage.Handler.MauiContext.Services.GetService<Microsoft.UI.Xaml.Window>().Content.XamlRoot;
 
             popup.IsOpen = true;

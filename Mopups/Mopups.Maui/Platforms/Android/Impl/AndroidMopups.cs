@@ -43,7 +43,7 @@ public class AndroidMopups : IPopupPlatform
             page.Parent ??= MauiApplication.Current.Application.Windows[0].Content as Element;
 
             var handler = page.Handler ??= new PopupPageHandler(page.Parent.Handler.MauiContext);
-            
+
             var androidNativeView = handler.PlatformView as Android.Views.View;
             var decoreView = Platform.CurrentActivity?.Window?.DecorView as FrameLayout;
 
@@ -103,7 +103,7 @@ public class AndroidMopups : IPopupPlatform
         {
             if (view is null)
             {
-                return;   
+                return;
             }
 
             // Screen reader

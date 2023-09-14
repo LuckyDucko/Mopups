@@ -1,11 +1,8 @@
-﻿using CoreGraphics;
-
-
-using Mopups.Interfaces;
+﻿using Mopups.Interfaces;
 using Mopups.Pages;
 using Mopups.Platforms.iOS;
 
-using UIKit; 
+using UIKit;
 namespace Mopups.iOS.Implementation;
 
 internal class iOSMopups : IPopupPlatform

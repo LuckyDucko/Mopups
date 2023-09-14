@@ -1,12 +1,8 @@
-﻿using CoreGraphics;
-
-using Microsoft.Maui.Controls.Compatibility.Platform.iOS;
-
-using Mopups.Interfaces;
+﻿using Mopups.Interfaces;
 using Mopups.Pages;
 using Mopups.Platforms.MacCatalyst;
 
-using UIKit; 
+using UIKit;
 namespace Mopups.MacCatalyst.Implementation;
 
 internal class MacOSMopups : IPopupPlatform
@@ -58,7 +54,7 @@ internal class MacOSMopups : IPopupPlatform
 
         handler.ViewController.ModalPresentationStyle = UIModalPresentationStyle.OverCurrentContext;
         handler.ViewController.ModalTransitionStyle = UIModalTransitionStyle.CoverVertical;
-        
+
 
         return window.RootViewController.PresentViewControllerAsync(handler.ViewController, false);
 

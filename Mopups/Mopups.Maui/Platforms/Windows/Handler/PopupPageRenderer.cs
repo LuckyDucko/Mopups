@@ -1,10 +1,10 @@
 ﻿using Microsoft.Maui.Platform;
+using Microsoft.UI.Xaml.Input;
+using Mopups.Pages;
 using Windows.UI.ViewManagement;
 using Rect = Windows.Foundation.Rect;
 using Size = Windows.Foundation.Size;
-using Mopups.Pages;
 using WinPopup = global::Microsoft.UI.Xaml.Controls.Primitives.Popup;
-using Microsoft.UI.Xaml.Input;
 
 namespace Mopups.Platforms.Windows
 {

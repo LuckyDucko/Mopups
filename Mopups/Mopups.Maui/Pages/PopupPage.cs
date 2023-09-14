@@ -1,11 +1,9 @@
-﻿using System.Windows.Input;
-
-using AsyncAwaitBestPractices;
-
+﻿using AsyncAwaitBestPractices;
 using Mopups.Animations;
 using Mopups.Animations.Base;
 using Mopups.Enums;
 using Mopups.Services;
+using System.Windows.Input;
 
 namespace Mopups.Pages;
 
@@ -286,12 +284,12 @@ public partial class PopupPage : ContentPage
     internal bool SendBackgroundClick()
     {
         BackgroundClicked?.Invoke(this, EventArgs.Empty);
-        
+
         if (BackgroundClickedCommand?.CanExecute(BackgroundClickedCommandParameter) == true)
         {
             BackgroundClickedCommand.Execute(BackgroundClickedCommandParameter);
         }
-        
+
         if (OnBackgroundClicked())
         {
             MopupService.Instance.RemovePageAsync(this).SafeFireAndForget();

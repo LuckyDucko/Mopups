@@ -56,7 +56,6 @@ public static class AppHostBuilderExtensions
 #if ANDROID
                 lifecycle.AddAndroid(d =>
                 {
-                    
                     d.OnBackPressed(activity => Droid.Implementation.AndroidMopups.SendBackPressed(backPressHandler));
                 });
 #endif

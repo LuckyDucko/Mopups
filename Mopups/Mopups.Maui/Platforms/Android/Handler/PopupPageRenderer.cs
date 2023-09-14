@@ -1,21 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-using Android.Content;
-using Android.Graphics;
+﻿using Android.Content;
+using Android.OS;
 using Android.Views;
-
 using Microsoft.Maui.Platform;
-
-using AndroidGraphics = Android.Graphics; //Weird conflict with Microsoft namespace?
-using AndroidView = Android.Views;
-
 using Mopups.Droid.Gestures;
 using Mopups.Pages;
-using Android.OS;
+using AndroidGraphics = Android.Graphics; //Weird conflict with Microsoft namespace?
+using AndroidView = Android.Views;
 using Rect = Microsoft.Maui.Graphics.Rect;
 
 namespace Mopups.Platforms.Android.Renderers;
