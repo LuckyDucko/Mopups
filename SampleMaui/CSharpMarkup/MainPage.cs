@@ -52,12 +52,12 @@ public partial class MainPage : ContentPage
         mainStackLayout.Add(GeneratePopupButton("Open Aswins Popup", GenerateSimpleCommandForPopup<AswinPage>()));
         var newButton = new Button
                         {
-                            Text = "New page test",
+                            Text = "Switch To Prebaked Examples",
                             BackgroundColor = Color.FromArgb("#FF7DBBE6"),
                             TextColor = Color.FromRgb(255, 255, 255),
                             Command = new AsyncCommand(async () =>
                                                        {
-                                                           await Navigation.PushAsync(new MainPage());
+                                                           await Navigation.PushAsync(new PreBakedExample());
                                                        })
                         };
         mainStackLayout.Add(newButton);
@@ -133,4 +133,8 @@ public partial class MainPage : ContentPage
                 }
             });
     }
+
+
+
+
 }

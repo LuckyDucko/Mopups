@@ -1,0 +1,87 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<pages:PopupPage
+    x:Class="Mopups.PreBaked.PopupPages.TextInput.TextInputPopupPage"
+xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:animations="clr-namespace:Mopups.Animations;assembly=Mopups"
+    xmlns:pages="clr-namespace:Mopups.Pages;assembly=Mopups"
+    xmlns:ViewModel="clr-namespace:Mopups.PreBaked.PopupPages.TextInput"
+    x:DataType="ViewModel:TextInputViewModel"
+    HasKeyboardOffset="False">
+    <pages:PopupPage.Animation>
+        <animations:ScaleAnimation
+            DurationIn="400"
+            DurationOut="300"
+            EasingIn="SinOut"
+            EasingOut="SinIn"
+            HasBackgroundAnimation="True"
+            PositionIn="Center"
+            PositionOut="Center"
+            ScaleIn="1.2"
+            ScaleOut="0.8" />
+    </pages:PopupPage.Animation>
+    <pages:PopupPage.Content>
+        <ContentView>
+            <AbsoluteLayout>
+                <Frame
+                    Margin="0"
+                    Padding="5"
+                    AbsoluteLayout.LayoutBounds=".5,.5,.65,.5"
+                    AbsoluteLayout.LayoutFlags="All"
+                    BackgroundColor="{Binding MainPopupColour, FallbackValue=#343434}"
+                    CornerRadius="5"
+                    HasShadow="false"
+                    MinimumWidthRequest="{Binding WidthRequest, Mode=OneTime}"
+                    MinimumHeightRequest="{Binding HeightRequest, Mode=OneTime}">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="50*" />
+                            <ColumnDefinition Width="50*" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="80*" />
+                            <RowDefinition Height="20*" />
+                        </Grid.RowDefinitions>
+                        <Editor
+                            AutomationId="EditorInput"
+                            Grid.Row="0"
+                            Grid.Column="0"
+                            Grid.ColumnSpan="2"
+                            BackgroundColor="WhiteSmoke"
+                            Placeholder="{Binding PlaceHolderInput, Mode=TwoWay, FallbackValue='Placeholder'}"
+                            PlaceholderColor="Black"
+                            Text="{Binding TextInput, Mode=TwoWay}" />
+                        <Button
+                            AutomationId="LeftButton"
+                            Grid.Row="1"
+                            Grid.Column="0"
+                            Margin="0"
+                            Padding="0"
+                            BackgroundColor="{Binding LeftButtonColour, FallbackValue='#FDFDFD'}"
+                            Command="{Binding LeftButtonCommand, Mode=TwoWay}"
+                            CornerRadius="5"
+                            HorizontalOptions="FillAndExpand"
+                            MinimumWidthRequest="100"
+                            Text="{Binding LeftButtonText, Mode=TwoWay, FallbackValue='Left Button Text'}"
+                            TextColor="{Binding LeftButtonTextColour, FallbackValue=Green}"
+                            VerticalOptions="FillAndExpand" />
+                        <Button
+                            AutomationId="RightButton"
+                            Grid.Row="1"
+                            Grid.Column="1"
+                            Margin="0"
+                            Padding="0"
+                            BackgroundColor="{Binding RightButtonColour, FallbackValue='#FDFDFD'}"
+                            Command="{Binding RightButtonCommand, Mode=TwoWay}"
+                            CornerRadius="5"
+                            HorizontalOptions="FillAndExpand"
+                            MinimumWidthRequest="100"
+                            Text="{Binding RightButtonText, Mode=TwoWay, FallbackValue='Right Button Text'}"
+                            TextColor="{Binding RightButtonTextColour, FallbackValue=Red}"
+                            VerticalOptions="FillAndExpand" />
+                    </Grid>
+                </Frame>
+            </AbsoluteLayout>
+        </ContentView>
+    </pages:PopupPage.Content>
+</pages:PopupPage>

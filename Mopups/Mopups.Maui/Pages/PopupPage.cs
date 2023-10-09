@@ -11,6 +11,9 @@ namespace Mopups.Pages;
 
 public partial class PopupPage : ContentPage
 {
+
+
+
     public event EventHandler? BackgroundClicked;
 
     internal Task? AppearingTransactionTask { get; set; }

@@ -1,0 +1,72 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<pages:PopupPage
+    x:Class="Mopups.PreBaked.PopupPages.SingleResponse.SingleResponsePopupPage"
+xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:animations="clr-namespace:Mopups.Animations;assembly=Mopups"
+    xmlns:pages="clr-namespace:Mopups.Pages;assembly=Mopups"
+    xmlns:ViewModel="clr-namespace:Mopups.PreBaked.PopupPages.SingleResponse"
+    x:DataType="ViewModel:SingleResponseViewModel"
+    HasKeyboardOffset="False">
+    <pages:PopupPage.Animation>
+        <animations:ScaleAnimation
+            DurationIn="400"
+            DurationOut="300"
+            EasingIn="SinOut"
+            EasingOut="SinIn"
+            HasBackgroundAnimation="True"
+            PositionIn="Center"
+            PositionOut="Center"
+            ScaleIn="1.2"
+            ScaleOut="0.8" />
+    </pages:PopupPage.Animation>
+    <pages:PopupPage.Content>
+        <ContentView>
+            <AbsoluteLayout>
+                <Frame
+                    Margin="0"
+                    Padding="5"
+                    AbsoluteLayout.LayoutBounds=".5,.4,.756,.5"
+                    AbsoluteLayout.LayoutFlags="All"
+                    BackgroundColor="{Binding MainPopupColour, FallbackValue=#343434}"
+                    CornerRadius="5"
+                    HasShadow="false"
+                MinimumWidthRequest="{Binding WidthRequest, Mode=OneTime}"
+                MinimumHeightRequest="{Binding HeightRequest, Mode=OneTime}">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="35*" />
+                            <RowDefinition Height="50*" />
+                            <RowDefinition Height="15*" />
+                        </Grid.RowDefinitions>
+                        <Image
+                            AutomationId="PictureSource"
+                            Grid.Row="0"
+                            HorizontalOptions="FillAndExpand"
+                            Source="{Binding SingleDisplayImage, Mode=OneWay, FallbackValue='NoSource.png'}" />
+                        <Label
+                            AutomationId="InformationLabel"
+                            Grid.Row="1"
+                            FontSize="17"
+                            HorizontalTextAlignment="Center"
+                            Text="{Binding MainPopupInformation, Mode=OneWay, FallbackValue='Generic Information here for information about the modal you are on'}"
+                            TextColor="#FDFDFD" />
+                        <Button
+                            AutomationId="SingleButton"
+                            Grid.Row="2"
+                            Margin="0"
+                            Padding="0"
+                            BackgroundColor="{Binding SingleButtonColour, FallbackValue='#FDFDFD'}"
+                            Command="{Binding SingleButtonCommand, Mode=OneWay}"
+                            CornerRadius="5"
+                            Text="{Binding SingleButtonText, Mode=OneWay, FallbackValue='Button Text'}"
+                            TextColor="{Binding SingleButtonTextColour, FallbackValue=Green}" />
+                    </Grid>
+                </Frame>
+            </AbsoluteLayout>
+        </ContentView>
+    </pages:PopupPage.Content>
+</pages:PopupPage>

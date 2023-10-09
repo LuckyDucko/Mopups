@@ -1,0 +1,56 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<pages:PopupPage
+    x:Class="Mopups.PreBaked.PopupPages.Loader.LoaderPopupPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:pages="clr-namespace:Mopups.Pages;assembly=Mopups"
+    xmlns:ViewModel="clr-namespace:Mopups.PreBaked.PopupPages.Loader"
+    x:DataType="ViewModel:LoaderViewModel"
+    HasKeyboardOffset="False">
+    <pages:PopupPage.Content>
+        <ContentView>
+            <AbsoluteLayout>
+                <Frame
+                    Margin="0"
+                    Padding="5"
+                    AbsoluteLayout.LayoutBounds=".5,.4,.3,.25"
+                    AbsoluteLayout.LayoutFlags="All"
+                    BackgroundColor="{Binding MainPopupColour, FallbackValue=#434343}"
+                    CornerRadius="5"
+                    HasShadow="false"
+                MinimumWidthRequest="{Binding WidthRequest, Mode=OneTime}"
+                MinimumHeightRequest="{Binding HeightRequest, Mode=OneTime}">
+                    <Grid >
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="50*" />
+                            <ColumnDefinition Width="50*" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="3*" />
+                            <RowDefinition Height="47*" />
+                            <RowDefinition Height="50*" />
+                        </Grid.RowDefinitions>
+                        <ActivityIndicator
+                            AutomationId="ActivityIndicator"
+                            Grid.Row="1"
+                            Grid.Column="0"
+                            Grid.ColumnSpan="2"
+                            BackgroundColor="Transparent"
+                            IsRunning="True"
+                            Scale="1"
+                            Color="{Binding LoaderColour, FallbackValue=Black}" />
+                        <Label
+                            AutomationId="InformationLabel"
+                            Grid.Row="2"
+                            Grid.Column="0"
+                            Grid.ColumnSpan="2"
+                            FontSize="17"
+                            HorizontalTextAlignment="Center"
+                            Text="{Binding MainPopupInformation, Mode=OneWay, FallbackValue='Generic Information'}"
+                            TextColor="{Binding TextColour, Mode=OneWay, FallbackValue=#FDFDFD}" />
+                    </Grid>
+                </Frame>
+            </AbsoluteLayout>
+        </ContentView>
+    </pages:PopupPage.Content>
+</pages:PopupPage>
