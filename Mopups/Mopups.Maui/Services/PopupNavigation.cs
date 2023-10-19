@@ -58,6 +58,8 @@ public class PopupNavigation : IPopupNavigation
 
     public Task PushAsync(PopupPage page, bool animate = true)
     {
+        animate = animate && Animations.AnimationHelper.SystemAnimationsEnabled;
+
         Pushing?.Invoke(this, new PopupNavigationEventArgs(page, animate));
         _popupStack.Add(page);
 
@@ -84,7 +86,9 @@ public class PopupNavigation : IPopupNavigation
 
     public async Task PopAllAsync(bool animate = true)
     {
-        while (MopupService.Instance.PopupStack.Count > 0)
+		animate = animate && Animations.AnimationHelper.SystemAnimationsEnabled;
+
+		while (MopupService.Instance.PopupStack.Count > 0)
         {
             await PopAsync(animate);
         }
@@ -92,14 +96,18 @@ public class PopupNavigation : IPopupNavigation
 
     public Task PopAsync(bool animate = true)
     {
-        return _popupStack.Count <= 0
+		animate = animate && Animations.AnimationHelper.SystemAnimationsEnabled;
+
+		return _popupStack.Count <= 0
             ? throw new InvalidOperationException("PopupStack is empty")
             : RemovePageAsync(PopupStack[PopupStack.Count - 1], animate);
     }
 
     public Task RemovePageAsync(PopupPage page, bool animate = true)
     {
-        if (page == null)
+		animate = animate && Animations.AnimationHelper.SystemAnimationsEnabled;
+
+		if (page == null)
             throw new InvalidOperationException("Page can not be null");
 
         if (!_popupStack.Contains(page))
