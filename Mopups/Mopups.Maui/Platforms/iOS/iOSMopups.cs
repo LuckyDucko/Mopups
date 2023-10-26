@@ -1,11 +1,8 @@
-﻿using CoreGraphics;
-
-
-using Mopups.Interfaces;
+﻿using Mopups.Interfaces;
 using Mopups.Pages;
 using Mopups.Platforms.iOS;
 
-using UIKit; 
+using UIKit;
 namespace Mopups.iOS.Implementation;
 
 internal class iOSMopups : IPopupPlatform
@@ -57,7 +54,7 @@ internal class iOSMopups : IPopupPlatform
 
         handler.ViewController.ModalPresentationStyle = UIModalPresentationStyle.OverCurrentContext;
         handler.ViewController.ModalTransitionStyle = UIModalTransitionStyle.CoverVertical;
-        
+
 
         return window.RootViewController.PresentViewControllerAsync(handler.ViewController, false);
 
@@ -124,12 +121,15 @@ internal class iOSMopups : IPopupPlatform
 
     private static void DisposeModelAndChildrenHandlers(VisualElement view)
     {
-        foreach (Element child in view.GetVisualTreeDescendants())
+        foreach (var descendant in view.GetVisualTreeDescendants())
         {
-            IElementHandler handler = child.Handler;
-            child?.Handler?.DisconnectHandler();
-            (handler?.PlatformView as UIView)?.RemoveFromSuperview();
-            (handler?.PlatformView as UIView)?.Dispose();
+            if (descendant is IElement child)
+            {
+                IElementHandler handler = child.Handler;
+                child?.Handler?.DisconnectHandler();
+                (handler?.PlatformView as UIView)?.RemoveFromSuperview();
+                (handler?.PlatformView as UIView)?.Dispose();
+            }
         }
 
         view?.Handler?.DisconnectHandler();
