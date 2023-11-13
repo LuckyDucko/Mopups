@@ -51,7 +51,7 @@ public class AndroidMopups : IPopupPlatform
 
         if (renderer != null)
         {
-            HandleAccessibility(false, page.DisableAccessibilityHandling);
+            HandleAccessibility(false, page.DisableAndroidAccessibilityHandling);
 
             DecoreView?.RemoveView(renderer.PlatformView as Android.Views.View);
             renderer.DisconnectHandler(); //?? no clue if works
