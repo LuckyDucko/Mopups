@@ -1,11 +1,9 @@
-﻿using System.Windows.Input;
-
-using AsyncAwaitBestPractices;
-
+﻿using AsyncAwaitBestPractices;
 using Mopups.Animations;
 using Mopups.Animations.Base;
 using Mopups.Enums;
 using Mopups.Services;
+using System.Windows.Input;
 
 namespace Mopups.Pages;
 
@@ -108,12 +106,12 @@ public partial class PopupPage : ContentPage
         set => SetValue(BackgroundClickedCommandParameterProperty, value);
     }
 
-    public static readonly BindableProperty AndroidTalkbackAccessibilityWorkaroundProperty = BindableProperty.Create(nameof(AndroidTalkbackAccessibilityWorkaround), typeof(bool), typeof(PopupPage), false);
+    public static readonly BindableProperty DisableAccessibilityHandlingProperty = BindableProperty.Create(nameof(DisableAccessibilityHandling), typeof(bool), typeof(PopupPage), false);
 
-    public bool AndroidTalkbackAccessibilityWorkaround
+    public bool DisableAccessibilityHandling
     {
-        get => (bool)GetValue(AndroidTalkbackAccessibilityWorkaroundProperty);
-        set => SetValue(AndroidTalkbackAccessibilityWorkaroundProperty, value);
+        get => (bool)GetValue(DisableAccessibilityHandlingProperty);
+        set => SetValue(DisableAccessibilityHandlingProperty, value);
     }
 
     public PopupPage()
