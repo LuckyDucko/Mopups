@@ -36,7 +36,7 @@ public class AndroidMopups : IPopupPlatform
 
     public Task AddAsync(PopupPage page)
     {
-        HandleAccessibility(true, page.DisableAccessibilityHandling);
+        HandleAccessibility(true, page.DisableAndroidAccessibilityHandling);
 
         page.Parent = MauiApplication.Current.Application.Windows[0].Content as Element;
         var AndroidNativeView = IPopupPlatform.GetOrCreateHandler<PopupPageHandler>(page).PlatformView as Android.Views.View;

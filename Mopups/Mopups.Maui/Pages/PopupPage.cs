@@ -106,12 +106,12 @@ public partial class PopupPage : ContentPage
         set => SetValue(BackgroundClickedCommandParameterProperty, value);
     }
 
-    public static readonly BindableProperty DisableAccessibilityHandlingProperty = BindableProperty.Create(nameof(DisableAccessibilityHandling), typeof(bool), typeof(PopupPage), false);
+    public static readonly BindableProperty DisableAndroidAccessibilityHandlingProperty = BindableProperty.Create(nameof(DisableAndroidAccessibilityHandling), typeof(bool), typeof(PopupPage), false);
 
-    public bool DisableAccessibilityHandling
+    public bool DisableAndroidAccessibilityHandling
     {
-        get => (bool)GetValue(DisableAccessibilityHandlingProperty);
-        set => SetValue(DisableAccessibilityHandlingProperty, value);
+        get => (bool)GetValue(DisableAndroidAccessibilityHandlingProperty);
+        set => SetValue(DisableAndroidAccessibilityHandlingProperty, value);
     }
 
     public PopupPage()
