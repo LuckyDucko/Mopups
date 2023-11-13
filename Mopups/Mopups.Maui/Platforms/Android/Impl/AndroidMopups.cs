@@ -64,7 +64,7 @@ public class AndroidMopups : IPopupPlatform
     }
 
     //! important keeps reference to pages that accessibility has applied to. This is so accessibility can be removed properly when popup is removed. #https://github.com/LuckyDucko/Mopups/issues/93
-    readonly List<Android.Views.View?> views = [];
+    readonly List<Android.Views.View?> views = new();
     void HandleAccessibility(bool showPopup, bool disableAccessibilityHandling)
     {
         if (disableAccessibilityHandling)
