@@ -36,20 +36,13 @@ public class AndroidMopups : IPopupPlatform
 
     public Task AddAsync(PopupPage page)
     {
-        try
-        {
-            HandleAccessibility(true);
+        HandleAccessibility(true, page.DisableAndroidAccessibilityHandling);
 
-            page.Parent = MauiApplication.Current.Application.Windows[0].Content as Element;
-            var AndroidNativeView = IPopupPlatform.GetOrCreateHandler<PopupPageHandler>(page).PlatformView as Android.Views.View;
-            DecoreView?.AddView(AndroidNativeView);
+        page.Parent = MauiApplication.Current.Application.Windows[0].Content as Element;
+        var AndroidNativeView = IPopupPlatform.GetOrCreateHandler<PopupPageHandler>(page).PlatformView as Android.Views.View;
+        DecoreView?.AddView(AndroidNativeView);
 
-            return PostAsync(AndroidNativeView);
-        }
-        catch (Exception)
-        {
-            throw;
-        }
+        return PostAsync(AndroidNativeView);
     }
 
     public Task RemoveAsync(PopupPage page)
@@ -58,7 +51,7 @@ public class AndroidMopups : IPopupPlatform
 
         if (renderer != null)
         {
-            HandleAccessibility(false);
+            HandleAccessibility(false, page.DisableAndroidAccessibilityHandling);
 
             DecoreView?.RemoveView(renderer.PlatformView as Android.Views.View);
             renderer.DisconnectHandler(); //?? no clue if works
@@ -70,35 +63,50 @@ public class AndroidMopups : IPopupPlatform
         return Task.CompletedTask;
     }
 
-    static void HandleAccessibility(bool showPopup)
+    //! important keeps reference to pages that accessibility has applied to. This is so accessibility can be removed properly when popup is removed. #https://github.com/LuckyDucko/Mopups/issues/93
+    readonly List<Android.Views.View?> views = new();
+    void HandleAccessibility(bool showPopup, bool disableAccessibilityHandling)
     {
-        Page? mainPage = Application.Current?.MainPage;
-
-        if (mainPage is null)
+        if (disableAccessibilityHandling)
         {
             return;
         }
 
-        int navCount = mainPage.Navigation.NavigationStack.Count;
-        int modalCount = mainPage.Navigation.ModalStack.Count;
-
-        ProcessView(showPopup, mainPage.Handler?.PlatformView as Android.Views.View);
-
-        if (navCount > 0)
+        if (showPopup)
         {
-            ProcessView(showPopup, mainPage.Navigation?.NavigationStack[navCount - 1]?.Handler?.PlatformView as Android.Views.View);
+            Page? mainPage = Application.Current?.MainPage;
+
+            if (mainPage is null)
+            {
+                return;
+            }
+
+            views.Add(mainPage.Handler?.PlatformView as Android.Views.View);
+
+            int navCount = mainPage.Navigation.NavigationStack.Count;
+            int modalCount = mainPage.Navigation.ModalStack.Count;
+
+            if (navCount > 0)
+            {
+                views.Add(mainPage.Navigation?.NavigationStack[navCount - 1]?.Handler?.PlatformView as Android.Views.View);
+            }
+
+            if (modalCount > 0)
+            {
+                views.Add(mainPage.Navigation?.ModalStack[modalCount - 1]?.Handler?.PlatformView as Android.Views.View);
+            }
         }
 
-        if (modalCount > 0)
+        foreach (var view in views)
         {
-            ProcessView(showPopup, mainPage.Navigation?.ModalStack[modalCount - 1]?.Handler?.PlatformView as Android.Views.View);
+            ProcessView(showPopup, view);
         }
 
         static void ProcessView(bool showPopup, Android.Views.View? view)
         {
             if (view is null)
             {
-                return;   
+                return;
             }
 
             // Screen reader
@@ -110,7 +118,7 @@ public class AndroidMopups : IPopupPlatform
         }
     }
 
-    Task<bool> PostAsync(Android.Views.View? nativeView)
+    static Task<bool> PostAsync(Android.Views.View? nativeView)
     {
         if (nativeView == null)
         {
