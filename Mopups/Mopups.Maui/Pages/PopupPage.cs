@@ -22,7 +22,7 @@ public partial class PopupPage : ContentPage
 
     public bool IsAnimationEnabled
     {
-        get => (bool)GetValue(IsAnimationEnabledProperty);
+        get => (bool)GetValue(IsAnimationEnabledProperty) && AnimationHelper.SystemAnimationsEnabled;
         set => SetValue(IsAnimationEnabledProperty, value);
     }
 
