@@ -116,7 +116,7 @@ public partial class PopupPage : ContentPage
 
     public PopupPage()
     {
-        //BackgroundColor = Color.FromArgb("#80000000");
+        BackgroundColor = Colors.Transparent;
     }
 
     protected override bool OnBackButtonPressed()
@@ -284,7 +284,7 @@ public partial class PopupPage : ContentPage
         return CloseWhenBackgroundIsClicked;
     }
 
-    internal void SendBackgroundClick()
+    internal bool SendBackgroundClick()
     {
         BackgroundClicked?.Invoke(this, EventArgs.Empty);
         if (BackgroundClickedCommand?.CanExecute(BackgroundClickedCommandParameter) == true)
@@ -294,6 +294,8 @@ public partial class PopupPage : ContentPage
         if (OnBackgroundClicked())
         {
             MopupService.Instance.RemovePageAsync(this).SafeFireAndForget();
+            return true;
         }
+        return false;
     }
 }

@@ -8,6 +8,8 @@ namespace Mopups.Platforms.iOS
 {
     internal class PopupWindow : UIWindow
     {
+
+        private bool _stop = false;
         public PopupWindow(IntPtr handle) : base(handle)
         {
         }
@@ -24,6 +26,12 @@ namespace Mopups.Platforms.iOS
 
         public override UIView HitTest(CGPoint point, UIEvent? uievent)
         {
+
+            if (_stop)
+            {
+                return base.HitTest(point, uievent);
+            }
+
             var platformHandler = (PopupPageRenderer?)RootViewController;
             var renderer = platformHandler?.Handler;
             var hitTestResult = base.HitTest(point, uievent);
@@ -36,6 +44,11 @@ namespace Mopups.Platforms.iOS
 
             if ((formsElement.BackgroundInputTransparent || formsElement.CloseWhenBackgroundIsClicked ) && renderer?.PlatformView == hitTestResult)
             {
+                if (formsElement.CloseWhenBackgroundIsClicked)
+                {
+                    _stop = true;
+                }
+
                 formsElement.SendBackgroundClick();
                 if (formsElement.BackgroundInputTransparent)
                 {
