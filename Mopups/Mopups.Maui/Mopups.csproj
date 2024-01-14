@@ -29,10 +29,12 @@
 		<PackageTags>Mopups;Popups;Maui;rg;Xamarin;ios;android;Windows;MacOS;Mopups;Dialogs;macos;windows</PackageTags>
 		<Version>1.3.0</Version>
 		<Title>Mopups (Maui Popups)</Title>
-		<PackageReleaseNotes>Finally did a release that should support Windows
-Added in previous work for awaitable popups directly into this repo under prebaked.</PackageReleaseNotes>
+		<PackageReleaseNotes>Added in several fixes from the community (THANKYOU!)
+
+Upgraded to .NET 8</PackageReleaseNotes>
 		<IncludeSymbols>True</IncludeSymbols>
 		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
+		<PublishAot>True</PublishAot>
 	</PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net7.0-android|AnyCPU'">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -79,6 +81,23 @@ Added in previous work for awaitable popups directly into this repo under prebak
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net7.0-windows10.0.19041.0|AnyCPU'">
     <PlatformTarget>AnyCPU</PlatformTarget>
 	  <Deterministic>False</Deterministic>
+	</PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net8.0-ios|AnyCPU'">
+	  <EnableSGenConc>True</EnableSGenConc>
+	</PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net8.0-ios|AnyCPU'">
+	  <EnableSGenConc>True</EnableSGenConc>
+	</PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net8.0-android34.0|AnyCPU'">
+	  <AndroidLinkTool>r8</AndroidLinkTool>
+	  <RunAOTCompilation>True</RunAOTCompilation>
+	  <EnableLLVM>True</EnableLLVM>
+	  <AndroidEnableProfiledAot>True</AndroidEnableProfiledAot>
+	</PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net8.0-android34.0|AnyCPU'">
+	  <RunAOTCompilation>True</RunAOTCompilation>
+	  <EnableLLVM>True</EnableLLVM>
+	  <AndroidEnableProfiledAot>True</AndroidEnableProfiledAot>
 	</PropertyGroup>
 	<ItemGroup>
 		<PackageReference Include="AsyncAwaitBestPractices" Version="6.0.4" />
