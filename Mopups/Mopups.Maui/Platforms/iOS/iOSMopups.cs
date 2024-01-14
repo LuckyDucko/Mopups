@@ -10,15 +10,13 @@ internal class iOSMopups : IPopupPlatform
     // It's necessary because GC in Xamarin.iOS 13 removes all UIWindow if there are not any references to them. See #459
     private readonly List<UIWindow> _windows = new List<UIWindow>();
 
-    private static bool IsiOS9OrNewer => UIDevice.CurrentDevice.CheckSystemVersion(9, 0);
 
     private static bool IsiOS13OrNewer => UIDevice.CurrentDevice.CheckSystemVersion(13, 0);
 
-    public bool IsSystemAnimationEnabled => true;
 
     public Task AddAsync(PopupPage page)
     {
-        page.Parent = Application.Current.MainPage;
+        page.Parent ??= Application.Current?.MainPage;
 
         page.DescendantRemoved += HandleChildRemoved;
 
@@ -26,7 +24,7 @@ internal class iOSMopups : IPopupPlatform
         if (keyWindow?.WindowLevel == UIWindowLevel.Normal)
             keyWindow.WindowLevel = -1;
 
-        var handler = (PopupPageHandler)IPopupPlatform.GetOrCreateHandler<PopupPageHandler>(page);
+        var handler = (page.Handler ??= new PopupPageHandler(page.Parent.Handler.MauiContext)) as PopupPageHandler;
 
         PopupWindow window;
 

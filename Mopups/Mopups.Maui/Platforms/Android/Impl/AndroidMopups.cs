@@ -36,13 +36,19 @@ public class AndroidMopups : IPopupPlatform
 
     public Task AddAsync(PopupPage page)
     {
-        HandleAccessibility(true, page.DisableAndroidAccessibilityHandling);
+        HandleAccessibility(true, page.DisableAndroidAccessibilityHandling, page.Parent as Page);
 
         page.Parent = MauiApplication.Current.Application.Windows[0].Content as Element;
-        var AndroidNativeView = IPopupPlatform.GetOrCreateHandler<PopupPageHandler>(page).PlatformView as Android.Views.View;
-        DecoreView?.AddView(AndroidNativeView);
+        page.Parent ??= MauiApplication.Current.Application.Windows[0].Content as Element;
 
-        return PostAsync(AndroidNativeView);
+        var handler = page.Handler ??= new PopupPageHandler(page.Parent.Handler.MauiContext);
+
+        var androidNativeView = handler.PlatformView as Android.Views.View;
+        var decoreView = Platform.CurrentActivity?.Window?.DecorView as FrameLayout;
+
+        decoreView?.AddView(androidNativeView);
+
+        return PostAsync(androidNativeView);
     }
 
     public Task RemoveAsync(PopupPage page)
@@ -51,7 +57,7 @@ public class AndroidMopups : IPopupPlatform
 
         if (renderer != null)
         {
-            HandleAccessibility(false, page.DisableAndroidAccessibilityHandling);
+            HandleAccessibility(false, page.DisableAndroidAccessibilityHandling, page.Parent as Page);
 
             DecoreView?.RemoveView(renderer.PlatformView as Android.Views.View);
             renderer.DisconnectHandler(); //?? no clue if works
@@ -65,7 +71,7 @@ public class AndroidMopups : IPopupPlatform
 
     //! important keeps reference to pages that accessibility has applied to. This is so accessibility can be removed properly when popup is removed. #https://github.com/LuckyDucko/Mopups/issues/93
     readonly List<Android.Views.View?> views = new();
-    void HandleAccessibility(bool showPopup, bool disableAccessibilityHandling)
+    void HandleAccessibility(bool showPopup, bool disableAccessibilityHandling, Page? mainPage = null)
     {
         if (disableAccessibilityHandling)
         {
@@ -74,7 +80,7 @@ public class AndroidMopups : IPopupPlatform
 
         if (showPopup)
         {
-            Page? mainPage = Application.Current?.MainPage;
+            mainPage ??= Application.Current?.MainPage;
 
             if (mainPage is null)
             {
