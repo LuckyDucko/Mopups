@@ -20,7 +20,8 @@ public class PopupPageHandler : PageHandler
 
     protected override void ConnectHandler(ContentViewGroup platformView)
     {
-        (platformView as PopupPageRenderer).PopupHandler = this;
+        if (platformView is PopupPageRenderer popupPageRenderer)
+            popupPageRenderer.PopupHandler = this;
         base.ConnectHandler(platformView);
     }
 
@@ -32,6 +33,8 @@ public class PopupPageHandler : PageHandler
 
     protected override void DisconnectHandler(ContentViewGroup platformView)
     {
+        if (platformView is PopupPageRenderer popupPageRenderer)
+            popupPageRenderer.PopupHandler = null;
         base.DisconnectHandler(platformView);
     }
 }
