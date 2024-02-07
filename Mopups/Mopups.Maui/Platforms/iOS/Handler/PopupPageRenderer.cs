@@ -42,8 +42,8 @@ namespace Mopups.Platforms.iOS
         {
             if (disposing)
             {
+                _renderer.ViewController.View?.RemoveGestureRecognizer(_tapGestureRecognizer);
                 _renderer = null; 
-                View?.RemoveGestureRecognizer(_tapGestureRecognizer);
             }
 
             base.Dispose(disposing);
@@ -53,7 +53,7 @@ namespace Mopups.Platforms.iOS
 
         private void OnTap(UITapGestureRecognizer e)
         {
-            var view = e.View;
+            var view = e.View.Subviews.First();
             var location = e.LocationInView(view);
             var subview = view.HitTest(location, null);
 
@@ -108,14 +108,14 @@ namespace Mopups.Platforms.iOS
             ModalPresentationStyle = UIModalPresentationStyle.OverCurrentContext;
             ModalTransitionStyle = UIModalTransitionStyle.CoverVertical;
 
-            View?.AddGestureRecognizer(_tapGestureRecognizer);
+            _renderer.ViewController.View?.AddGestureRecognizer(_tapGestureRecognizer);
         }
 
         public override void ViewDidUnload()
         {
             base.ViewDidUnload();
 
-            View?.RemoveGestureRecognizer(_tapGestureRecognizer);
+            _renderer.ViewController.View?.RemoveGestureRecognizer(_tapGestureRecognizer);
         }
 
         public override void ViewWillAppear(bool animated)
