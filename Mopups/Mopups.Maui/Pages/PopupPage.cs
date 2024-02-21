@@ -1,11 +1,9 @@
-﻿using System.Windows.Input;
-
-using AsyncAwaitBestPractices;
-
+﻿using AsyncAwaitBestPractices;
 using Mopups.Animations;
 using Mopups.Animations.Base;
 using Mopups.Enums;
 using Mopups.Services;
+using System.Windows.Input;
 
 namespace Mopups.Pages;
 
@@ -108,17 +106,17 @@ public partial class PopupPage : ContentPage
         set => SetValue(BackgroundClickedCommandParameterProperty, value);
     }
 
-    public static readonly BindableProperty AndroidTalkbackAccessibilityWorkaroundProperty = BindableProperty.Create(nameof(AndroidTalkbackAccessibilityWorkaround), typeof(bool), typeof(PopupPage), false);
+    public static readonly BindableProperty DisableAndroidAccessibilityHandlingProperty = BindableProperty.Create(nameof(DisableAndroidAccessibilityHandling), typeof(bool), typeof(PopupPage), false);
 
-    public bool AndroidTalkbackAccessibilityWorkaround
+    public bool DisableAndroidAccessibilityHandling
     {
-        get => (bool)GetValue(AndroidTalkbackAccessibilityWorkaroundProperty);
-        set => SetValue(AndroidTalkbackAccessibilityWorkaroundProperty, value);
+        get => (bool)GetValue(DisableAndroidAccessibilityHandlingProperty);
+        set => SetValue(DisableAndroidAccessibilityHandlingProperty, value);
     }
 
     public PopupPage()
     {
-        //BackgroundColor = Color.FromArgb("#80000000");
+        BackgroundColor = Colors.Transparent;
     }
 
     protected override bool OnBackButtonPressed()
@@ -286,7 +284,7 @@ public partial class PopupPage : ContentPage
         return CloseWhenBackgroundIsClicked;
     }
 
-    internal void SendBackgroundClick()
+    internal bool SendBackgroundClick()
     {
         BackgroundClicked?.Invoke(this, EventArgs.Empty);
         if (BackgroundClickedCommand?.CanExecute(BackgroundClickedCommandParameter) == true)
@@ -296,6 +294,8 @@ public partial class PopupPage : ContentPage
         if (OnBackgroundClicked())
         {
             MopupService.Instance.RemovePageAsync(this).SafeFireAndForget();
+            return true;
         }
+        return false;
     }
 }

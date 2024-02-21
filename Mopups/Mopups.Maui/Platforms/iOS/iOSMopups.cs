@@ -1,11 +1,8 @@
-﻿using CoreGraphics;
-
-
-using Mopups.Interfaces;
+﻿using Mopups.Interfaces;
 using Mopups.Pages;
 using Mopups.Platforms.iOS;
 
-using UIKit; 
+using UIKit;
 namespace Mopups.iOS.Implementation;
 
 internal class iOSMopups : IPopupPlatform
@@ -13,15 +10,13 @@ internal class iOSMopups : IPopupPlatform
     // It's necessary because GC in Xamarin.iOS 13 removes all UIWindow if there are not any references to them. See #459
     private readonly List<UIWindow> _windows = new List<UIWindow>();
 
-    private static bool IsiOS9OrNewer => UIDevice.CurrentDevice.CheckSystemVersion(9, 0);
 
     private static bool IsiOS13OrNewer => UIDevice.CurrentDevice.CheckSystemVersion(13, 0);
 
-    public bool IsSystemAnimationEnabled => true;
 
     public Task AddAsync(PopupPage page)
     {
-        page.Parent = Application.Current.MainPage;
+        page.Parent ??= Application.Current?.MainPage;
 
         page.DescendantRemoved += HandleChildRemoved;
 
@@ -29,7 +24,7 @@ internal class iOSMopups : IPopupPlatform
         if (keyWindow?.WindowLevel == UIWindowLevel.Normal)
             keyWindow.WindowLevel = -1;
 
-        var handler = (PopupPageHandler)IPopupPlatform.GetOrCreateHandler<PopupPageHandler>(page);
+        var handler = (page.Handler ??= new PopupPageHandler(page.Parent.Handler.MauiContext)) as PopupPageHandler;
 
         PopupWindow window;
 
@@ -57,7 +52,7 @@ internal class iOSMopups : IPopupPlatform
 
         handler.ViewController.ModalPresentationStyle = UIModalPresentationStyle.OverCurrentContext;
         handler.ViewController.ModalTransitionStyle = UIModalTransitionStyle.CoverVertical;
-        
+
 
         return window.RootViewController.PresentViewControllerAsync(handler.ViewController, false);
 
@@ -124,12 +119,15 @@ internal class iOSMopups : IPopupPlatform
 
     private static void DisposeModelAndChildrenHandlers(VisualElement view)
     {
-        foreach (Element child in view.GetVisualTreeDescendants())
+        foreach (var descendant in view.GetVisualTreeDescendants())
         {
-            IElementHandler handler = child.Handler;
-            child?.Handler?.DisconnectHandler();
-            (handler?.PlatformView as UIView)?.RemoveFromSuperview();
-            (handler?.PlatformView as UIView)?.Dispose();
+            if (descendant is IElement child)
+            {
+                IElementHandler handler = child.Handler;
+                child?.Handler?.DisconnectHandler();
+                (handler?.PlatformView as UIView)?.RemoveFromSuperview();
+                (handler?.PlatformView as UIView)?.Dispose();
+            }
         }
 
         view?.Handler?.DisconnectHandler();

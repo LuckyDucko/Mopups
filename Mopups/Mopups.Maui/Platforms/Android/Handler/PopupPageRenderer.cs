@@ -115,13 +115,13 @@ public class PopupPageRenderer : ContentViewGroup
                 systemPadding = new Thickness();
             }
 
-            (PopupHandler.VirtualView as PopupPage).SetValue(PopupPage.SystemPaddingProperty, systemPadding);
-            (PopupHandler.VirtualView as PopupPage).SetValue(PopupPage.KeyboardOffsetProperty, keyboardOffset);
+            (PopupHandler.VirtualView as PopupPage)?.SetValue(PopupPage.SystemPaddingProperty, systemPadding);
+            (PopupHandler.VirtualView as PopupPage)?.SetValue(PopupPage.KeyboardOffsetProperty, keyboardOffset);
 
             if (changed)
-                (PopupHandler.VirtualView as PopupPage).Layout(new Rect(Context.FromPixels(left), Context.FromPixels(top), Context.FromPixels(right), Context.FromPixels(bottom)));
+                (PopupHandler.VirtualView as PopupPage)?.Layout(new Rect(Context.FromPixels(left), Context.FromPixels(top), Context.FromPixels(right), Context.FromPixels(bottom)));
             else
-                (PopupHandler.VirtualView as PopupPage).ForceLayout();
+                (PopupHandler.VirtualView as PopupPage)?.ForceLayout();
             base.OnLayout(changed, left, top, right, bottom);
             //base.OnLayout(changed, 20, 500, 1080, 2000);
             //base.OnLayout(changed, visibleRect.Left, visibleRect.Top, visibleRect.Right, visibleRect.Bottom);
