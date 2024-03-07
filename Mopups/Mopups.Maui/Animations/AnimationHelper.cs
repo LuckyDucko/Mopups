@@ -8,7 +8,10 @@ public static class AnimationHelper
 		get
 		{
 #if __ANDROID__
-			return Android.Animation.ValueAnimator.AreAnimatorsEnabled();
+			if (Android.OS.Build.VERSION.SdkInt >= Android.OS.BuildVersionCodes.O)
+			{
+				return Android.Animation.ValueAnimator.AreAnimatorsEnabled();
+			}
 #endif
 			return true;
 		}
