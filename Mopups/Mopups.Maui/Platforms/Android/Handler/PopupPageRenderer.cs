@@ -115,13 +115,13 @@ public class PopupPageRenderer : ContentViewGroup
                 systemPadding = new Thickness();
             }
 
-            (PopupHandler.VirtualView as PopupPage)?.SetValue(PopupPage.SystemPaddingProperty, systemPadding);
-            (PopupHandler.VirtualView as PopupPage)?.SetValue(PopupPage.KeyboardOffsetProperty, keyboardOffset);
+            (PopupHandler?.VirtualView as PopupPage)?.SetValue(PopupPage.SystemPaddingProperty, systemPadding);
+            (PopupHandler?.VirtualView as PopupPage)?.SetValue(PopupPage.KeyboardOffsetProperty, keyboardOffset);
 
             if (changed)
-                (PopupHandler.VirtualView as PopupPage)?.Layout(new Rect(Context.FromPixels(left), Context.FromPixels(top), Context.FromPixels(right), Context.FromPixels(bottom)));
+                (PopupHandler?.VirtualView as PopupPage)?.Layout(new Rect(Context.FromPixels(left), Context.FromPixels(top), Context.FromPixels(right), Context.FromPixels(bottom)));
             else
-                (PopupHandler.VirtualView as PopupPage)?.ForceLayout();
+                (PopupHandler?.VirtualView as PopupPage)?.ForceLayout();
             base.OnLayout(changed, left, top, right, bottom);
             //base.OnLayout(changed, 20, 500, 1080, 2000);
             //base.OnLayout(changed, visibleRect.Left, visibleRect.Top, visibleRect.Right, visibleRect.Bottom);
@@ -137,17 +137,19 @@ public class PopupPageRenderer : ContentViewGroup
         var activity = Platform.CurrentActivity;
         var decoreView = activity?.Window?.DecorView;
         //activity?.Window?.SetSoftInputMode(SoftInput.AdjustResize);
-        Context.HideKeyboard(decoreView);
+        if (decoreView != null)
+            Context?.HideKeyboard(decoreView);
         base.OnAttachedToWindow();
     }
 
     protected override void OnDetachedFromWindow()
     {
-        Device.StartTimer(TimeSpan.FromMilliseconds(0), () =>
+        Application.Current?.Dispatcher.StartTimer(TimeSpan.FromMilliseconds(0), () =>
         {
             var activity = Platform.CurrentActivity;
             var decoreView = activity?.Window?.DecorView;
-            Context.HideKeyboard(decoreView);
+            if (decoreView != null)
+                Context?.HideKeyboard(decoreView);
             return false;
         });
 
@@ -170,7 +172,7 @@ public class PopupPageRenderer : ContentViewGroup
         {
             return false;
         }
-        if ((PopupHandler.VirtualView as PopupPage).BackgroundInputTransparent)
+        if ((PopupHandler?.VirtualView is PopupPage popupPage) && popupPage.BackgroundInputTransparent)
         {
             return base.DispatchTouchEvent(e);
         }
@@ -192,11 +194,11 @@ public class PopupPageRenderer : ContentViewGroup
 
             _gestureDetector.OnTouchEvent(e);
 
-            if ((PopupHandler?.VirtualView as PopupPage).BackgroundInputTransparent)
+            if ((PopupHandler?.VirtualView is PopupPage popupPage) && popupPage.BackgroundInputTransparent)
             {
                 if ((ChildCount > 0 && !IsInRegion(e.RawX, e.RawY, PopupHandler?.PlatformView.GetChildAt(0)!)) || ChildCount == 0)
                 {
-                    (PopupHandler?.VirtualView as PopupPage).SendBackgroundClick();
+                    popupPage.SendBackgroundClick();
 
                     return false;
                 }
@@ -227,11 +229,20 @@ public class PopupPageRenderer : ContentViewGroup
         if (ChildCount == 0)
             return;
 
-        var isInRegion = IsInRegion(e.RawX, e.RawY, PopupHandler.PlatformView.GetChildAt(0));
-
-        if (!isInRegion)
+        if (PopupHandler != null)
         {
-            (PopupHandler.VirtualView as PopupPage).SendBackgroundClick();
+            var child = PopupHandler.PlatformView.GetChildAt(0);
+
+            if (child != null)
+            {
+                var isInRegion = IsInRegion(e.RawX, e.RawY, child);
+
+                if (!isInRegion)
+                {
+                    if (PopupHandler.VirtualView is PopupPage popupPage)
+                        popupPage.SendBackgroundClick();
+                }
+            }
         }
     }
 }
