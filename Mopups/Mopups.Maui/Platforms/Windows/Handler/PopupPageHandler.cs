@@ -1,4 +1,5 @@
 ﻿using Microsoft.Maui.Handlers;
+using Microsoft.Maui.Layouts;
 using Microsoft.Maui.Platform;
 
 namespace Mopups.Platforms.Windows
@@ -7,6 +8,13 @@ namespace Mopups.Platforms.Windows
     {
         public PopupPageHandler()
         {
+        }
+
+        protected override void ConnectHandler(ContentPanel platformView)
+        {
+            base.ConnectHandler(platformView);
+
+            PlatformView.SizeChanged += (_, e) => VirtualView.ComputeDesiredSize(e.NewSize.Width, e.NewSize.Height);
         }
 
         protected override ContentPanel CreatePlatformView()
