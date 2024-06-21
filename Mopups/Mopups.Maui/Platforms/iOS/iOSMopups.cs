@@ -30,7 +30,10 @@ internal class iOSMopups : IPopupPlatform
 
         if (IsiOS13OrNewer)
         {
-            var connectedScene = UIApplication.SharedApplication.ConnectedScenes.ToArray().FirstOrDefault(x => x.ActivationState == UISceneActivationState.ForegroundActive);
+            var connectedScene = UIApplication.SharedApplication.ConnectedScenes.ToArray()
+                .Where(scene => scene.Session.Role == UIWindowSceneSessionRole.Application)
+                .FirstOrDefault(x => x.ActivationState == UISceneActivationState.ForegroundActive);
+
             if (connectedScene != null && connectedScene is UIWindowScene windowScene)
                 window = new PopupWindow(windowScene);
             else
@@ -65,6 +68,7 @@ internal class iOSMopups : IPopupPlatform
                 .ConnectedScenes
                 .ToArray()
                 .OfType<UIWindowScene>()
+                .Where(scene => scene.Session.Role == UIWindowSceneSessionRole.Application)
                 .SelectMany(scene => scene.Windows)
                 .FirstOrDefault(window => window.IsKeyWindow);
 

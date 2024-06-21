@@ -1,7 +1,7 @@
 ﻿using CoreGraphics;
 
 using Microsoft.Maui.Controls.Compatibility.Platform.iOS;
-
+using Microsoft.Maui.Platform;
 using Mopups.Interfaces;
 using Mopups.Pages;
 using Mopups.Platforms.MacCatalyst;
@@ -36,7 +36,16 @@ internal class MacOSMopups : IPopupPlatform
 
         if (IsiOS13OrNewer)
         {
-            var connectedScene = UIApplication.SharedApplication.ConnectedScenes.ToArray().FirstOrDefault(x => x.ActivationState == UISceneActivationState.ForegroundActive);
+            UIScene connectedScene = null;
+
+            if(page.Parent != null && page.Parent.Handler != null && page.Parent.Handler.MauiContext != null) {
+                var nativeMainPage = page.Parent.ToPlatform(page.Parent.Handler.MauiContext);
+                connectedScene = nativeMainPage.Window.WindowScene;
+            }
+            
+            if(connectedScene == null) 
+                connectedScene = UIApplication.SharedApplication.ConnectedScenes.ToArray().FirstOrDefault(x => x.ActivationState == UISceneActivationState.ForegroundActive);
+
             if (connectedScene != null && connectedScene is UIWindowScene windowScene)
                 window = new PopupWindow(windowScene);
             else
