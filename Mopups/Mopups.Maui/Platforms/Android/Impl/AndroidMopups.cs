@@ -126,7 +126,7 @@ public class AndroidMopups : IPopupPlatform
                 }
             }
             
-            accessibilityStates.Add(test, views);
+            accessibilityStates.Add(popup.GetType(), views);
         }
 
         if(accessibilityStates.ContainsKey(popup.GetType()))
