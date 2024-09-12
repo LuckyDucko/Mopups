@@ -96,11 +96,9 @@ public class AndroidMopups : IPopupPlatform
             }
 
             int navCount = mainPage.Navigation.NavigationStack.Count;
-            int modalCount = mainPage.Navigation.ModalStack.Count;
-
             if(navCount > 0)
             {
-                var androidView = mainPage.Navigation?.NavigationStack[navCount - 1]?.Handler?.PlatformView as Android.Views.View;
+                var androidView = mainPage.Navigation.NavigationStack[navCount - 1]?.Handler?.PlatformView as Android.Views.View;
 
                 if(androidView is not null && androidView.ImportantForAccessibility != ImportantForAccessibility.NoHideDescendants)
                 {
@@ -108,16 +106,26 @@ public class AndroidMopups : IPopupPlatform
                 }
             }
 
+            int modalCount = mainPage.Navigation.ModalStack.Count;
             if(modalCount > 0)
             {
-                var androidView = mainPage.Navigation?.ModalStack[modalCount - 1]?.Handler?.PlatformView as Android.Views.View;
+                var androidView = mainPage.Navigation.ModalStack[modalCount - 1]?.Handler?.PlatformView as Android.Views.View;
                 if(androidView is not null && androidView.ImportantForAccessibility != ImportantForAccessibility.NoHideDescendants)
                 {
                     views.Add(androidView);
                 }
             }
 
-            var test = popup.GetType();
+            var popupCount = MopupService.Instance.PopupStack.Count;
+            if(popupCount > 1)
+            {
+                var androidView = MopupService.Instance.PopupStack[popupCount - 2]?.Handler?.PlatformView as Android.Views.View;
+                if(androidView is not null && androidView.ImportantForAccessibility != ImportantForAccessibility.NoHideDescendants)
+                {
+                    views.Add(androidView);
+                }
+            }
+            
             accessibilityStates.Add(test, views);
         }
 
