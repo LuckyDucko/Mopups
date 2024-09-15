@@ -18,8 +18,6 @@ internal class iOSMopups : IPopupPlatform
     {
         page.Parent ??= Application.Current?.MainPage;
 
-        page.DescendantRemoved += HandleChildRemoved;
-
         var keyWindow = GetKeyWindow(UIApplication.SharedApplication);
         if (keyWindow?.WindowLevel == UIWindowLevel.Normal)
             keyWindow.WindowLevel = -1;
@@ -82,8 +80,6 @@ internal class iOSMopups : IPopupPlatform
 
         await Task.Delay(50);
 
-        page.DescendantRemoved -= HandleChildRemoved;
-
         if (handler != null && viewController != null && !viewController.IsBeingDismissed)
         {
             var window = viewController.View?.Window;
@@ -134,11 +130,4 @@ internal class iOSMopups : IPopupPlatform
         (view?.Handler?.PlatformView as UIView)?.RemoveFromSuperview();
         (view?.Handler?.PlatformView as UIView)?.Dispose();
     }
-
-    private void HandleChildRemoved(object sender, ElementEventArgs e)
-    {
-        var view = e.Element;
-        DisposeModelAndChildrenHandlers((VisualElement)view);
-    }
-
 }
