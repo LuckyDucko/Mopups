@@ -24,7 +24,7 @@ namespace Mopups.Platforms.iOS
 
         }
 
-         public override UIView? HitTest(CGPoint point, UIEvent? uievent)
+        public override UIView? HitTest(CGPoint point, UIEvent? uievent)
         {
             try
             {
@@ -52,6 +52,12 @@ namespace Mopups.Platforms.iOS
             }
             catch(Exception)
             {
+                // Perform any necessary cleanup here
+                RootViewController?.View?.RemoveFromSuperview();
+                RootViewController = null;
+                Hidden = true;
+                Dispose();
+
                 return null;
             }
         }
