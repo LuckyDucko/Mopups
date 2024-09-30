@@ -1,25 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-
-using Mopups.PreBaked.AbstractClasses;
-
-using Mopups.Pages;
+﻿using Mopups.Pages;
 
 namespace Mopups.PreBaked.Interfaces
 {
-	public interface IPreBakedMopupService
+    public interface IPreBakedMopupService
 	{
 		TPopupPage AttachViewModel<TPopupPage, TViewModel>(TPopupPage popupPage, TViewModel viewModel)
 			where TPopupPage : PopupPage, IGenericViewModel<TViewModel>
-			where TViewModel : BasePopupViewModel;
+			where TViewModel : IBasePopupViewModel;
 		TPopupPage CreatePopupPage<TPopupPage>() where TPopupPage : PopupPage, new();
 		Task ForceMinimumWaitTime(Task returnableTask, int millisecondsDelay);
 		Task<TAsyncActionResult> ForceMinimumWaitTime<TAsyncActionResult>(Task<TAsyncActionResult> returnableTask, int millisecondsDelay);
 		void PopAsync<TPopupType>() where TPopupType : PopupPage, new();
 		void PopAsync<TPopupType>(Action<Exception> exceptionActionForSafeFireAndForget) where TPopupType : PopupPage, new();
 		Task<TReturnable> PushAsync<TViewModel, TPopupPage, TReturnable>(TViewModel modalViewModel)
-			where TViewModel : PopupViewModel<TReturnable>
+			where TViewModel : IPopupViewModel<TReturnable>, IBasePopupViewModel
 			where TPopupPage : PopupPage, IGenericViewModel<TViewModel>, new();
 		Task<TSyncActionResult> WrapReturnableFuncInLoader<TSyncActionResult>(Func<TSyncActionResult> action, Color loaderColour, Color loaderPopupColour, List<string> reasonsForLoader, Color textColour, int millisecondsBetweenReasons = 2000);
 		Task<TSyncActionResult> WrapReturnableFuncInLoader<TSyncActionResult, TPopupPage>(Func<TSyncActionResult> action, Color loaderColour, Color loaderPopupColour, List<string> reasonsForLoader, Color textColour, int millisecondsBetweenReasons = 2000) where TPopupPage : PopupPage, IGenericViewModel<PopupPages.Loader.LoaderViewModel>, new();
