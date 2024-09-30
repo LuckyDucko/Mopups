@@ -24,25 +24,42 @@ namespace Mopups.Platforms.iOS
 
         }
 
-        public override UIView HitTest(CGPoint point, UIEvent? uievent)
+        public override UIView? HitTest(CGPoint point, UIEvent? uievent)
         {
-            var platformHandler = (PopupPageRenderer?)RootViewController;
-            var renderer = platformHandler?.Handler;
-            var hitTestResult = base.HitTest(point, uievent);
-
-            if (!(platformHandler?.Handler?.VirtualView is PopupPage formsElement))
-                return hitTestResult;
-
-            if (formsElement.InputTransparent)
-                return null!;
-
-            if (formsElement.BackgroundInputTransparent && renderer?.PlatformView == hitTestResult)
+            try
             {
-                formsElement.SendBackgroundClick();
-                return null!;
+                var platformHandler = (PopupPageRenderer?)RootViewController;
+                var renderer = platformHandler?.Handler;
+                var hitTestResult = base.HitTest(point, uievent);
+
+                if(renderer?.VirtualView is null)
+                {
+                    return hitTestResult;
+                }
+
+                if(renderer.VirtualView is not PopupPage formsElement)
+                    return hitTestResult;
+
+                if(formsElement.InputTransparent)
+                    return null;
+
+                if(formsElement.BackgroundInputTransparent && renderer.PlatformView == hitTestResult)
+                {
+                    formsElement.SendBackgroundClick();
+                    return null;
+                }
+                return hitTestResult;
             }
-            return hitTestResult;
-                
+            catch(Exception)
+            {
+                // Perform any necessary cleanup here
+                RootViewController?.View?.RemoveFromSuperview();
+                RootViewController = null;
+                Hidden = true;
+                Dispose();
+
+                return null;
+            }
         }
     }
 }
