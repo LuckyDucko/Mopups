@@ -166,7 +166,7 @@ to use this version, just call `TViewModel.GeneratePopup<YourXamlPopupPage>()`
 
 <!-- LICENSE -->
 ## License
-This project uses the MIT License
+This project uses the BSD 3-Clause License
 
 <!-- CONTACT -->
 ## Contact
