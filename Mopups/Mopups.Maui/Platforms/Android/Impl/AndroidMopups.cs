@@ -1,6 +1,7 @@
 ﻿using Android.Views;
 using Android.Widget;
 using AsyncAwaitBestPractices;
+using Mopups.Extensions;
 using Mopups.Interfaces;
 using Mopups.Pages;
 using Mopups.Services;
@@ -38,10 +39,7 @@ public class AndroidMopups : IPopupPlatform
     {
         HandleAccessibility(true, page.DisableAndroidAccessibilityHandling, page);
 
-        page.Parent = MauiApplication.Current.Application.Windows[0].Content as Element;
-        page.Parent ??= MauiApplication.Current.Application.Windows[0].Content as Element;
-
-        var handler = page.Handler ??= new PopupPageHandler(page.Parent.Handler.MauiContext);
+        var handler = page.Handler ??= new PopupPageHandler(((Element)MauiApplication.Current.Application.Windows[0].Content).FindMauiContext());
 
         var androidNativeView = handler.PlatformView as Android.Views.View;
         var decoreView = Platform.CurrentActivity?.Window?.DecorView as FrameLayout;
