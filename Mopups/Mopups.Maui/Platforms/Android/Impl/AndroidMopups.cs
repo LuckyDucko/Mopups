@@ -39,7 +39,10 @@ public class AndroidMopups : IPopupPlatform
     {
         HandleAccessibility(true, page.DisableAndroidAccessibilityHandling, page);
 
-        var handler = page.Handler ??= new PopupPageHandler(((Element)MauiApplication.Current.Application.Windows[0].Content).FindMauiContext());
+        page.Parent = MauiApplication.Current.Application.Windows[0].Content as Element;
+        page.Parent ??= MauiApplication.Current.Application.Windows[0].Content as Element;
+
+        var handler = page.Handler ??= new PopupPageHandler(page.Parent.FindMauiContext());
 
         var androidNativeView = handler.PlatformView as Android.Views.View;
         var decoreView = Platform.CurrentActivity?.Window?.DecorView as FrameLayout;
