@@ -1,6 +1,9 @@
 ﻿using Android.Views;
 using Android.Widget;
+using AndroidX.Activity;
+using AndroidX.Fragment.App;
 using AsyncAwaitBestPractices;
+using Microsoft.Maui.Platform;
 using Mopups.Interfaces;
 using Mopups.Pages;
 using Mopups.Services;
@@ -9,7 +12,7 @@ namespace Mopups.Droid.Implementation;
 
 public class AndroidMopups : IPopupPlatform
 {
-    private static FrameLayout? DecoreView => Platform.CurrentActivity?.Window?.DecorView as FrameLayout;
+    private static FrameLayout? DecoreView => GetTopFragmentDecorView();
 
     public static bool SendBackPressed(Action? backPressedHandler = null)
     {
@@ -44,13 +47,11 @@ public class AndroidMopups : IPopupPlatform
         var handler = page.Handler ??= new PopupPageHandler(page.Parent.Handler.MauiContext);
 
         var androidNativeView = handler.PlatformView as Android.Views.View;
-        var decoreView = Platform.CurrentActivity?.Window?.DecorView as FrameLayout;
-
-        decoreView?.AddView(androidNativeView);
+        DecoreView?.AddView(androidNativeView);
 
         return PostAsync(androidNativeView);
     }
-
+    
     public Task RemoveAsync(PopupPage page)
     {
         var renderer = IPopupPlatform.GetOrCreateHandler<PopupPageHandler>(page);
@@ -170,5 +171,29 @@ public class AndroidMopups : IPopupPlatform
         nativeView.Post(() => tcs.SetResult(true));
 
         return tcs.Task;
+    }
+    
+    static FrameLayout? GetTopFragmentDecorView()
+    {
+        if (Platform.CurrentActivity is not ComponentActivity componentActivity)
+        {
+            return null;
+        }
+
+        var fragments = componentActivity.GetFragmentManager()?.Fragments;
+        
+        if (fragments is null || !fragments.Any())
+        {
+            return Platform.CurrentActivity?.Window?.DecorView as FrameLayout;;
+        }
+
+        var topFragment = fragments[^1];
+
+        if (topFragment is DialogFragment dialogFragment)
+        {
+            return dialogFragment.Dialog?.Window?.DecorView as FrameLayout;
+        }
+
+        return topFragment.Activity?.Window?.DecorView as FrameLayout;
     }
 }
