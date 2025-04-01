@@ -12,6 +12,7 @@ namespace Mopups.Droid.Implementation;
 
 public class AndroidMopups : IPopupPlatform
 {
+    private static IList<FrameLayout?> DecoreViews => GetAllFragmentDecorViews();
     private static FrameLayout? DecoreView => GetTopFragmentDecorView();
 
     public static bool SendBackPressed(Action? backPressedHandler = null)
@@ -56,11 +57,14 @@ public class AndroidMopups : IPopupPlatform
     {
         var renderer = IPopupPlatform.GetOrCreateHandler<PopupPageHandler>(page);
 
-        if(renderer != null)
+        if (renderer != null)
         {
             HandleAccessibility(false, page.DisableAndroidAccessibilityHandling, page);
 
-            DecoreView?.RemoveView(renderer.PlatformView as Android.Views.View);
+            foreach (var decoreView in DecoreViews)
+            {
+                decoreView?.RemoveView(renderer.PlatformView as Android.Views.View);
+            }
             renderer.DisconnectHandler(); //?? no clue if works
             page.Parent = null;
 
@@ -195,5 +199,35 @@ public class AndroidMopups : IPopupPlatform
         }
 
         return topFragment.Activity?.Window?.DecorView as FrameLayout;
+    }
+
+    static IList<FrameLayout?> GetAllFragmentDecorViews()
+    {
+        IList<FrameLayout?> decoreViews = new List<FrameLayout?>();
+        if (Platform.CurrentActivity is not ComponentActivity componentActivity)
+        {
+            return decoreViews;
+        }
+
+        var fragments = componentActivity.GetFragmentManager()?.Fragments;
+
+        if (fragments is null || !fragments.Any())
+        {
+            decoreViews.Add(Platform.CurrentActivity?.Window?.DecorView as FrameLayout);
+            return decoreViews;
+        }
+
+        foreach (var fragment in fragments)
+        {
+            if (fragment is DialogFragment dialogFragment)
+            {
+                decoreViews.Add(dialogFragment.Dialog?.Window?.DecorView as FrameLayout);
+                continue;
+            }
+
+            decoreViews.Add(fragment.Activity?.Window?.DecorView as FrameLayout);
+        }
+
+        return decoreViews;
     }
 }
