@@ -1,8 +1,9 @@
-﻿using Android.Views;
+using Android.Views;
 using Android.Widget;
 using AndroidX.Activity;
 using AndroidX.Fragment.App;
 using AsyncAwaitBestPractices;
+using Mopups.Extensions;
 using Microsoft.Maui.Platform;
 using Mopups.Interfaces;
 using Mopups.Pages;
@@ -44,7 +45,7 @@ public class AndroidMopups : IPopupPlatform
         page.Parent = MauiApplication.Current.Application.Windows[0].Content as Element;
         page.Parent ??= MauiApplication.Current.Application.Windows[0].Content as Element;
 
-        var handler = page.Handler ??= new PopupPageHandler(page.Parent.Handler.MauiContext);
+        var handler = page.Handler ??= new PopupPageHandler(page.Parent.FindMauiContext());
 
         var androidNativeView = handler.PlatformView as Android.Views.View;
         DecoreView?.AddView(androidNativeView);
