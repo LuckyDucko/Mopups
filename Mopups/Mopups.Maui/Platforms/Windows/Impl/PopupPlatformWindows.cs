@@ -51,7 +51,8 @@ namespace Mopups.Windows.Implementation
 
         public async Task AddAsync(PopupPage page)
         {
-            page.Parent = Application.Current.MainPage;
+            var mainPage = Application.Current.MainPage;
+            mainPage.AddLogicalChild(page);
 
             var popup = new global::Microsoft.UI.Xaml.Controls.Primitives.Popup();
 
@@ -62,16 +63,12 @@ namespace Mopups.Windows.Implementation
             // Then you can use contructor resolution instead of singletons
             // But I figured we could do that in a later PR and just work on windows here
 
-            var renderer = (PopupPageRenderer)page.ToPlatform(Application.Current.MainPage.Handler.MauiContext);
-
+            var renderer = (PopupPageRenderer)page.ToPlatform(mainPage.Handler.MauiContext);
             renderer.Prepare(popup);
             popup.Child = renderer;
 
-
             // https://github.com/microsoft/microsoft-ui-xaml/issues/3389
-            popup.XamlRoot = 
-                Application.Current.MainPage.Handler.MauiContext.Services.GetService<Microsoft.UI.Xaml.Window>().Content.XamlRoot;
-
+            popup.XamlRoot = mainPage.Handler.MauiContext.Services.GetService<Microsoft.UI.Xaml.Window>().Content.XamlRoot;
             popup.IsOpen = true;
             page.ForceLayout();
 
@@ -91,7 +88,7 @@ namespace Mopups.Windows.Implementation
                 renderer.Destroy();
 
                 Cleanup(page);
-                page.Parent = null;
+                page.Parent?.RemoveLogicalChild(page);
                 popup.Child = null;
                 popup.IsOpen = false;
             }
