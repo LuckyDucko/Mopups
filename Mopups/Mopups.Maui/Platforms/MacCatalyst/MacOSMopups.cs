@@ -22,7 +22,8 @@ internal class MacOSMopups : IPopupPlatform
 
     public Task AddAsync(PopupPage page)
     {
-        page.Parent = Application.Current.MainPage;
+        var mainPage = Application.Current.MainPage;
+        mainPage.AddLogicalChild(page);
 
         page.DescendantRemoved += HandleChildRemoved;
 
@@ -102,7 +103,7 @@ internal class MacOSMopups : IPopupPlatform
         if (handler != null && viewController != null && !viewController.IsBeingDismissed)
         {
             var window = viewController.View?.Window;
-            page.Parent = null;
+            page.Parent?.RemoveLogicalChild(page);
 
             if (window != null)
             {

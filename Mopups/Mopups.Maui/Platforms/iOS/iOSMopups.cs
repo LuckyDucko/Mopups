@@ -16,7 +16,8 @@ internal class iOSMopups : IPopupPlatform
 
     public Task AddAsync(PopupPage page)
     {
-        page.Parent ??= Application.Current?.MainPage;
+        var mainPage = Application.Current.MainPage;
+        mainPage.AddLogicalChild(page);
 
         var keyWindow = GetKeyWindow(UIApplication.SharedApplication);
         if (keyWindow?.WindowLevel == UIWindowLevel.Normal)
@@ -87,7 +88,7 @@ internal class iOSMopups : IPopupPlatform
         if (handler != null && viewController != null && !viewController.IsBeingDismissed)
         {
             var window = viewController.View?.Window;
-            page.Parent = null;
+            page.Parent?.RemoveLogicalChild(page);
 
             if (window != null)
             {
