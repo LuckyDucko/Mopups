@@ -1,25 +1,17 @@
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Android.Views;
 using Android.Widget;
 using AndroidX.Activity;
 using AndroidX.Fragment.App;
 using AsyncAwaitBestPractices;
-using Microsoft.Maui;
 using Microsoft.Maui.Platform;
 using Mopups.Interfaces;
 using Mopups.Pages;
 using Mopups.Services;
-using System;
-using Microsoft.Maui.ApplicationModel;
-using Microsoft.Maui.Controls;
 
 namespace Mopups.Droid.Implementation;
 
 public class AndroidMopups : IPopupPlatform
 {
-    private static FrameLayout? DecoreView =>  GetTopFragmentDecorView();
 
     public static bool SendBackPressed(Action? backPressedHandler = null)
     {
@@ -211,29 +203,6 @@ public class AndroidMopups : IPopupPlatform
         if (topFragment is DialogFragment dialogFragment)
             return dialogFragment.Dialog?.Window?.DecorView as FrameLayout;
 
-        return topFragment.Activity?.Window?.DecorView as FrameLayout;
-    }
-
-    static FrameLayout? GetTopFragmentDecorView()
-    {
-        if (Platform.CurrentActivity is not ComponentActivity componentActivity)
-        {
-            return null;
-        }
-
-        var fragments = componentActivity.GetFragmentManager()?.Fragments;
-
-        if (fragments is null || !fragments.Any())
-        {
-            return Platform.CurrentActivity?.Window?.DecorView as FrameLayout;;
-        }
-
-        var topFragment = fragments[^1];
-
-        if (topFragment is DialogFragment dialogFragment)
-        {
-            return dialogFragment.Dialog?.Window?.DecorView as FrameLayout;
-        }
         return topFragment.Activity?.Window?.DecorView as FrameLayout;
     }
 }
