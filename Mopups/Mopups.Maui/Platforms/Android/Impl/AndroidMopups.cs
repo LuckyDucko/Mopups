@@ -67,7 +67,10 @@ public class AndroidMopups : IPopupPlatform
             renderer.DisconnectHandler();
             page.Parent = null;
 
-            await PostAsync(decorView);
+            if (decorView != null)
+            {
+                await PostAsync(decorView);
+            }
         }
     }
 
