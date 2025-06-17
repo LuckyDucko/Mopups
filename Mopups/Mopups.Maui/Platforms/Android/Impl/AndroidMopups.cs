@@ -180,7 +180,7 @@ public class AndroidMopups : IPopupPlatform
     static async Task<FrameLayout?> GetTopFragmentDecorViewWithRetryAsync()
     {
         ComponentActivity? componentActivity = null;
-
+        //Try to get the currenct acticity 5 times.
         for (int i = 0; i < 5; i++)
         {
             if (Platform.CurrentActivity is ComponentActivity activity)
