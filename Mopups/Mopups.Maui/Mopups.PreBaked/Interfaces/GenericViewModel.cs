@@ -1,8 +1,6 @@
-﻿using Mopups.PreBaked.AbstractClasses;
-
-namespace Mopups.PreBaked.Interfaces
+﻿namespace Mopups.PreBaked.Interfaces
 {
-    public interface IGenericViewModel<TViewModel> where TViewModel : BasePopupViewModel
+    public interface IGenericViewModel<TViewModel> where TViewModel : IBasePopupViewModel
     {
         void SetViewModel(TViewModel viewModel);
         TViewModel GetViewModel();

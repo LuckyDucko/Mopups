@@ -75,8 +75,8 @@ namespace Mopups.PreBaked.Services
 
 		public TPopupPage AttachViewModel<TPopupPage, TViewModel>(TPopupPage popupPage, TViewModel viewModel)
 			where TPopupPage : PopupPage, IGenericViewModel<TViewModel>
-			where TViewModel : BasePopupViewModel
-		{
+			where TViewModel : IBasePopupViewModel
+        {
 			popupPage.SetViewModel(viewModel);
 			viewModel.RunOnAttachment<TPopupPage>(popupPage);
 			return popupPage;
@@ -84,8 +84,8 @@ namespace Mopups.PreBaked.Services
 
 		public async Task<TReturnable> PushAsync<TViewModel, TPopupPage, TReturnable>(TViewModel modalViewModel)
 			where TPopupPage : PopupPage, IGenericViewModel<TViewModel>, new()
-			where TViewModel : PopupViewModel<TReturnable>
-		{
+			where TViewModel : IPopupViewModel<TReturnable>, IBasePopupViewModel
+        {
 			TPopupPage popupModal = AttachViewModel(CreatePopupPage<TPopupPage>(), modalViewModel);
 			await s_popupNavigation.PushAsync(popupModal);
 			return await modalViewModel.Returnable.Task;
