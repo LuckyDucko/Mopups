@@ -87,7 +87,7 @@ public partial class PopupPage : ContentPage
     public double KeyboardOffset
     {
         get => (double)GetValue(KeyboardOffsetProperty);
-        private set => SetValue(KeyboardOffsetProperty, value);
+        internal set => SetValue(KeyboardOffsetProperty, value);
     }
 
     public static readonly BindableProperty BackgroundClickedCommandProperty = BindableProperty.Create(nameof(BackgroundClickedCommand), typeof(ICommand), typeof(PopupPage));
@@ -123,6 +123,9 @@ public partial class PopupPage : ContentPage
     {
         return false;
     }
+
+    private Thickness basePadding;
+
     protected override void OnPropertyChanged(string? propertyName = null)
     {
         base.OnPropertyChanged(propertyName);
@@ -134,7 +137,49 @@ public partial class PopupPage : ContentPage
             case nameof(SystemPaddingSides):
             case nameof(SystemPadding):
                 ForceLayout();
+
+                if (HasSystemPadding)
+                {
+                    // padding is controled by SystemPadding and SystemPaddingSides
+                    var padding = ApplySides(SystemPadding, SystemPaddingSides, basePadding);
+
+                    // add keyboard offset, if one
+                    if (HasKeyboardOffset)
+                    {
+                        padding.Bottom += KeyboardOffset;
+                    }
+
+                    Padding = padding;
+                }
+                else if (HasKeyboardOffset)
+                {
+                    var padding = basePadding;
+                    padding.Bottom += KeyboardOffset;
+                    Padding = padding;
+                }
+                else
+                {
+                    Padding = basePadding;
+                }
                 break;
+
+            case nameof(Padding):
+                // this is basically the reverse of the above logic; retrive the base padding;
+                // this starts out with the current padding minus the keyboard offset if one.
+                basePadding = Padding;
+
+                if (HasKeyboardOffset && basePadding.Bottom >= KeyboardOffset)
+                {
+                    basePadding.Bottom -= KeyboardOffset;
+                }
+
+                // then, if we have system padding, only save the sides which are NOT system padding
+                if (HasSystemPadding)
+                {
+                    basePadding = ApplySides(basePadding, ~SystemPaddingSides, default);
+                }
+                break;
+
                 //case nameof(IsAnimating):
                 //    IsAnimationEnabled = IsAnimating;
                 //    break;
@@ -198,6 +243,15 @@ public partial class PopupPage : ContentPage
     //    base.LayoutChildren(x, y, width, height);
     //}
 
+    private static Thickness ApplySides(Thickness paddingOverride, PaddingSide paddingSides, Thickness paddingBase)
+    {
+        return new Thickness(
+            paddingSides.HasFlag(PaddingSide.Left) ? paddingOverride.Left : paddingBase.Left,
+            paddingSides.HasFlag(PaddingSide.Top) ? paddingOverride.Top : paddingBase.Top,
+            paddingSides.HasFlag(PaddingSide.Right) ? paddingOverride.Right : paddingBase.Right,
+            paddingSides.HasFlag(PaddingSide.Bottom) ? paddingOverride.Bottom : paddingBase.Bottom
+        );
+    }
 
     #region Animation Methods
 

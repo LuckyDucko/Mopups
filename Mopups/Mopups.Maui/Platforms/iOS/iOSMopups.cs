@@ -19,7 +19,7 @@ internal class iOSMopups : IPopupPlatform
         var mainPage = Application.Current.MainPage;
         mainPage.AddLogicalChild(page);
 
-        var keyWindow = GetKeyWindow();
+        var keyWindow = MopupsHelper.FindKeyWindow();
         if (keyWindow?.WindowLevel == UIWindowLevel.Normal)
             keyWindow.WindowLevel = -1;
 
@@ -29,9 +29,7 @@ internal class iOSMopups : IPopupPlatform
 
         if (IsiOS13OrNewer)
         {
-            var connectedScene = UIApplication.SharedApplication.ConnectedScenes.ToArray()
-                .Where(scene => scene.Session.Role == UIWindowSceneSessionRole.Application)
-                .FirstOrDefault(x => x.ActivationState == UISceneActivationState.ForegroundActive);
+            var connectedScene = MopupsHelper.FindKeyScene();
 
             if (connectedScene != null && connectedScene is UIWindowScene windowScene)
                 window = new PopupWindow(windowScene);
@@ -98,26 +96,11 @@ internal class iOSMopups : IPopupPlatform
             if (_windows.Count > 0)
                 _windows.Last().WindowLevel = UIWindowLevel.Normal;
             else {
-                var keyWindow = GetKeyWindow();
+                var keyWindow = MopupsHelper.FindKeyWindow();
                 if (keyWindow?.WindowLevel == -1)
                     keyWindow.WindowLevel = UIWindowLevel.Normal;
             }
         }
-    }
-    
-    private static UIWindow? GetKeyWindow()
-    {
-        if (!IsiOS13OrNewer)
-            return UIApplication.SharedApplication.KeyWindow;
-
-        var window = UIApplication.SharedApplication.ConnectedScenes
-            .ToArray()
-            .OfType<UIWindowScene>()
-            .Where(scene => scene.Session.Role == UIWindowSceneSessionRole.Application)
-            .SelectMany(scene => scene.Windows)
-            .FirstOrDefault(window => window.IsKeyWindow);
-
-        return window;
     }
 
     private static void DisposeModelAndChildrenHandlers(VisualElement view)
