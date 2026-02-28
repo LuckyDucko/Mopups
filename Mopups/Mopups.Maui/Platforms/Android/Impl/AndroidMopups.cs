@@ -185,8 +185,13 @@ public class AndroidMopups : IPopupPlatform
         {
             return null;
         }
-
-        var fragments = componentActivity.GetFragmentManager()?.Fragments;
+        
+        var fragmentManager = componentActivity.GetFragmentManager();
+        // Execute pending transactions to make sure the top fragment is not going to be affected by upcoming
+        // state change transactions.
+        fragmentManager?.ExecutePendingTransactions();
+        
+        var fragments = fragmentManager?.Fragments;
         
         if (fragments is null || !fragments.Any())
         {
