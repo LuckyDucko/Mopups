@@ -77,6 +77,9 @@ public class MoveAnimation : FadeBackgroundAnimation
                 content.TranslationX = leftOffset;
             }
 
+            content.HeightRequest = content.Height;
+            content.WidthRequest = content.Width;
+
             taskList.Add(content.TranslateTo(_defaultTranslationX, _defaultTranslationY, DurationIn, EasingIn));
         }
 
