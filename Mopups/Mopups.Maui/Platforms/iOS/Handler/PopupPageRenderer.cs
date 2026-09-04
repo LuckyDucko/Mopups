@@ -42,12 +42,12 @@ namespace Mopups.Platforms.iOS
         {
             if (disposing)
             {
-                _renderer.ViewController.View?.RemoveGestureRecognizer(_tapGestureRecognizer);
-                _renderer = null; 
+                _renderer?.ViewController?.View?.RemoveGestureRecognizer(_tapGestureRecognizer);
+                _renderer = null;
             }
 
-            base.Dispose(disposing);
             _isDisposed = true;
+            base.Dispose(disposing);
         }
 
 
