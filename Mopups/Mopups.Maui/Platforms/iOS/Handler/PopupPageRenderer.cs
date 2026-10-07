@@ -196,7 +196,7 @@ namespace Mopups.Platforms.iOS
 
         public override bool PrefersStatusBarHidden()
         {
-            return _renderer?.ViewController.PrefersStatusBarHidden() ?? false;
+            return _renderer?.ViewController?.PrefersStatusBarHidden() ?? false;
         }
 
         public override UIViewController ChildViewControllerForStatusBarStyle()
@@ -206,7 +206,8 @@ namespace Mopups.Platforms.iOS
 
         public override UIStatusBarStyle PreferredStatusBarStyle()
         {
-            return (UIStatusBarStyle)(_renderer?.ViewController.PreferredStatusBarStyle())!;
+            // UIKit can still ask after teardown has cleared _renderer; casting the null result threw.
+            return _renderer?.ViewController?.PreferredStatusBarStyle() ?? base.PreferredStatusBarStyle();
         }
 
         public override bool ShouldAutorotate()
