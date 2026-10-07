@@ -113,9 +113,21 @@ internal class iOSMopups : IPopupPlatform
 
             if (_windows.Count > 0)
                 _windows.Last().WindowLevel = UIWindowLevel.Normal;
-            else if (UIApplication.SharedApplication.KeyWindow.WindowLevel == -1)
-                UIApplication.SharedApplication.KeyWindow.WindowLevel = UIWindowLevel.Normal;
+            else
+                RestoreLoweredWindows();
         }
+    }
+
+    // AddAsync lowered the app's key window to -1. Restore every lowered window rather than asking for
+    // the key window, which can be null straight after the popup window (the key window) is hidden.
+    private static void RestoreLoweredWindows()
+    {
+        var windows = OperatingSystem.IsIOSVersionAtLeast(13)
+            ? UIApplication.SharedApplication.ConnectedScenes.ToArray().OfType<UIWindowScene>().SelectMany(scene => scene.Windows)
+            : UIApplication.SharedApplication.Windows;
+
+        foreach (var window in windows.Where(window => window.WindowLevel == -1))
+            window.WindowLevel = UIWindowLevel.Normal;
     }
 
     private static void DisposeModelAndChildrenHandlers(VisualElement view)
