@@ -53,13 +53,16 @@ namespace Mopups.Platforms.iOS
 
         private void OnTap(UITapGestureRecognizer e)
         {
-            var view = e.View.Subviews.First();
+            var view = e.View.Subviews.FirstOrDefault();
+            if (view == null)
+                return;
+
             var location = e.LocationInView(view);
             var subview = view.HitTest(location, null);
 
-            if (Equals(subview, view))
+            if (Equals(subview, view) && (Handler as IElementHandler)?.VirtualView is PopupPage page)
             {
-                ((PopupPage)Handler.VirtualView).SendBackgroundClick();
+                page.SendBackgroundClick();
             }
         }
 
@@ -74,12 +77,12 @@ namespace Mopups.Platforms.iOS
 
             void UpdateSize(PopupPageRenderer handler)
             {
-                var currentElement = ((PopupPage)Handler.VirtualView);
-
-                if (handler.Handler.PlatformView?.Superview?.Frame == null || currentElement == null)
+                // Layout and keyboard callbacks can still arrive after teardown has disconnected the handler.
+                if (handler.Handler is not IElementHandler { VirtualView: PopupPage currentElement, PlatformView: UIView platformView }
+                    || platformView.Superview == null)
                     return;
 
-                var superviewFrame = handler.Handler.PlatformView.Superview.Frame;
+                var superviewFrame = platformView.Superview.Frame;
                 var applicationFrame = UIScreen.MainScreen.ApplicationFrame;
 
                 var systemPadding = new Thickness
@@ -90,7 +93,7 @@ namespace Mopups.Platforms.iOS
                     Bottom = applicationFrame.Bottom - applicationFrame.Height - applicationFrame.Top + handler.KeyboardBounds.Height
                 };
 
-                if ((handler.Handler.VirtualView.Width != superviewFrame.Width && handler.Handler.VirtualView.Height != superviewFrame.Height)
+                if ((currentElement.Width != superviewFrame.Width && currentElement.Height != superviewFrame.Height)
                     || currentElement.SystemPadding.Bottom != systemPadding.Bottom)
                 {
                     currentElement.BatchBegin();
@@ -108,14 +111,14 @@ namespace Mopups.Platforms.iOS
             ModalPresentationStyle = UIModalPresentationStyle.OverCurrentContext;
             ModalTransitionStyle = UIModalTransitionStyle.CoverVertical;
 
-            _renderer.ViewController.View?.AddGestureRecognizer(_tapGestureRecognizer);
+            _renderer?.ViewController?.View?.AddGestureRecognizer(_tapGestureRecognizer);
         }
 
         public override void ViewDidUnload()
         {
             base.ViewDidUnload();
 
-            _renderer.ViewController.View?.RemoveGestureRecognizer(_tapGestureRecognizer);
+            _renderer?.ViewController?.View?.RemoveGestureRecognizer(_tapGestureRecognizer);
         }
 
         public override void ViewWillAppear(bool animated)
