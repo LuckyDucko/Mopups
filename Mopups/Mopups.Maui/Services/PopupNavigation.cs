@@ -12,6 +12,7 @@ public class PopupNavigation : IPopupNavigation
 
     public IReadOnlyList<PopupPage> PopupStack => _popupStack;
     private readonly List<PopupPage> _popupStack = new();
+    private readonly Dictionary<PopupPage, Task> _removals = new();
 
     public event EventHandler<PopupNavigationEventArgs>? Pushing;
 
@@ -110,13 +111,50 @@ public class PopupNavigation : IPopupNavigation
 		if (page == null)
             throw new InvalidOperationException("Page can not be null");
 
-        if (!_popupStack.Contains(page))
-            throw new InvalidOperationException("The page has not been pushed yet or has been removed already");
+        TaskCompletionSource removed;
 
-        return (MainThread.IsMainThread
-            ? RemovePage()
-            : MainThread.InvokeOnMainThreadAsync(RemovePage));
+        lock (_locker)
+        {
+            // The page stays in the stack until its removal finishes, so a call made meanwhile
+            // (background tap, PopAsync, an awaiting caller) shares that removal instead of starting another.
+            if (_removals.TryGetValue(page, out var inProgress))
+                return inProgress;
 
+            if (!_popupStack.Contains(page))
+                throw new InvalidOperationException("The page has not been pushed yet or has been removed already");
+
+            removed = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+            _removals.Add(page, removed.Task);
+        }
+
+        _ = RunRemoval();
+        return removed.Task;
+
+        async Task RunRemoval()
+        {
+            Exception? failure = null;
+
+            try
+            {
+                await (MainThread.IsMainThread
+                    ? RemovePage()
+                    : MainThread.InvokeOnMainThreadAsync(RemovePage));
+            }
+            catch (Exception ex)
+            {
+                failure = ex;
+            }
+
+            lock (_locker)
+            {
+                _removals.Remove(page);
+            }
+
+            if (failure == null)
+                removed.SetResult();
+            else
+                removed.SetException(failure);
+        }
 
         async Task RemovePage()
         {
