@@ -129,7 +129,17 @@ public class PopupNavigation : IPopupNavigation
             }
 
             Popping?.Invoke(this, new PopupNavigationEventArgs(page, animate));
-            await page.DisappearingAnimation();
+
+            try
+            {
+                // An animation that never finishes (the .NET 10 iOS TranslateTo deadlock was one) mustn't leave the
+                // popup up and its caller waiting forever, so the teardown carries on without it after a while.
+                await page.DisappearingAnimation().WaitAsync(TimeSpan.FromSeconds(5));
+            }
+            catch (TimeoutException)
+            {
+            }
+
             page.SendDisappearing();
             await PopupPlatform.RemoveAsync(page);
             page.DisposingAnimation();
