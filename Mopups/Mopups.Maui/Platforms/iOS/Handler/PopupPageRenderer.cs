@@ -80,14 +80,13 @@ namespace Mopups.Platforms.iOS
                     return;
 
                 var superviewFrame = handler.Handler.PlatformView.Superview.Frame;
-                var applicationFrame = UIScreen.MainScreen.ApplicationFrame;
 
+                // UIScreen.ApplicationFrame is NaN for apps built with the iOS 27 SDK. Its only real inset was
+                // the status bar at the top, so read the status-bar height directly instead.
                 var systemPadding = new Thickness
                 {
-                    Left = applicationFrame.Left,
-                    Top = applicationFrame.Top,
-                    Right = applicationFrame.Right - applicationFrame.Width - applicationFrame.Left,
-                    Bottom = applicationFrame.Bottom - applicationFrame.Height - applicationFrame.Top + handler.KeyboardBounds.Height
+                    Top = StatusBarHeight(handler),
+                    Bottom = handler.KeyboardBounds.Height
                 };
 
                 if ((handler.Handler.VirtualView.Width != superviewFrame.Width && handler.Handler.VirtualView.Height != superviewFrame.Height)
@@ -98,6 +97,28 @@ namespace Mopups.Platforms.iOS
                     currentElement.Layout(new Rect(currentElement.X, currentElement.Y, superviewFrame.Width, superviewFrame.Height));
                     currentElement.BatchCommit();
                 }
+            }
+
+            static double StatusBarHeight(UIViewController controller)
+            {
+                if (!OperatingSystem.IsIOSVersionAtLeast(13))
+                    return UIApplication.SharedApplication.StatusBarFrame.Height;
+
+                // A popup window opened while no scene was active has no scene of its own, so fall back to the app's.
+                var scene = controller.View?.Window?.WindowScene;
+                if (scene == null)
+                {
+                    foreach (var connected in UIApplication.SharedApplication.ConnectedScenes.ToArray())
+                    {
+                        if (connected is UIWindowScene { Session.Role: UIWindowSceneSessionRole.Application } appScene)
+                        {
+                            scene = appScene;
+                            break;
+                        }
+                    }
+                }
+
+                return scene?.StatusBarManager?.StatusBarFrame.Height ?? 0;
             }
         }
 
