@@ -1,65 +1,44 @@
-﻿using Nkraft.Mopups.Animations.Base;
 using Nkraft.Mopups.Pages;
 
 namespace Nkraft.Mopups.Animations;
 
-public class FadeAnimation : BaseAnimation
+public class FadeAnimation : PopupAnimation
 {
-    private double _defaultOpacity;
+    private double _defaultOpacity = 1;
 
     public bool HasBackgroundAnimation { get; set; } = true;
 
     public override void Preparing(View? content, PopupPage page)
     {
-        if (HasBackgroundAnimation)
+        if (Target(content, page) is { } target)
         {
-            _defaultOpacity = page.Opacity;
-            page.Opacity = 0;
-        }
-        else if (content is not null)
-        {
-            _defaultOpacity = content.Opacity;
-            content.Opacity = 0;
+            _defaultOpacity = target.Opacity;
+            target.Opacity = 0;
         }
     }
 
     public override void Disposing(View? content, PopupPage page)
     {
-        if (HasBackgroundAnimation || content != null)
+        if (Target(content, page) is { } target)
         {
-            page.Opacity = _defaultOpacity;
+            target.Opacity = _defaultOpacity;
         }
     }
 
-    public override Task Appearing(View? content, PopupPage page)
+    public override Task AppearingAsync(View? content, PopupPage page)
     {
-        if (HasBackgroundAnimation)
-        {
-            return page.FadeToAsync(1, DurationIn, EasingIn);
-        }
-        if (content is not null)
-        {
-            return content.FadeToAsync(1, DurationIn, EasingIn);
-        }
-
-        return Task.CompletedTask;
+        return Target(content, page)?.FadeToAsync(1, DurationIn, EasingIn) ?? Task.CompletedTask;
     }
 
-    public override Task Disappearing(View? content, PopupPage page)
+    public override Task DisappearingAsync(View? content, PopupPage page)
     {
-        _defaultOpacity = page.Opacity;
-        if (double.IsNaN(_defaultOpacity))
-            _defaultOpacity = 1;
+        if (Target(content, page) is not { } target)
+            return Task.CompletedTask;
 
-        if (HasBackgroundAnimation)
-        {
-            return page.FadeToAsync(0, DurationOut, EasingOut);
-        }
-        if (content is not null)
-        {
-            return content.FadeToAsync(0, DurationOut, EasingOut);
-        }
-
-        return Task.CompletedTask;
+        _defaultOpacity = target.Opacity;
+        return target.FadeToAsync(0, DurationOut, EasingOut);
     }
+
+    /// <summary>What fades: the whole page, scrim included, or just its content.</summary>
+    private VisualElement? Target(View? content, PopupPage page) => HasBackgroundAnimation ? page : content;
 }

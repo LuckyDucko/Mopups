@@ -1,4 +1,4 @@
-﻿using CoreGraphics;
+using CoreGraphics;
 using Nkraft.Mopups.Pages;
 using UIKit;
 
@@ -15,25 +15,21 @@ internal sealed class PopupWindow : UIWindow
         HostWindow = hostWindow;
     }
 
-    /// <summary>The app window this popup sits on top of; gets key status back when the last popup closes.</summary>
     public UIWindow? HostWindow { get; private set; }
 
     public override UIView? HitTest(CGPoint point, UIEvent? uievent)
     {
         var hit = base.HitTest(point, uievent);
-        var page = _page;
-
-        if (hit is null || page is null)
+        if (hit is null || _page is not { } page)
             return hit;
 
-        // Returning null lets the touch fall through to the windows below.
+        // Null lets the touch fall through to the windows below.
         if (page.InputTransparent)
             return null;
 
         if (page.BackgroundInputTransparent && IsBackground(hit))
         {
-            // UIKit may hit-test several times for a single touch, and also for pointer hover on iPad.
-            // Report the background tap once per touch event.
+            // UIKit hit-tests several times for one touch, and for pointer hover on iPad: once per touch event.
             if (uievent is { Type: UIEventType.Touches } && uievent.Timestamp != _lastBackgroundTouchTimestamp)
             {
                 _lastBackgroundTouchTimestamp = uievent.Timestamp;
@@ -46,19 +42,15 @@ internal sealed class PopupWindow : UIWindow
         return hit;
     }
 
+    /// <summary>Drops the page and the host window once the popup is gone, without disposing the window.</summary>
+    public void Forget()
+    {
+        _page = null;
+        HostWindow = null;
+    }
+
     private bool IsBackground(UIView hit) =>
         ReferenceEquals(hit, this)
         || ReferenceEquals(hit, RootViewController?.View)
         || (RootViewController is PopupRootViewController root && root.IsBackgroundView(hit));
-
-    protected override void Dispose(bool disposing)
-    {
-        if (disposing)
-        {
-            _page = null;
-            HostWindow = null;
-        }
-
-        base.Dispose(disposing);
-    }
 }

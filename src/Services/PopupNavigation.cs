@@ -1,163 +1,215 @@
-﻿using Nkraft.Mopups.Animations;
+using System.Diagnostics;
+using Nkraft.CrossUtility.Extensions;
+using Nkraft.Mopups.Animations;
 using Nkraft.Mopups.Contracts;
 using Nkraft.Mopups.Events;
 using Nkraft.Mopups.Pages;
 
-#if ANDROID
-using Nkraft.Mopups.Platforms.Android;
-#elif IOS
-using Nkraft.Mopups.Platforms.iOS;
-#endif
-
 namespace Nkraft.Mopups.Services;
 
-public class PopupNavigation : IPopupNavigation
+internal sealed class PopupNavigation : IPopupNavigation
 {
-    private static readonly Lazy<IPopupPlatform> LazyImplementation = new(GeneratePopupPlatform, LazyThreadSafetyMode.PublicationOnly);
-    private readonly Lock _locker = new();
-
-    private readonly IPopupPlatform _popupPlatform = LazyImplementation.Value;
-    private readonly List<PopupPage> _popupStack = [];
-
+    private readonly PopupPlatform _platform = new();
+    private readonly Lock _lock = new();
+    private readonly Lock _queueLock = new();
+    private readonly List<PopupPage> _stack = [];
+    private readonly Dictionary<PopupPage, Task> _removals = [];
+    private Task _operations = Task.CompletedTask;
     private volatile PopupPage[] _snapshot = [];
 
-    private readonly HashSet<PopupPage> _removing = [];
+    public event EventHandler<PopupNavigationEventArgs>? Pushing;
+
+    public event EventHandler<PopupNavigationEventArgs>? Pushed;
+
+    public event EventHandler<PopupNavigationEventArgs>? Popping;
+
+    public event EventHandler<PopupNavigationEventArgs>? Popped;
 
     public IReadOnlyList<PopupPage> PopupStack => _snapshot;
 
-    public event EventHandler<PopupNavigationEventArgs>? Pushing;
-    public event EventHandler<PopupNavigationEventArgs>? Pushed;
-    public event EventHandler<PopupNavigationEventArgs>? Popping;
-    public event EventHandler<PopupNavigationEventArgs>? Popped;
-
-    private static IPopupPlatform GeneratePopupPlatform()
-    {
-#if ANDROID
-        return new AndroidMopups();
-#elif IOS
-        return new iOSMopups();
-#else
-        throw new PlatformNotSupportedException();
-#endif
-    }
-
+    /// <summary>
+    /// Pushes, pops and removals run one at a time, on the main thread, in the order they were asked for, so a pop
+    /// asked for right after a push waits for the push to finish instead of racing it. The stack changes as soon as an
+    /// operation is asked for. Don't await another operation from inside a popup's animation hooks or
+    /// <see cref="Pushing"/>/<see cref="Popping"/>: it would wait for the one running them.
+    /// </summary>
     public Task PushAsync(PopupPage page, bool animate = true)
     {
         ArgumentNullException.ThrowIfNull(page);
-        animate = animate && AnimationHelper.SystemAnimationsEnabled;
 
-        lock (_locker)
+        lock (_lock)
         {
-            if (_popupStack.Contains(page))
+            if (_stack.Contains(page))
                 throw new InvalidOperationException("The page has already been pushed.");
 
-            _popupStack.Add(page);
-            _snapshot = [.. _popupStack];
+            _stack.Add(page);
+            _snapshot = [.. _stack];
         }
 
-        Pushing?.Invoke(this, new PopupNavigationEventArgs(page, animate));
-
-        return MainThread.IsMainThread
-            ? PushPage()
-            : MainThread.InvokeOnMainThreadAsync(PushPage);
-
-        async Task PushPage()
-        {
-            try
-            {
-                page.PreparingAnimation();
-                await _popupPlatform.AddAsync(page);
-            }
-            catch
-            {
-                // Don't leave a page in the stack that never made it on screen.
-                lock (_locker)
-                {
-                    _popupStack.Remove(page);
-                    _snapshot = [.. _popupStack];
-                }
-                throw;
-            }
-
-            // Safe-area/keyboard padding is now applied by PopupPage itself whenever the
-            // platform reports new SystemPadding/KeyboardOffset values (rotation, keyboard, etc.).
-
-            page.SendAppearing();
-            await page.AppearingAnimation();
-            Pushed?.Invoke(this, new PopupNavigationEventArgs(page, animate));
-        }
-    }
-
-    public async Task PopAllAsync(bool animate = true)
-    {
-        animate = animate && AnimationHelper.SystemAnimationsEnabled;
-
-        while (true)
-        {
-            PopupPage? top;
-            lock (_locker)
-                top = _popupStack.LastOrDefault(p => !_removing.Contains(p));
-
-            if (top is null)
-                break;
-
-            await RemovePageAsync(top, animate);
-        }
+        return EnqueueAsync(() => PushCoreAsync(page, animate && page.IsAnimationEnabled));
     }
 
     public Task PopAsync(bool animate = true)
     {
-        animate = animate && AnimationHelper.SystemAnimationsEnabled;
+        lock (_lock)
+        {
+            var top = _stack.LastOrDefault(page => !_removals.ContainsKey(page))
+                ?? throw new InvalidOperationException("There is no popup to pop.");
 
-        PopupPage? top;
-        lock (_locker)
-            top = _popupStack.LastOrDefault(p => !_removing.Contains(p));
+            return RemoveAsync(top, animate);
+        }
+    }
 
-        return top is null
-            ? throw new InvalidOperationException("PopupStack is empty")
-            : RemovePageAsync(top, animate);
+    public Task PopAllAsync(bool animate = true)
+    {
+        lock (_lock)
+        {
+            var removals = _stack
+                .Where(page => !_removals.ContainsKey(page))
+                .Reverse()
+                .Select(page => RemoveAsync(page, animate))
+                .ToList();
+
+            return Task.WhenAll(removals);
+        }
+    }
+
+    public Task RemovePageAsync(PopupPage page, bool animate = true)
+    {
+        ArgumentNullException.ThrowIfNull(page);
+
+        lock (_lock)
+        {
+            return RemoveAsync(page, animate);
+        }
+    }
+
+    public bool SendBackButtonPressed()
+    {
+        PopupPage top;
+        lock (_lock)
+        {
+            if (_stack.Count == 0)
+                return false;
+
+            top = _stack[^1];
+            if (_removals.ContainsKey(top))
+                return true;
+        }
+
+        if (!top.SendBackButtonPressed())
+        {
+            RemovePageAsync(top).FireAndForget(ex => Trace.TraceError("Closing a popup on Back failed: {0}", ex));
+        }
+
+        return true;
     }
 
     /// <summary>
-    /// Removes <paramref name="page"/>. Calling this for a page that is already being removed,
-    /// or was never pushed, is a no-op.
+    /// Under <see cref="_lock"/>: the check and the queueing are one step, so a page is queued for removal once.
     /// </summary>
-    public Task RemovePageAsync(PopupPage? page, bool animate = true)
+    private Task RemoveAsync(PopupPage page, bool animate)
     {
-        ArgumentNullException.ThrowIfNull(page);
-        animate = animate && AnimationHelper.SystemAnimationsEnabled;
+        if (_removals.TryGetValue(page, out var removal))
+            return removal;
 
-        lock (_locker)
+        if (!_stack.Contains(page))
+            return Task.CompletedTask;
+
+        removal = EnqueueAsync(() => RemoveCoreAsync(page, animate && page.IsAnimationEnabled));
+        _removals[page] = removal;
+        return removal;
+    }
+
+    private Task EnqueueAsync(Func<Task> operation)
+    {
+        lock (_queueLock)
         {
-            if (!_popupStack.Contains(page) || !_removing.Add(page))
-                return Task.CompletedTask;
+            _operations = RunAfterAsync(_operations, operation);
+            return _operations;
+        }
+    }
+
+    private static async Task RunAfterAsync(Task previous, Func<Task> operation)
+    {
+        try
+        {
+            await previous.ConfigureAwait(false);
+        }
+        catch
+        {
+            // Its caller got the failure; the operations after it still run.
         }
 
-        return MainThread.IsMainThread
-            ? RemovePage()
-            : MainThread.InvokeOnMainThreadAsync(RemovePage);
+        await MainThread.InvokeOnMainThreadAsync(operation);
+    }
 
-        async Task RemovePage()
+    private async Task PushCoreAsync(PopupPage page, bool animate)
+    {
+        animate = animate && SystemAnimations.Enabled;
+        Pushing?.Invoke(this, new PopupNavigationEventArgs(page, animate));
+
+        try
         {
-            try
-            {
-                Popping?.Invoke(this, new PopupNavigationEventArgs(page, animate));
-                await page.DisappearingAnimation();
-                page.SendDisappearing();
-                await _popupPlatform.RemoveAsync(page);
-                page.DisposingAnimation();
-            }
-            finally
-            {
-                lock (_locker)
-                {
-                    _removing.Remove(page);
-                    _popupStack.Remove(page);
-                    _snapshot = [.. _popupStack];
-                }
-            }
+            var host = _platform.HostWindow()
+                ?? throw new InvalidOperationException("There is no window to show the popup over.");
 
-            Popped?.Invoke(this, new PopupNavigationEventArgs(page, animate));
+            // Parent only, never a logical child of the host page: a NavigationPage would take the popup for its
+            // current page and drop its bar (upstream issue 158).
+            page.Parent = host.Page;
+            page.PrepareAnimation(animate);
+            await _platform.AddAsync(page, host, Below(page));
+        }
+        catch
+        {
+            page.Parent = null;
+            Forget(page);
+            throw;
+        }
+
+        page.SendAppearing();
+        await page.AppearAsync();
+        Pushed?.Invoke(this, new PopupNavigationEventArgs(page, animate));
+    }
+
+    private async Task RemoveCoreAsync(PopupPage page, bool animate)
+    {
+        animate = animate && SystemAnimations.Enabled;
+        Popping?.Invoke(this, new PopupNavigationEventArgs(page, animate));
+
+        try
+        {
+            await page.DisappearAsync(animate);
+            page.SendDisappearing();
+            await _platform.RemoveAsync(page);
+            page.DisconnectHandlers();
+            page.RestoreAnimation();
+            page.Parent = null;
+        }
+        finally
+        {
+            Forget(page);
+        }
+
+        Popped?.Invoke(this, new PopupNavigationEventArgs(page, animate));
+    }
+
+    private PopupPage? Below(PopupPage page)
+    {
+        lock (_lock)
+        {
+            var index = _stack.IndexOf(page);
+            return index > 0 ? _stack[index - 1] : null;
+        }
+    }
+
+    private void Forget(PopupPage page)
+    {
+        lock (_lock)
+        {
+            _removals.Remove(page);
+            _stack.Remove(page);
+            _snapshot = [.. _stack];
         }
     }
 }

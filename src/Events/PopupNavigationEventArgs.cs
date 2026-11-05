@@ -1,4 +1,4 @@
-﻿using Nkraft.Mopups.Pages;
+using Nkraft.Mopups.Pages;
 
 namespace Nkraft.Mopups.Events;
 

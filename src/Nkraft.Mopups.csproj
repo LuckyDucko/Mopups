@@ -1,40 +1,57 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project Sdk="Microsoft.NET.Sdk">
-	<PropertyGroup>
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
     <TargetFrameworks>net10.0;net10.0-android</TargetFrameworks>
     <TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('osx'))">$(TargetFrameworks);net10.0-ios</TargetFrameworks>
-		<UseMaui>true</UseMaui>
-		<UseMauiEssentials>true</UseMauiEssentials>
-		<SingleProject>true</SingleProject>
-		<PackageId>Nkraft.Mopups</PackageId>
+    <UseMaui>true</UseMaui>
+    <UseMauiEssentials>true</UseMauiEssentials>
+    <SingleProject>true</SingleProject>
     <RootNamespace>Nkraft.Mopups</RootNamespace>
-		<Description>Fork of Mopups (LuckyDucko/Mopups) maintained for Android and iOS only</Description>
-		<PackageProjectUrl>https://github.com/mr5z/Mopups</PackageProjectUrl>
-    <RepositoryUrl>https://github.com/mr5z/Mopups</RepositoryUrl>
-		<PackageLicenseFile>LICENSE</PackageLicenseFile>
-    <PackageReadmeFile>README.md</PackageReadmeFile>
     <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">24.0</SupportedOSPlatformVersion>
-    <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios'">12.2</SupportedOSPlatformVersion>
-	</PropertyGroup>
-  
-	<PropertyGroup>
-		<GenerateDocumentationFile>True</GenerateDocumentationFile>
+    <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios'">15.0</SupportedOSPlatformVersion>
+  </PropertyGroup>
+
+  <!--
+    The compile check: `dotnet build -p:CompileCheck=true` compiles the shared C# for plain net10.0 with the .NET SDK
+    alone, where neither platform builds (no workload, or Linux, which can't build iOS). Without UseMaui, MAUI's
+    packages still drop Platforms/Android and Platforms/iOS. Platforms/Reference, the net10.0 bodies, compiles either
+    way: it is also the reference assembly the package ships for net10.0.
+  -->
+  <PropertyGroup Condition="'$(CompileCheck)' == 'true'">
+    <TargetFrameworks>net10.0</TargetFrameworks>
+    <UseMaui>false</UseMaui>
+    <UseMauiEssentials>false</UseMauiEssentials>
+  </PropertyGroup>
+  <ItemGroup Condition="'$(TargetFramework)' == 'net10.0'">
+    <!-- No TargetPlatformIdentifier: MAUI compiles such a folder whenever the item exists. -->
+    <MauiPlatformSpecificFolder Include="Platforms/Reference/" />
+  </ItemGroup>
+
+  <PropertyGroup>
+    <PackageId>Nkraft.Mopups</PackageId>
+    <Version>1.1.0</Version>
+    <Title>Nkraft.Mopups (MAUI Popups)</Title>
+    <Description>Fork of Mopups (LuckyDucko/Mopups) maintained for Android and iOS only</Description>
     <Authors>Mark L, Tyson Hooker, Maksym Koshovyi, Aswin P G, Kirill Lyubimov, Martijn Van Dijk, Shane Neuville</Authors>
-		<Company>Nkraft</Company>
-		<PackageTags>Nkraft.Mopups;Mopups;Popups;Maui;rg;Xamarin;ios;android;Dialogs</PackageTags>
-		<Version>1.0.2.2</Version>
-		<Title>Nkraft.Mopups (MAUI Popups)</Title>
-		<PackageReleaseNotes>Update package</PackageReleaseNotes>
-		<IncludeSymbols>True</IncludeSymbols>
+    <Company>Nkraft</Company>
+    <PackageTags>Nkraft.Mopups;Mopups;Popups;Maui;rg;Xamarin;ios;android;Dialogs</PackageTags>
+    <PackageProjectUrl>https://github.com/mr5z/Mopups</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/mr5z/Mopups</RepositoryUrl>
+    <PackageLicenseFile>LICENSE</PackageLicenseFile>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageReleaseNotes>See the repository's commit history.</PackageReleaseNotes>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <!-- Names say what a member is for (STYLE.md); only methods carry docs. -->
+    <NoWarn>$(NoWarn);CS1591</NoWarn>
+    <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
-	</PropertyGroup>
-  
-	<ItemGroup>
+  </PropertyGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.Maui.Controls" Version="10.0.110" />
     <PackageReference Include="Microsoft.Maui.Essentials" Version="10.0.110" />
-    <PackageReference Include="Nkraft.CrossUtility" Version="1.0.12.2" />
-	</ItemGroup>
-  
+    <PackageReference Include="Nkraft.CrossUtility" Version="1.0.12.3" />
+  </ItemGroup>
+
   <ItemGroup>
     <None Include="..\LICENSE" Pack="true" PackagePath="" />
     <None Include="..\README.md" Pack="true" PackagePath="" />

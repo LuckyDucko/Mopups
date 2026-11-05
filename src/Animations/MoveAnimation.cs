@@ -1,6 +1,3 @@
-﻿
-using System.ComponentModel;
-using Nkraft.Mopups.Animations.Base;
 using Nkraft.Mopups.Enums;
 using Nkraft.Mopups.Pages;
 
@@ -8,20 +5,25 @@ namespace Nkraft.Mopups.Animations;
 
 public class MoveAnimation : FadeBackgroundAnimation
 {
+    private const uint MoveDuration = 300;
+
+    private double _defaultPageOpacity = 1;
     private double _defaultTranslationX;
     private double _defaultTranslationY;
 
     public MoveAnimationOptions PositionIn { get; set; }
+
     public MoveAnimationOptions PositionOut { get; set; }
 
-    public MoveAnimation() : this(MoveAnimationOptions.Bottom, MoveAnimationOptions.Bottom) { }
+    public MoveAnimation() : this(MoveAnimationOptions.Bottom, MoveAnimationOptions.Bottom)
+    {
+    }
 
     public MoveAnimation(MoveAnimationOptions positionIn, MoveAnimationOptions positionOut)
     {
         PositionIn = positionIn;
         PositionOut = positionOut;
-
-        DurationIn = DurationOut = 300;
+        DurationIn = DurationOut = MoveDuration;
         EasingIn = Easing.SinOut;
         EasingOut = Easing.SinIn;
     }
@@ -30,11 +32,12 @@ public class MoveAnimation : FadeBackgroundAnimation
     {
         base.Preparing(content, page);
 
+        _defaultPageOpacity = page.Opacity;
         HidePage(page);
 
         if (content is not null)
         {
-            UpdateDefaultTranslations(content);
+            RememberTranslation(content);
         }
     }
 
@@ -42,7 +45,7 @@ public class MoveAnimation : FadeBackgroundAnimation
     {
         base.Disposing(content, page);
 
-        ShowPage(page);
+        page.Opacity = _defaultPageOpacity;
 
         if (content is not null)
         {
@@ -51,89 +54,42 @@ public class MoveAnimation : FadeBackgroundAnimation
         }
     }
 
-    public override Task Appearing(View? content, PopupPage page)
+    public override Task AppearingAsync(View? content, PopupPage page)
     {
-        var taskList = new List<Task>
-        {
-            base.Appearing(content, page)
-        };
+        List<Task> animations = [base.AppearingAsync(content, page)];
 
         if (content is not null)
         {
-            var topOffset = GetTopOffset(content, page);
-            var leftOffset = GetLeftOffset(content, page);
-
-            switch (PositionIn)
-            {
-                case MoveAnimationOptions.Top:
-                    content.TranslationY = -topOffset;
-                    break;
-                case MoveAnimationOptions.Bottom:
-                    content.TranslationY = topOffset;
-                    break;
-                case MoveAnimationOptions.Left:
-                    content.TranslationX = -leftOffset;
-                    break;
-                case MoveAnimationOptions.Right:
-                    content.TranslationX = leftOffset;
-                    break;
-                case MoveAnimationOptions.Center:
-                    break;
-                default:
-                    throw new InvalidEnumArgumentException(nameof(PositionIn), (int)PositionIn,
-                        typeof(MoveAnimationOptions));
-            }
-
-            content.HeightRequest = content.Height;
-            content.WidthRequest = content.Width;
-
-            taskList.Add(content.TranslateToAsync(_defaultTranslationX, _defaultTranslationY, DurationIn, EasingIn));
+            // The content keeps its requested size. Pinning it to its measured size worked around a freeze on .NET 10
+            // iOS (upstream pull request 177) that MAUI fixed in 10.0.50 (dotnet/maui issue 32586); kept, the pin
+            // breaks layout when the content or the insets change (upstream pull request 183).
+            var offset = Offset(PositionIn, content, page);
+            content.TranslationX = _defaultTranslationX + offset.X;
+            content.TranslationY = _defaultTranslationY + offset.Y;
+            animations.Add(content.TranslateToAsync(_defaultTranslationX, _defaultTranslationY, DurationIn, EasingIn));
         }
 
         ShowPage(page);
 
-        return Task.WhenAll(taskList);
+        return Task.WhenAll(animations);
     }
 
-    public override Task Disappearing(View? content, PopupPage page)
+    public override Task DisappearingAsync(View? content, PopupPage page)
     {
-        var taskList = new List<Task>
+        List<Task> animations = [base.DisappearingAsync(content, page)];
+
+        if (content is not null)
         {
-            base.Disappearing(content, page)
-        };
-        
-        if (content is null)
-            return Task.WhenAll(taskList);
-
-        UpdateDefaultTranslations(content);
-
-        var topOffset = GetTopOffset(content, page);
-        var leftOffset = GetLeftOffset(content, page);
-
-        switch (PositionOut)
-        {
-            case MoveAnimationOptions.Top:
-                taskList.Add(content.TranslateToAsync(_defaultTranslationX, -topOffset, DurationOut, EasingOut));
-                break;
-            case MoveAnimationOptions.Bottom:
-                taskList.Add(content.TranslateToAsync(_defaultTranslationX, topOffset, DurationOut, EasingOut));
-                break;
-            case MoveAnimationOptions.Left:
-                taskList.Add(content.TranslateToAsync(-leftOffset, _defaultTranslationY, DurationOut, EasingOut));
-                break;
-            case MoveAnimationOptions.Right:
-                taskList.Add(content.TranslateToAsync(leftOffset, _defaultTranslationY, DurationOut, EasingOut));
-                break;
-            case MoveAnimationOptions.Center:
-                break;
-            default:
-                throw new InvalidEnumArgumentException(nameof(PositionOut), (int)PositionOut, typeof(MoveAnimationOptions));
+            RememberTranslation(content);
+            var offset = Offset(PositionOut, content, page);
+            animations.Add(content.TranslateToAsync(
+                _defaultTranslationX + offset.X, _defaultTranslationY + offset.Y, DurationOut, EasingOut));
         }
 
-        return Task.WhenAll(taskList);
+        return Task.WhenAll(animations);
     }
 
-    private void UpdateDefaultTranslations(View content)
+    private void RememberTranslation(View content)
     {
         _defaultTranslationX = content.TranslationX;
         _defaultTranslationY = content.TranslationY;

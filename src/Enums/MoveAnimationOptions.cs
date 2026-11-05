@@ -1,4 +1,4 @@
-﻿namespace Nkraft.Mopups.Enums;
+namespace Nkraft.Mopups.Enums;
 
 public enum MoveAnimationOptions
 {
