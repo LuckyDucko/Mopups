@@ -61,6 +61,14 @@ public partial class MainPage : ContentPage
                                                        })
                         };
         mainStackLayout.Add(newButton);
+        mainStackLayout.Add(new Button
+                            {
+                                Text = "Run window tests (on-device)",
+                                AutomationId = "openTests",
+                                BackgroundColor = Color.FromArgb("#FF7DBBE6"),
+                                TextColor = Color.FromRgb(255, 255, 255),
+                                Command = new AsyncCommand(async () => await Navigation.PushAsync(new SampleMaui.Tests.PopupTestsPage()))
+                            });
 
         return mainStackLayout;
 
