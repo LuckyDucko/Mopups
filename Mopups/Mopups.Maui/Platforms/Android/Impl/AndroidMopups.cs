@@ -8,6 +8,8 @@ using Microsoft.Maui.Platform;
 using Mopups.Interfaces;
 using Mopups.Pages;
 using Mopups.Services;
+using Activity = Android.App.Activity;
+using System.Runtime.CompilerServices;
 
 namespace Mopups.Droid.Implementation;
 
@@ -15,6 +17,9 @@ public class AndroidMopups : IPopupPlatform
 {
     private static IList<FrameLayout?> DecoreViews => GetAllFragmentDecorViews();
     private static FrameLayout? DecoreView => GetTopFragmentDecorView();
+
+    // One lifecycle-callbacks instance per activity (see RehostPopups).
+    private static readonly ConditionalWeakTable<Activity, PopupHostFragmentCallbacks> FragmentCallbacks = new();
 
     public static bool SendBackPressed(Action? backPressedHandler = null)
     {
@@ -50,6 +55,10 @@ public class AndroidMopups : IPopupPlatform
         var handler = page.Handler ??= new PopupPageHandler(page.Parent.FindMauiContext());
 
         var androidNativeView = handler.PlatformView as Android.Views.View;
+
+        // MAUI modal pages are DialogFragments, i.e. they live in their own window. A popup has to follow the topmost window
+        // (see RehostPopups), otherwise it is hidden under a modal, or it is destroyed together with the modal it was added to.
+        EnsureFragmentCallbacks();
         DecoreView?.AddView(androidNativeView);
 
         return PostAsync(androidNativeView);
@@ -63,9 +72,14 @@ public class AndroidMopups : IPopupPlatform
         {
             HandleAccessibility(false, page.DisableAndroidAccessibilityHandling, page);
 
+            var popupView = renderer.PlatformView as Android.Views.View;
+
+            // The popup may sit in a window that is no longer listed among the fragments (e.g. a dismissed modal) - detach it from its real parent first.
+            (popupView?.Parent as ViewGroup)?.RemoveView(popupView);
+
             foreach (var decoreView in DecoreViews)
             {
-                decoreView?.RemoveView(renderer.PlatformView as Android.Views.View);
+                decoreView?.RemoveView(popupView);
             }
             renderer.DisconnectHandler(); //?? no clue if works
             page.Parent?.RemoveLogicalChild(page);
@@ -179,7 +193,7 @@ public class AndroidMopups : IPopupPlatform
         return tcs.Task;
     }
     
-    static FrameLayout? GetTopFragmentDecorView()
+    static FrameLayout? GetTopFragmentDecorView(Fragment? exclude = null)
     {
         if (Platform.CurrentActivity is not ComponentActivity componentActivity)
         {
@@ -187,20 +201,24 @@ public class AndroidMopups : IPopupPlatform
         }
 
         var fragments = componentActivity.GetFragmentManager()?.Fragments;
-        
-        if (fragments is null || !fragments.Any())
+
+        // The topmost dialog (MAUI modal page) that is actually on screen. Dialogs that are hidden, dismissed or being
+        // destroyed (`exclude`) do not count - their window is not visible (or is about to be gone).
+        if (fragments is not null)
         {
-            return Platform.CurrentActivity?.Window?.DecorView as FrameLayout;;
+            for (var i = fragments.Count - 1; i >= 0; i--)
+            {
+                var fragment = fragments[i];
+                if (fragment is DialogFragment dialogFragment
+                    && !ReferenceEquals(fragment, exclude)
+                    && dialogFragment.Dialog is { IsShowing: true } dialog)
+                {
+                    return dialog.Window?.DecorView as FrameLayout;
+                }
+            }
         }
 
-        var topFragment = fragments[^1];
-
-        if (topFragment is DialogFragment dialogFragment)
-        {
-            return dialogFragment.Dialog?.Window?.DecorView as FrameLayout;
-        }
-
-        return topFragment.Activity?.Window?.DecorView as FrameLayout;
+        return Platform.CurrentActivity?.Window?.DecorView as FrameLayout;
     }
 
     static IList<FrameLayout?> GetAllFragmentDecorViews()
@@ -231,5 +249,109 @@ public class AndroidMopups : IPopupPlatform
         }
 
         return decoreViews;
+    }
+
+    static void EnsureFragmentCallbacks()
+    {
+        var activity = Platform.CurrentActivity;
+
+        if (activity is not ComponentActivity componentActivity || FragmentCallbacks.TryGetValue(activity, out _))
+        {
+            return;
+        }
+
+        var fragmentManager = componentActivity.GetFragmentManager();
+        if (fragmentManager is null)
+        {
+            return;
+        }
+
+        var callbacks = new PopupHostFragmentCallbacks();
+        fragmentManager.RegisterFragmentLifecycleCallbacks(callbacks, false);
+        FragmentCallbacks.Add(activity, callbacks);
+    }
+
+    /// <summary>
+    /// Moves all visible popups to the window that is currently on top. A MAUI modal page is a DialogFragment with its own window:
+    /// without this a popup that is shown while a modal is opened stays hidden under it, and a popup that was added to a modal
+    /// disappears (but stays in the PopupStack) when that modal is closed.
+    /// </summary>
+    /// <param name="closingFragment">Dialog that is being destroyed and must not be used as a target.</param>
+    static void RehostPopups(Fragment? closingFragment)
+    {
+        var popupStack = MopupService.Instance.PopupStack;
+        if (popupStack.Count == 0)
+        {
+            return;
+        }
+
+        var target = GetTopFragmentDecorView(closingFragment);
+        if (target is null)
+        {
+            return;
+        }
+
+        var popupViews = new List<Android.Views.View>(popupStack.Count);
+        foreach (var popup in popupStack)
+        {
+            // A popup that is just being pushed has no native view yet.
+            if (popup.Handler?.PlatformView is Android.Views.View popupView && popupView.Parent is not null)
+            {
+                popupViews.Add(popupView);
+            }
+        }
+
+        if (popupViews.All(view => ReferenceEquals(view.Parent, target)))
+        {
+            return;
+        }
+
+        foreach (var popupView in popupViews)
+        {
+            if (!ReferenceEquals(popupView.Parent, target))
+            {
+                (popupView.Parent as ViewGroup)?.RemoveView(popupView);
+                target.AddView(popupView);
+            }
+            else
+            {
+                popupView.BringToFront(); // keep the order of the PopupStack
+            }
+        }
+
+        // Keep the stacking order of the popups (the first one is the bottom one).
+        foreach (var popupView in popupViews)
+        {
+            popupView.BringToFront();
+        }
+    }
+
+    sealed class PopupHostFragmentCallbacks : FragmentManager.FragmentLifecycleCallbacks
+    {
+        // A modal page was shown -> popups go above it.
+        public override void OnFragmentStarted(FragmentManager fm, Fragment f)
+        {
+            if (f is DialogFragment)
+            {
+                RehostPopups(null);
+            }
+        }
+
+        // A modal page was closed -> popups go to the window below it.
+        public override void OnFragmentViewDestroyed(FragmentManager fm, Fragment f)
+        {
+            if (f is DialogFragment)
+            {
+                RehostPopups(f);
+            }
+        }
+
+        public override void OnFragmentDestroyed(FragmentManager fm, Fragment f)
+        {
+            if (f is DialogFragment)
+            {
+                RehostPopups(f);
+            }
+        }
     }
 }
